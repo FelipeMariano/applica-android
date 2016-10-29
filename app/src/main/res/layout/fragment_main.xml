@@ -42,4 +42,28 @@
         android:layout_alignTop="@+id/content_label"
         android:layout_alignLeft="@+id/id_value"  />
 
+    <EditText
+        android:id="@+id/txt_email"
+        android:hint="E-mail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"/>
+
+    <EditText
+        android:id="@+id/txt_pass"
+        android:hint="E-mail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"/>
+
+
+    <Button
+        android:text="Login"
+        android:layout_marginTop="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="userLogin"/>
+
+
+
 </RelativeLayout>

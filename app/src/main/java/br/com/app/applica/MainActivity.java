@@ -1,5 +1,6 @@
 package br.com.app.applica;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,15 +12,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
-import br.com.app.applica.entitity.Greeting;
 import br.com.app.applica.entitity.User;
 
 public class MainActivity extends AppCompatActivity {
+
+    public void userLogin(View view){
+        System.out.println("BUTTON PRESSED!");
+        new LoginRequestTask().execute();
+
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart(){
         super.onStart();
-        new HttpRequestTask().execute();
+     //   new LoginRequestTask().execute();
     }
 
     @Override
@@ -66,30 +72,42 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class HttpRequestTask extends AsyncTask<Void, Void, User> {
+    private class LoginRequestTask extends AsyncTask<Void, Void, User> {
+
+        private User user;
+
+        private void loadUserInfos(){
+            TextView email = (TextView) findViewById(R.id.txt_email);
+            TextView password = (TextView) findViewById(R.id.txt_pass);
+
+            //user = new User(email.getText().toString().trim(), password.getText().toString().trim());
+            user = new User("felipe@gmail.com", "29835010");
+        }
+
         @Override
         protected User doInBackground(Void... params){
             try{
-                final String url = "http://rest-service.guides.spring.io/greeting";
+                loadUserInfos();
 
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                Greeting greeting = restTemplate.getForObject(url, Greeting.class);
+                System.out.println(user.getEmail());
+                System.out.println(user.getPassword());
+
+                this.user.authenticateAndGetToken();
+                this.user.load();
+
+                this.user.loadCardenetas();
+
+                FileOutputStream fos = new FileOutputStream(new File(getFilesDir(), "userData.xml"));
+                FileOutputStream fileos = openFileOutput("userData", Context.MODE_PRIVATE);
+
+                this.user.writeUserDataLocally(fos, fileos);
 
 
+                FileInputStream fis = getApplicationContext().openFileInput("userData");
 
-                User user = new User("felipe@gmail.com", "29835010");
+                this.user.readUserDataLocally(fis);
 
                 ///
-
-                HttpHeaders requestHeaders = new HttpHeaders();
-                requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-
-
-                user.authenticateAndGetToken();
-                user.load();
-                ///
-
                 return user;
             }catch(Exception e){
                 System.out.println("Error: " + e);
@@ -101,8 +119,10 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(User user){
             TextView id = (TextView) findViewById(R.id.id_value);
             TextView content = (TextView) findViewById(R.id.content_value);
-            id.setText(user.getId());
-            content.setText(user.getEmail());
+        //    id.setText(user.getId());
+        //    content.setText(user.getEmail());
+        //    EditText txt_email = (EditText) findViewById(R.id.txt_email);
+        //    txt_email.setText(user.getEmail());
         }
     }
 }
