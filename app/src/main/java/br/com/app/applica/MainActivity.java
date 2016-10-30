@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             TextView password = (TextView) findViewById(R.id.txt_pass);
 
             //user = new User(email.getText().toString().trim(), password.getText().toString().trim());
-            user = new User("felipe@gmail.com", "29835010");
+            user = new User("felipe@gmail.com", "223333330");
         }
 
         @Override

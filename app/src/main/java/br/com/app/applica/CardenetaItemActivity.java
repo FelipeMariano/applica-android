@@ -4,10 +4,17 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import java.io.FileInputStream;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import br.com.app.applica.adapter.AplicacaoAdapter;
+import br.com.app.applica.entitity.Aplicacao;
 import br.com.app.applica.entitity.Cardeneta;
 import br.com.app.applica.entitity.User;
 
@@ -17,6 +24,8 @@ import br.com.app.applica.entitity.User;
 public class CardenetaItemActivity extends AppCompatActivity{
 
     public static String CURRENT_CARD = "";
+    private Cardeneta cardeneta;
+    private RecyclerView.Adapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -32,11 +41,32 @@ public class CardenetaItemActivity extends AppCompatActivity{
     @Override
     public void onStart(){
         super.onStart();
-        new CardenetaRequestTask().execute();
+
+        CardenetaRequestTask task = new CardenetaRequestTask();
+        try {
+            task.execute();
+            task.get(5000, TimeUnit.MILLISECONDS);
+        }catch(Exception e){
+
+        }
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.aplicacao_recycler);
+
+        List<Aplicacao> apcs = cardeneta.getAplicacoes();
+
+        for(int i = 0; i < 5; i++){
+            Aplicacao apc = new Aplicacao();
+            apc.setData(new Date());
+            apcs.add(apc);
+        }
+
+        mAdapter = new AplicacaoAdapter(apcs);
+        recyclerView.setAdapter(mAdapter);
+        RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layout);
     }
 
     private class CardenetaRequestTask extends AsyncTask<Void, Void, Cardeneta> {
-        private Cardeneta cardeneta =  new Cardeneta();
 
         @Override
         protected Cardeneta doInBackground(Void... params){
@@ -49,10 +79,10 @@ public class CardenetaItemActivity extends AppCompatActivity{
                     user.readUserDataLocally(fis);
                 }
 
-                this.cardeneta = Cardeneta.load(user.getRequestHeaders(), CURRENT_CARD);
-
+                cardeneta = Cardeneta.load(user.getRequestHeaders(), CURRENT_CARD);
+                cardeneta.loadAplicacoes(user.getRequestHeaders());
                 ///
-                return this.cardeneta;
+                return cardeneta;
             }catch(Exception e){
                 System.out.println("Error: " + e);
             }
@@ -62,13 +92,14 @@ public class CardenetaItemActivity extends AppCompatActivity{
         @Override
         protected void onPostExecute(Cardeneta cardeneta){
             TextView nome = (TextView) findViewById(R.id.cardeneta_view_nome);
-            nome.setText(this.cardeneta.getNome());
+            nome.setText(cardeneta.getNome());
 
             TextView sobrenome = (TextView) findViewById(R.id.cardeneta_view_sobrenome);
-            sobrenome.setText(this.cardeneta.get_id());
-            System.out.println();
+            sobrenome.setText(cardeneta.get_id());
+
             TextView sexo = (TextView) findViewById(R.id.cardeneta_view_sexo);
-            sexo.setText(this.cardeneta.getSexo());
+            sexo.setText(cardeneta.getSexo());
+
         }
     }
 }

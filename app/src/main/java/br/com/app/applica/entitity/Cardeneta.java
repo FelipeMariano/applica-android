@@ -2,6 +2,7 @@ package br.com.app.applica.entitity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -9,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * Created by felipe on 29/10/16.
@@ -20,6 +23,7 @@ public class Cardeneta {
     private String sobrenome;
     private String sexo;
     private String dt_nasc;
+    private List<Aplicacao> aplicacoes;
 
     private static RestTemplate restTemplate = new RestTemplate();
     private static HttpHeaders requestHeaders = new HttpHeaders();
@@ -75,6 +79,14 @@ public class Cardeneta {
         this._id = _id;
     }
 
+    public void setAplicacoes(List<Aplicacao> aplicacoes) {
+        this.aplicacoes = aplicacoes;
+    }
+
+    public List<Aplicacao> getAplicacoes() {
+        return aplicacoes;
+    }
+
     public void setAuthToken(String authToken){
         requestHeaders.add("x-access-token", authToken);
         System.out.println(authToken);
@@ -91,5 +103,17 @@ public class Cardeneta {
         ResponseEntity<?> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, Cardeneta.class);
         System.out.println("LOAD: " + result.getBody());
         return (Cardeneta) result.getBody();
+    }
+
+    public List<Aplicacao> loadAplicacoes(HttpHeaders requestHeaders){
+        String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + get_id() + "/aplicacoes";
+        HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
+
+        ResponseEntity<List<Aplicacao>> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<Aplicacao>>() {
+        });
+        this.aplicacoes = result.getBody();
+        System.out.println(aplicacoes);
+
+        return this.aplicacoes;
     }
 }

@@ -17,7 +17,7 @@ import br.com.app.applica.entitity.Cardeneta;
  */
 public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .CardenetaViewHolder> {
        private List<Cardeneta> cardenetas;
-       private static String LOG_TAG = "Cardenetadapter";
+       private static String LOG_TAG = "CardenetaAdapter";
        private static MyClickListener myClickListener;
 
     public static class CardenetaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
