@@ -37,10 +37,7 @@ public class User {
     private String email;
     private String password;
 
-
-
-
-    //private HashSet<Cardeneta> cardenetas;
+    private List<Cardeneta> cardenetas;
 
     //Control:
     final String xmlFile = "UserData";
@@ -93,6 +90,14 @@ public class User {
         this.authToken = authToken;
     }
 
+    public List<Cardeneta> getCardenetas() {
+        return cardenetas;
+    }
+
+    public void setCardenetas(List<Cardeneta> cardenetas) {
+        this.cardenetas = cardenetas;
+    }
+
     private void setRestConfig(){
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -128,6 +133,10 @@ public class User {
         System.out.println("-------> " + result.getBody());
     }
 
+    public HttpHeaders getRequestHeaders(){
+        return this.requestHeaders;
+    }
+
     public void load(){
         String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + getId();
 
@@ -144,8 +153,8 @@ public class User {
 
         ResponseEntity<List<Cardeneta>> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<Cardeneta>>() {
         });
-        List<Cardeneta> cardenetas = result.getBody();
-
+        this.cardenetas = result.getBody();
+        System.out.println(cardenetas);
     }
 
 
@@ -228,11 +237,10 @@ public class User {
 
             }
 
-            System.out.println("ID: " + userData.get(0));
-            System.out.println("EMAIL: " + userData.get(1));
-            System.out.println("SENHA: " + userData.get(2));
-            System.out.println("TOKEN: " + userData.get(3));
+            requestHeaders.add("x-access-token", userData.get(3));
 
+            this.setId(userData.get(0));
+            this.setAuthToken(userData.get(3));
     }
 
     private void storageUserData(FileOutputStream fos, FileOutputStream fileos){

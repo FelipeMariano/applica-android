@@ -1,6 +1,7 @@
 package br.com.app.applica;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,23 +15,26 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 import br.com.app.applica.entitity.User;
 
 public class MainActivity extends AppCompatActivity {
 
+    public final static String MESSAGE = "I AM HERE FIRST!";
+
     public void userLogin(View view){
         System.out.println("BUTTON PRESSED!");
-        new LoginRequestTask().execute();
-
-
+        //new LoginRequestTask().execute();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -46,8 +50,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStart(){
-        super.onStart();
-     //   new LoginRequestTask().execute();
+    super.onStart();
+
+        try {
+            FileInputStream fis = getApplicationContext().openFileInput("userData");
+            User user = new User();
+            user.readUserDataLocally(fis);;
+            if(user.getId() != null) {
+                Intent intent = new Intent(this, CardenetaActivity.class);
+
+                startActivity(intent);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/txt_cardeneta_nome"
+        android:hint="Nome"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"/>
+
+
+    <EditText
+        android:id="@+id/txt_cardeneta_sobrenome"
+        android:hint="Sobrenome"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="70dp"/>
+
+
+    <EditText
+        android:id="@+id/txt_cardeneta_sexo"
+        android:hint="Sexo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"/>
+
+
+    <Button
+        android:id="@+id/btn_add_cardeneta"
+        android:text="Salvar"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="50dp"
+        android:onClick="addCardeneta"/>
+
+</LinearLayout>
