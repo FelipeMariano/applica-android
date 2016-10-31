@@ -9,12 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import java.io.FileInputStream;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.adapter.AplicacaoAdapter;
-import br.com.app.applica.entitity.Aplicacao;
 import br.com.app.applica.entitity.Cardeneta;
 import br.com.app.applica.entitity.User;
 
@@ -52,15 +49,7 @@ public class CardenetaItemActivity extends AppCompatActivity{
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.aplicacao_recycler);
 
-        List<Aplicacao> apcs = cardeneta.getAplicacoes();
-
-        for(int i = 0; i < 5; i++){
-            Aplicacao apc = new Aplicacao();
-            apc.setData(new Date());
-            apcs.add(apc);
-        }
-
-        mAdapter = new AplicacaoAdapter(apcs);
+        mAdapter = new AplicacaoAdapter(cardeneta.getAplicacoes());
         recyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layout);

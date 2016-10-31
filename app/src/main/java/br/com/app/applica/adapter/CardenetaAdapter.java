@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Years;
+
 import java.util.List;
 
 import br.com.app.applica.R;
@@ -23,6 +26,7 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
     public static class CardenetaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private String id;
         public final TextView nome;
+        public final TextView idade;
 
         public void setId(String id){
             this.id = id;
@@ -36,6 +40,7 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
             super(itemView);
             itemView.setTag(this);
             nome = (TextView) itemView.findViewById(R.id.cardeneta_item_nome);
+            idade = (TextView) itemView.findViewById(R.id.cardeneta_item_idade);
             Log.i(LOG_TAG, "Adding Listener");
             itemView.setOnClickListener(this);
         }
@@ -69,6 +74,15 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
         Cardeneta cardeneta = cardenetas.get(position);
         vHolder.setId(cardeneta.get_id());
         vHolder.nome.setText(cardeneta.getNome());
+
+        if(cardeneta.getDt_nasc() != null || cardeneta.getDt_nasc() == "") {
+            String dt = cardeneta.getDt_nasc().substring(0, 10);
+
+            String splittedBirthDate[] = dt.split("-");
+            LocalDate localDate = new LocalDate(Integer.parseInt(splittedBirthDate[0]), Integer.parseInt(splittedBirthDate[1]), Integer.parseInt(splittedBirthDate[2]));
+            int idade = getIdadeByDataNasc(localDate);
+            vHolder.idade.setText(String.valueOf(idade) + " anos");
+        }
     }
 
     @Override
@@ -78,5 +92,10 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
 
     public interface MyClickListener{
         public void onItemClick(int position, View v);
+    }
+
+    private int getIdadeByDataNasc(LocalDate birthDate){
+        LocalDate now = new LocalDate();
+        return Years.yearsBetween(birthDate, now).getYears();
     }
 }
