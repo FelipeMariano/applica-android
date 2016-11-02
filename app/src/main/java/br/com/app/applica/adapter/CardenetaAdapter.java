@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.joda.time.LocalDate;
-import org.joda.time.Years;
+import org.joda.time.Months;
 
 import java.util.List;
 
@@ -73,16 +73,22 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
 
         Cardeneta cardeneta = cardenetas.get(position);
         vHolder.setId(cardeneta.get_id());
-        vHolder.nome.setText(cardeneta.getNome());
+        vHolder.nome.setText(cardeneta.toString());
+
 
         if(cardeneta.getDt_nasc() != null || cardeneta.getDt_nasc() == "") {
             String dt = cardeneta.getDt_nasc().substring(0, 10);
 
             String splittedBirthDate[] = dt.split("-");
             LocalDate localDate = new LocalDate(Integer.parseInt(splittedBirthDate[0]), Integer.parseInt(splittedBirthDate[1]), Integer.parseInt(splittedBirthDate[2]));
-            int idade = getIdadeByDataNasc(localDate);
-            vHolder.idade.setText(String.valueOf(idade) + " anos");
+            vHolder.idade.setText(getIdadeByDataNasc(localDate));
         }
+    }
+
+    public void addItem(Cardeneta newCardeneta, int index){
+        cardenetas.add(newCardeneta);
+        System.out.println("CARDENETA ADDED: " + newCardeneta.get_id());
+        notifyItemInserted(index);
     }
 
     @Override
@@ -94,8 +100,16 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
         public void onItemClick(int position, View v);
     }
 
-    private int getIdadeByDataNasc(LocalDate birthDate){
+    private int getMonths(LocalDate birthDate){
         LocalDate now = new LocalDate();
-        return Years.yearsBetween(birthDate, now).getYears();
+        return Months.monthsBetween(birthDate, now).getMonths();
+    }
+
+    private String getIdadeByDataNasc(LocalDate birthDate){
+        int meses = getMonths(birthDate);
+        if(meses > 12)
+            return ((int) meses / 12) + " anos";
+        else
+            return meses + " meses";
     }
 }

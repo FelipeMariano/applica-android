@@ -2,10 +2,10 @@ package br.com.app.applica;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,8 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public final static String MESSAGE = "I AM HERE FIRST!";
 
     public void userLogin(View view){
-        System.out.println("BUTTON PRESSED!");
-        //new LoginRequestTask().execute();
+        new LoginRequestTask().execute();
     }
 
     @Override
@@ -38,15 +37,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
-        });
-    }
 
     @Override
     public void onStart(){
@@ -55,21 +46,21 @@ public class MainActivity extends AppCompatActivity {
         try {
             FileInputStream fis = getApplicationContext().openFileInput("userData");
             User user = new User();
-            user.readUserDataLocally(fis);;
+            user.readUserDataLocally(fis);
             if(user.getId() != null) {
                 Intent intent = new Intent(this, CardenetaActivity.class);
 
                 startActivity(intent);
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+       // getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -88,6 +79,37 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void saveLocally(User user){
+        SQLiteDatabase myDB = null;
+        String tableName = "user";
+
+        try{
+            myDB = this.openOrCreateDatabase("applica", MODE_PRIVATE, null);
+            System.out.println("CREATING USER TABLE");
+            myDB.execSQL("CREATE TABLE IF NOT EXISTS " + tableName +
+                    "_id VARCHAR, email VARCHAR, password VARCHAR, token VARCHAR");
+            System.out.println("SAVING USER");
+
+            myDB.execSQL("INSERT INTO " + tableName +
+            "VALEUS (" + user.getId() + ", " +
+            user.getEmail() + ", " + user.getPassword() +
+            ", " + user.getAuthToken() + ")");
+
+
+            Cursor cursor = myDB.rawQuery("SELECT * FROM " + tableName, null);
+
+            cursor.moveToFirst();
+
+            if(cursor != null){
+                System.out.println("USER SAVED LOCALLY");
+            }
+
+        }catch(Exception e){
+            System.out.println("ERROR TO SAVE");
+        }
+
+    }
+
     private class LoginRequestTask extends AsyncTask<Void, Void, User> {
 
         private User user;
@@ -96,29 +118,28 @@ public class MainActivity extends AppCompatActivity {
             TextView email = (TextView) findViewById(R.id.txt_email);
             TextView password = (TextView) findViewById(R.id.txt_pass);
 
-            //user = new User(email.getText().toString().trim(), password.getText().toString().trim());
-            user = new User("felipe@gmail.com", "223333330");
+            user = new User(email.getText().toString().trim(), password.getText().toString().trim());
+            //user = new User("felipe@gmail.com", "223333330");
         }
 
         @Override
         protected User doInBackground(Void... params){
+            loadUserInfos();
+
+            System.out.println(user.getEmail());
+            System.out.println(user.getPassword());
+
+            this.user.authenticateAndGetToken();
+            this.user.load();
+
+            this.user.loadCardenetas();
             try{
-                loadUserInfos();
-
-                System.out.println(user.getEmail());
-                System.out.println(user.getPassword());
-
-                this.user.authenticateAndGetToken();
-                this.user.load();
-
-                this.user.loadCardenetas();
 
                 FileOutputStream fos = new FileOutputStream(new File(getFilesDir(), "userData.xml"));
                 FileOutputStream fileos = openFileOutput("userData", Context.MODE_PRIVATE);
 
                 this.user.writeUserDataLocally(fos, fileos);
-
-
+                //saveLocally(this.user);
                 FileInputStream fis = getApplicationContext().openFileInput("userData");
 
                 this.user.readUserDataLocally(fis);
@@ -126,19 +147,23 @@ public class MainActivity extends AppCompatActivity {
                 ///
                 return user;
             }catch(Exception e){
-                System.out.println("Error: " + e);
+                System.out.println("Error ao autenticar usuário: " + e);
+                user = new User();
+                try {
+                    FileOutputStream fos = new FileOutputStream(new File(getFilesDir(), "userData.xml"));
+                    FileOutputStream fileos = openFileOutput("userData", Context.MODE_PRIVATE);
+                    user.writeUserDataLocally(fos, fileos);
+                }catch(Exception error){
+                    System.out.println("Erro ao sobreescrever userData: " + error);
+                }
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(User user){
-            TextView id = (TextView) findViewById(R.id.id_value);
-            TextView content = (TextView) findViewById(R.id.content_value);
-        //    id.setText(user.getId());
-        //    content.setText(user.getEmail());
-        //    EditText txt_email = (EditText) findViewById(R.id.txt_email);
-        //    txt_email.setText(user.getEmail());
+            Intent intent = new Intent(MainActivity.this, CardenetaActivity.class);
+            startActivity(intent);
         }
     }
 }

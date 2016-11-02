@@ -37,7 +37,7 @@ public class User {
     private String email;
     private String password;
 
-    private List<Cardeneta> cardenetas;
+    private List<Cardeneta> listaCardenetas;
 
     //Control:
     final String xmlFile = "UserData";
@@ -82,6 +82,14 @@ public class User {
         this.id = id;
     }
 
+    public List<Cardeneta> getListaCardenetas() {
+        return listaCardenetas;
+    }
+
+    public void setListaCardenetas(List<Cardeneta> listaCardenetas) {
+        this.listaCardenetas = listaCardenetas;
+    }
+
     public String getAuthToken() {
         return authToken;
     }
@@ -90,17 +98,10 @@ public class User {
         this.authToken = authToken;
     }
 
-    public List<Cardeneta> getCardenetas() {
-        return cardenetas;
-    }
-
-    public void setCardenetas(List<Cardeneta> cardenetas) {
-        this.cardenetas = cardenetas;
-    }
-
     private void setRestConfig(){
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+        requestHeaders.add("x-access-token", getAuthToken());
     }
 
     public void authenticateAndGetToken() {
@@ -138,26 +139,60 @@ public class User {
     }
 
     public void load(){
-        String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + getId();
+        try {
+            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + getId();
 
-        HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
-        ResponseEntity<?> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, this.getClass());
+            HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
+            ResponseEntity<?> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, this.getClass());
 
-        System.out.println("LOAD: " + result.getBody());
+            System.out.println("LOAD: " + result.getBody());
+        }catch(Exception e){
+            System.out.println("USER AUTHENTICATION ERROR: " + e);
+        }
     }
 
     public void loadCardenetas(){
-        String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/5812b0a6bf1d950019333ee5/cardenetas";
+        try {
+            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + getId() + "/cardenetas";
 
-        HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
+            HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
 
-        ResponseEntity<List<Cardeneta>> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<Cardeneta>>() {
-        });
-        this.cardenetas = result.getBody();
-        System.out.println(cardenetas);
+            ResponseEntity<List<Cardeneta>> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<Cardeneta>>() {
+            });
+
+            this.listaCardenetas = result.getBody();
+            System.out.println(listaCardenetas);
+        }catch(Exception e){
+            System.out.println("AUTHENTICATION ERROR: " + e);
+            User user = new User();
+        }
+
     }
 
+    public Cardeneta createCardeneta(Cardeneta cardeneta){
+        String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + getId() + "/cardenetas";
 
+        LinkedHashMap<String, Object> _map = new LinkedHashMap<String, Object>();
+        _map.put("nome", cardeneta.getNome());
+        _map.put("sobrenome", cardeneta.getSobrenome());
+        _map.put("sexo", cardeneta.getSexo());
+        _map.put("dt_nasc", cardeneta.getDt_nasc());
+
+        StringWriter _writer = new StringWriter();
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            mapper.writeValue(_writer, _map);
+        }catch(Exception e){
+
+        }
+
+
+        HttpEntity<String> httpEntity = new HttpEntity<String>(_writer.toString(), requestHeaders);
+        ResponseEntity<Cardeneta> result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Cardeneta.class);
+
+        return result.getBody();
+    }
 
     @Override
     public String toString(){
@@ -237,10 +272,18 @@ public class User {
 
             }
 
-            requestHeaders.add("x-access-token", userData.get(3));
+        try{
 
-            this.setId(userData.get(0));
-            this.setAuthToken(userData.get(3));
+            if(userData.size() > 0) {
+                requestHeaders.add("x-access-token", userData.get(3));
+
+                this.setId(userData.get(0));
+                this.setAuthToken(userData.get(3));
+            }
+        }catch (Exception e ){
+
+        }
+
     }
 
     private void storageUserData(FileOutputStream fos, FileOutputStream fileos){
@@ -274,10 +317,12 @@ public class User {
             fileos.write(dataWrite.getBytes());
             fileos.close();
         }catch(Exception e){
-
+            System.out.println("----> ERROR TO SAVE USER: " + e);
         }
         System.out.println("USER SAVED");
 
     }
+
+
 
 }

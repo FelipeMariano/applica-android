@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="dose_arrays">
+        <item>Dose única</item>
+        <item>1ª Dose</item>
+        <item>2ª Dose</item>
+        <item>3ª Dose</item>
+        <item>4ª Dose</item>
+        <item>5ª Dose</item>
+    </string-array>
+</resources>

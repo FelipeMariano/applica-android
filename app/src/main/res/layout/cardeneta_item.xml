@@ -19,7 +19,7 @@
             android:id="@+id/card_perf_img"
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark"
+            android:src="@mipmap/ic_profile_man"
             android:layout_alignParentLeft="true"
           />
 

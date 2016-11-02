@@ -1,6 +1,7 @@
 package br.com.app.applica.entitity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -11,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.StringWriter;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -23,20 +26,25 @@ public class Cardeneta {
     private String sobrenome;
     private String sexo;
     private String dt_nasc;
-    private List<Aplicacao> aplicacoes;
+    private List<Aplicacao> ListaAplicacoes;
 
     private static RestTemplate restTemplate = new RestTemplate();
     private static HttpHeaders requestHeaders = new HttpHeaders();
-
     public Cardeneta() {
         setRestConfig();
     }
 
-    public Cardeneta(String nome, String sobrenome, String sexo){
-        setRestConfig();
+    public Cardeneta(String nome, String sobrenome, String sexo) {
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.sexo = sexo;
+    }
+
+    public Cardeneta(String nome, String sobrenome, String sexo, String dt_nasc){
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.sexo = sexo;
+        this.dt_nasc = dt_nasc;
     }
 
     public String getNome() {
@@ -79,17 +87,22 @@ public class Cardeneta {
         this._id = _id;
     }
 
-    public void setAplicacoes(List<Aplicacao> aplicacoes) {
-        this.aplicacoes = aplicacoes;
+    public List<Aplicacao> getListaAplicacoes() {
+        return ListaAplicacoes;
     }
 
-    public List<Aplicacao> getAplicacoes() {
-        return aplicacoes;
+    public void setListaAplicacoes(List<Aplicacao> listaAplicacoes) {
+        ListaAplicacoes = listaAplicacoes;
     }
 
     public void setAuthToken(String authToken){
         requestHeaders.add("x-access-token", authToken);
         System.out.println(authToken);
+    }
+
+    @Override
+    public String toString(){
+        return this.nome + " " + this.sobrenome;
     }
 
     private static void setRestConfig(){
@@ -107,13 +120,42 @@ public class Cardeneta {
 
     public List<Aplicacao> loadAplicacoes(HttpHeaders requestHeaders){
         String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + get_id() + "/aplicacoes";
+
         HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
 
         ResponseEntity<List<Aplicacao>> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<Aplicacao>>() {
         });
-        this.aplicacoes = result.getBody();
-        System.out.println(aplicacoes);
 
-        return this.aplicacoes;
+
+
+        this.ListaAplicacoes = result.getBody();
+
+        return this.ListaAplicacoes;
+    }
+
+    public void createAplicacao(HttpHeaders requestHeaders, Aplicacao aplicacao){
+        String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + get_id() + "/aplicacoes";
+
+        LinkedHashMap<String, Object> _map = new LinkedHashMap<String, Object>();
+        _map.put("data", aplicacao.getData());
+        _map.put("vacina", aplicacao.getVacina());
+        _map.put("dose", aplicacao.getDose());
+        //_map.put("local", aplicacao.get);
+
+        StringWriter _writer = new StringWriter();
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            mapper.writeValue(_writer, _map);
+        }catch(Exception e){
+
+        }
+
+
+        HttpEntity<String> httpEntity = new HttpEntity<String>(_writer.toString(), requestHeaders);
+        ResponseEntity<Aplicacao> result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Aplicacao.class);
+
+        System.out.println(result.getBody());
+
     }
 }

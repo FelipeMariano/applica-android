@@ -2,30 +2,59 @@ package br.com.app.applica.entitity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.Date;
-
 /**
  * Created by felipe on 30/10/16.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Aplicacao {
-    public String _id;
-    public Date data;
-    public String local;
-    public String lote;
+    private String _id;
+    private String vacina;
+    private String data;
+    private String dose;
+    private Boolean efetivada;
 
-    public Aplicacao() {
+    public Aplicacao(){
+
     }
 
-    public Aplicacao(String _id) {
+    public Aplicacao(String _id, String vacina, String data, String dose, Boolean efetivada) {
         this._id = _id;
-    }
-
-    public Aplicacao(String _id, Date data, String local, String lote) {
-        this._id = _id;
+        this.vacina = vacina;
         this.data = data;
-        this.local = local;
-        this.lote = lote;
+        this.dose = dose;
+        this.efetivada = efetivada;
+    }
+
+    public String getData() {
+        return formatData(data);
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public Boolean getEfetivada() {
+        return efetivada;
+    }
+
+    public void setEfetivada(Boolean efetivada) {
+        this.efetivada = efetivada;
+    }
+
+    public String getVacina() {
+        return vacina;
+    }
+
+    public void setVacina(String vacina) {
+        this.vacina = vacina;
+    }
+
+    public String getDose() {
+        return dose;
+    }
+
+    public void setDose(String dose) {
+        this.dose = dose;
     }
 
     public String get_id() {
@@ -36,27 +65,11 @@ public class Aplicacao {
         this._id = _id;
     }
 
-    public Date getData() {
-        return data;
+    private String formatData(String date){
+        String strDate = date.toString();
+        String separetedDate[] = strDate.substring(0, 10).split("-");
+
+        return separetedDate[2] + "/" + separetedDate[1] + "/" + separetedDate[0];
     }
 
-    public void setData(Date data) {
-        this.data = data;
-    }
-
-    public String getLocal() {
-        return local;
-    }
-
-    public void setLocal(String local) {
-        this.local = local;
-    }
-
-    public String getLote() {
-        return lote;
-    }
-
-    public void setLote(String lote) {
-        this.lote = lote;
-    }
 }

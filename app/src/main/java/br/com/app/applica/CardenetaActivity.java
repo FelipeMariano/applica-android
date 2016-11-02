@@ -7,9 +7,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import java.io.FileInputStream;
 import java.util.List;
@@ -30,11 +30,39 @@ public class CardenetaActivity extends AppCompatActivity {
     private User user;
     List<Cardeneta> cardenetas;
 
+    private void setRecyclerLayout(RecyclerView recyclerView){
+        mAdapter = new CardenetaAdapter(user.getListaCardenetas());
+        recyclerView.setAdapter(mAdapter);
+        RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layout);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cardeneta_recycler);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.cardeneta_recycler);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(android.R.drawable.ic_menu_crop);
+        setSupportActionBar(toolbar);
+
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), CardenetaPersistActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
 
         UserRequestTask task = new UserRequestTask();
         try {
@@ -43,19 +71,10 @@ public class CardenetaActivity extends AppCompatActivity {
         }catch(Exception e){
 
         }
-        mAdapter = new CardenetaAdapter(user.getCardenetas());
-        recyclerView.setAdapter(mAdapter);
-        RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layout);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.cardeneta_recycler);
+        setRecyclerLayout(recyclerView);
 
-
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
         ((CardenetaAdapter) mAdapter).setOnItemClickListener(new CardenetaAdapter.MyClickListener(){
             @Override
             public void onItemClick(int position, View v){
@@ -64,12 +83,14 @@ public class CardenetaActivity extends AppCompatActivity {
                 showCardeneta(vHolder.getId());
             }
         });
+
+
     }
 
-    public void editCardeneta(View v){
-        Intent intent = new Intent(this, CardenetaPersistActivity.class);
-        Cardeneta card = new Cardeneta();
-
+    @Override
+    public void onStart(){
+        super.onStart();
+        getSupportActionBar().setTitle("Minhas cardenetas");
 
     }
 
@@ -81,6 +102,7 @@ public class CardenetaActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
 
     private class UserRequestTask extends AsyncTask<Void, Void, User> {
         private void loadUserInfos(){
@@ -100,7 +122,7 @@ public class CardenetaActivity extends AppCompatActivity {
                 loadUserInfos();
 
                 user.loadCardenetas();
-                System.out.println("Cardenetas: " + user.getCardenetas());
+                System.out.println("Cardenetas: " + user.getListaCardenetas());
                 ///
                 return user;
             }catch(Exception e){
@@ -111,12 +133,9 @@ public class CardenetaActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(User user){
-            TextView id = (TextView) findViewById(R.id.id_value);
-            TextView content = (TextView) findViewById(R.id.content_value);
-            //    id.setText(user.getId());
-            //    content.setText(user.getEmail());
-            //    EditText txt_email = (EditText) findViewById(R.id.txt_email);
-            //    txt_email.setText(user.getEmail());
+
+            System.out.println("USER LOADED");
         }
     }
+
 }
