@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.entitity.Cardeneta;
 import br.com.app.applica.entitity.User;
@@ -33,7 +34,7 @@ public class CardenetaPersistActivity extends AppCompatActivity {
     static final int DIALOG_ID = 0;
     public static String CURRENT_CARDENETA = "";
 
-    public void createCardeneta(Cardeneta cardeneta){
+    public void createCardeneta(Cardeneta cardeneta) {
         Intent intent = getIntent();
         try {
             FileInputStream fis = getApplicationContext().openFileInput("userData");
@@ -43,11 +44,11 @@ public class CardenetaPersistActivity extends AppCompatActivity {
             CardenetaPersistTask persistTask = new CardenetaPersistTask();
 
             persistTask.execute(cardeneta, user);
-        }catch(Exception e){
+            persistTask.get(5000, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
 
         }
-
-            //Add task to persist!
+        finish();
     }
 
     @Override
@@ -60,7 +61,7 @@ public class CardenetaPersistActivity extends AppCompatActivity {
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);
+        toolbar.setNavigationIcon(R.drawable.ic_keyboard_back);
         toolbar.setTitle("Nova cardeneta");
 
         setSupportActionBar(toolbar);

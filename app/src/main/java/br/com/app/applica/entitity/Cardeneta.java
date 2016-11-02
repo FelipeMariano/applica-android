@@ -96,7 +96,7 @@ public class Cardeneta {
     }
 
     public void setAuthToken(String authToken){
-        requestHeaders.add("x-access-token", authToken);
+        //requestHeaders.add("x-access-token", authToken);
         System.out.println(authToken);
     }
 
@@ -136,19 +136,27 @@ public class Cardeneta {
     public void createAplicacao(HttpHeaders requestHeaders, Aplicacao aplicacao){
         String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + get_id() + "/aplicacoes";
 
-        LinkedHashMap<String, Object> _map = new LinkedHashMap<String, Object>();
-        _map.put("data", aplicacao.getData());
-        _map.put("vacina", aplicacao.getVacina());
-        _map.put("dose", aplicacao.getDose());
-        //_map.put("local", aplicacao.get);
+
 
         StringWriter _writer = new StringWriter();
         ObjectMapper mapper = new ObjectMapper();
 
+
+        System.out.println(aplicacao.getData());
+
         try {
+
+            LinkedHashMap<String, Object> _map = new LinkedHashMap<String, Object>();
+            _map.put("data", aplicacao.getData());
+            _map.put("vacina", aplicacao.getVacina());
+            _map.put("dose", aplicacao.getDose());
+            _map.put("efetivada", false);
+            _map.put("local", "");
+            //_map.put("local", aplicacao.get);
+
             mapper.writeValue(_writer, _map);
         }catch(Exception e){
-
+            System.out.println("ERRO AO MAPEAR PERSIST APLICAÇÃO" + e);
         }
 
 

@@ -41,7 +41,7 @@
             android:layout_below="@+id/label_aplicacao_data"
             android:background="@color/colorPrimaryDark"
             android:textColor="@color/colorWhite"
-            android:id="@+id/cardeneta_data_aplicacao"
+            android:id="@+id/aplicacao_data"
             android:layout_width="150dp"
             android:layout_marginRight="20dp"
             android:layout_height="30dp"/>
@@ -77,7 +77,7 @@
 
             <TextView
                 android:id="@+id/label_aplicacao_dose"
-                android:text="Vacina: "
+                android:text="Dose: "
                 android:textSize="15dp"
                 android:textColor="@color/cardview_dark_background"
                 android:layout_width="wrap_content"

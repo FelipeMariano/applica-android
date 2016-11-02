@@ -36,7 +36,7 @@
             android:onClick="userLogin"/>
 
     </RelativeLayout>
-
+    <!--
     <Button
         android:textColor="@color/colorWhite"
         android:background="@color/colorGreen"
@@ -45,5 +45,5 @@
         android:text="Cadastre-se"
         android:layout_width="match_parent"
         android:layout_height="50dp" />
-
+    -->
 </RelativeLayout>

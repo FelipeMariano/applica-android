@@ -16,4 +16,8 @@
     <string name="cardeneta_nome_value">[nome]</string>
     <string name="cardeneta_sobrenome_value">[sobrenome]</string>
     <string name="cardeneta_sexo_value">[sexo]</string>
+
+    <string name="title_activity_splash">Splash</string>
+    <string name="dummy_content">APPLICA</string>
+
 </resources>

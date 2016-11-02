@@ -34,6 +34,10 @@ public class CardenetaActivity extends AppCompatActivity {
         mAdapter = new CardenetaAdapter(user.getListaCardenetas());
         recyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+        //RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
+
+        //recyclerView.addItemDecoration(itemDecoration);
         recyclerView.setLayoutManager(layout);
     }
 
@@ -43,7 +47,7 @@ public class CardenetaActivity extends AppCompatActivity {
         setContentView(R.layout.cardeneta_recycler);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(android.R.drawable.ic_menu_crop);
+        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
         setSupportActionBar(toolbar);
 
 

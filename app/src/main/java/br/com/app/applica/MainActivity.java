@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -42,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart(){
     super.onStart();
+        File file = new File(getFilesDir(), "userData");
+        if(file.exists())
+            file.delete();
+
 
         try {
             FileInputStream fis = getApplicationContext().openFileInput("userData");
@@ -118,7 +121,13 @@ public class MainActivity extends AppCompatActivity {
             TextView email = (TextView) findViewById(R.id.txt_email);
             TextView password = (TextView) findViewById(R.id.txt_pass);
 
-            user = new User(email.getText().toString().trim(), password.getText().toString().trim());
+            String email_str = email.getText().toString();
+            email_str = email_str.toLowerCase().trim();
+
+            String pass_str = password.getText().toString();
+            pass_str = pass_str.toLowerCase().trim();
+
+            user = new User(email_str, pass_str);
             //user = new User("felipe@gmail.com", "223333330");
         }
 

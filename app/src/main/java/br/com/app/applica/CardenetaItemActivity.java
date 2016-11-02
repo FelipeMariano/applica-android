@@ -39,7 +39,7 @@ public class CardenetaItemActivity extends AppCompatActivity{
         CURRENT_CARD = intent.getStringExtra(CardenetaItemActivity.CURRENT_CARD);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);
+        toolbar.setNavigationIcon(R.drawable.ic_keyboard_back);
 
         setSupportActionBar(toolbar);
 
@@ -49,7 +49,6 @@ public class CardenetaItemActivity extends AppCompatActivity{
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), AplicacaoPersistActivity.class);
                 intent.putExtra(AplicacaoPersistActivity.CURRENT_CARD, cardeneta.get_id());
-                intent.putExtra(AplicacaoPersistActivity.AUTHENTICATION, user.getAuthToken());
                 startActivity(intent);
             }
         });
@@ -59,7 +58,7 @@ public class CardenetaItemActivity extends AppCompatActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -88,14 +87,24 @@ public class CardenetaItemActivity extends AppCompatActivity{
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.aplicacao_recycler);
 
+        setRecyclerView(recyclerView);
+
+        ((AplicacaoAdapter) mAdapter).setOnItemClickListener(new AplicacaoAdapter.MyClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                System.out.println("Click disabled!");
+            }
+        });
+
+        getSupportActionBar().setTitle(cardeneta.getNome() + " " + cardeneta.getSobrenome());
+
+    }
+
+    public void setRecyclerView(RecyclerView recyclerView){
         mAdapter = new AplicacaoAdapter(cardeneta.getListaAplicacoes());
         recyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layout);
-
-
-        getSupportActionBar().setTitle(cardeneta.getNome() + " " + cardeneta.getSobrenome());
-
     }
 
     private class CardenetaRequestTask extends AsyncTask<Void, Void, Cardeneta> {

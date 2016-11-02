@@ -26,7 +26,7 @@ public class Aplicacao {
     }
 
     public String getData() {
-        return formatData(data);
+        return data;
     }
 
     public void setData(String data) {
@@ -65,8 +65,8 @@ public class Aplicacao {
         this._id = _id;
     }
 
-    private String formatData(String date){
-        String strDate = date.toString();
+    public String getFormattedData(){
+        String strDate = this.data.toString();
         String separetedDate[] = strDate.substring(0, 10).split("-");
 
         return separetedDate[2] + "/" + separetedDate[1] + "/" + separetedDate[0];

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.joda.time.LocalDate;
@@ -25,6 +26,7 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
 
     public static class CardenetaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private String id;
+        public final ImageView perf_img;
         public final TextView nome;
         public final TextView idade;
 
@@ -41,6 +43,8 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
             itemView.setTag(this);
             nome = (TextView) itemView.findViewById(R.id.cardeneta_item_nome);
             idade = (TextView) itemView.findViewById(R.id.cardeneta_item_idade);
+            perf_img = (ImageView) itemView.findViewById(R.id.card_perf_img);
+
             Log.i(LOG_TAG, "Adding Listener");
             itemView.setOnClickListener(this);
         }
@@ -64,6 +68,7 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardeneta_item, parent, false);
 
         CardenetaViewHolder holder = new CardenetaViewHolder(view);
+
         return holder;
     }
 
@@ -75,13 +80,29 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
         vHolder.setId(cardeneta.get_id());
         vHolder.nome.setText(cardeneta.toString());
 
+        int idade_months = 0;
 
         if(cardeneta.getDt_nasc() != null || cardeneta.getDt_nasc() == "") {
             String dt = cardeneta.getDt_nasc().substring(0, 10);
 
             String splittedBirthDate[] = dt.split("-");
             LocalDate localDate = new LocalDate(Integer.parseInt(splittedBirthDate[0]), Integer.parseInt(splittedBirthDate[1]), Integer.parseInt(splittedBirthDate[2]));
-            vHolder.idade.setText(getIdadeByDataNasc(localDate));
+
+            idade_months = getMonths(localDate);
+
+            vHolder.idade.setText(getIdadeByDataNasc(idade_months));
+        }
+
+        if(cardeneta.getSexo().equals("Masculino")) {
+            if(idade_months >= 180)
+                vHolder.perf_img.setImageResource(R.mipmap.ic_profile_boy);
+            else
+                vHolder.perf_img.setImageResource(R.mipmap.ic_profile_baby_boy);
+        }else{
+            if(idade_months >= 180)
+                vHolder.perf_img.setImageResource(R.mipmap.ic_profile_girl);
+            else
+                vHolder.perf_img.setImageResource(R.mipmap.ic_profile_baby_girl);
         }
     }
 
@@ -105,8 +126,7 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
         return Months.monthsBetween(birthDate, now).getMonths();
     }
 
-    private String getIdadeByDataNasc(LocalDate birthDate){
-        int meses = getMonths(birthDate);
+    private String getIdadeByDataNasc(int meses){
         if(meses > 12)
             return ((int) meses / 12) + " anos";
         else

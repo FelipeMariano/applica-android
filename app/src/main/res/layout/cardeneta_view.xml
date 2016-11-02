@@ -82,7 +82,6 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/aplicacao_recycler"
-            android:layout_below="@+id/txtTeste"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             />
@@ -94,6 +93,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_input_add" />
+        android:src="@drawable/ic_action_add" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -69,7 +69,7 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
         vHolder.setId(aplicacao.get_id());
        // vHolder.data.setText(aplicacao.get_id());
 
-        vHolder.data.setText(aplicacao.getData());
+        vHolder.data.setText("Data: " + aplicacao.getFormattedData());
         vHolder.dose.setText(aplicacao.getDose());
         vHolder.vacina.setText(aplicacao.getVacina());
     }
