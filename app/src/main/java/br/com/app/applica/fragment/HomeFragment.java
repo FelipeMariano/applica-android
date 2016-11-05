@@ -4,6 +4,7 @@ package br.com.app.applica.fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -61,10 +62,28 @@ public class HomeFragment extends Fragment {
 
         recyclerView.setLayoutManager(layout);
 
+
         ((CardenetaAdapter) mAdapter).setOnItemClickListener(new CardenetaAdapter.MyClickListener(){
             @Override
             public void onItemClick(int position, View v){
-                System.out.println("CLICKED!");
+
+                CardenetaAdapter.CardenetaViewHolder vHolder = (CardenetaAdapter.CardenetaViewHolder) v.getTag();
+
+                Fragment cardeneta = new CardenetaFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("card_id", "THIS IS CARD ID");
+
+                cardeneta.setArguments(bundle);
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                getActivity().setTitle("ALGUEM AQUI!");
+
+                transaction.replace(R.id.fragment_layout, cardeneta);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
             }
         });
 
