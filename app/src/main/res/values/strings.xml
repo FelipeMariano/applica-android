@@ -17,7 +17,20 @@
     <string name="cardeneta_sobrenome_value">[sobrenome]</string>
     <string name="cardeneta_sexo_value">[sexo]</string>
 
-    <string name="title_activity_splash">Splash</string>
+    <string name="title_activity_splash">Applica</string>
     <string name="dummy_content">APPLICA</string>
+    <string name="title_activity_main_nav">Splash</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="nav_item_activity_titles">
+        <item>Minhas aplicações</item>
+        <item>Explorar</item>
+        <item>Algo</item>
+    </string-array>
 
 </resources>

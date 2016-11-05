@@ -106,12 +106,6 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
         }
     }
 
-    public void addItem(Cardeneta newCardeneta, int index){
-        cardenetas.add(newCardeneta);
-        System.out.println("CARDENETA ADDED: " + newCardeneta.get_id());
-        notifyItemInserted(index);
-    }
-
     @Override
     public int getItemCount() {
         return cardenetas.size();

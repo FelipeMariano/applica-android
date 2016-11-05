@@ -2,17 +2,42 @@ package br.com.app.applica;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.concurrent.TimeUnit;
+
+import br.com.app.applica.entitity.Auth;
+import br.com.app.applica.entitity.User;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class Splash extends AppCompatActivity {
+    private User user;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -76,17 +101,35 @@ public class Splash extends AppCompatActivity {
             }
         });
 
+        final UserLoginTask loginUser = new UserLoginTask();
+
+        user = new User();
+
         Thread welcomeThread = new Thread(){
             @Override
             public void run(){
                 try{
                     super.run();
-                    sleep(5000);
-                }catch(Exception e){
 
+                    user = getUserLocally();
+
+                    if (user.getEmail() != null)
+                        System.out.println("Is Logged!");
+                    else
+                        System.out.println("Login online!");
+
+
+                    loginUser.execute();
+                    user = loginUser.get(5000, TimeUnit.MILLISECONDS);
+                    System.out.println("---> " + user.getAuthToken());
+                }catch(Exception e){
+                    System.out.println("ERRO: " + e);
                 }finally{
-                    Intent i = new Intent(Splash.this, MainActivity.class);
-                    startActivity(i);
+
+                    Intent intent = new Intent(Splash.this, MainNavActivity.class);
+                    intent.putExtra("id", user.getId());
+                    intent.putExtra("x-access-token", user.getAuthToken());
+                    startActivity(intent);
                     finish();
                 }
             }
@@ -142,4 +185,151 @@ public class Splash extends AppCompatActivity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
+
+    private User getUserLocally(){
+        User localUser = new User();
+
+
+
+        ArrayList<String> userData = new ArrayList<String>();
+        String data = null;
+        FileInputStream fis;
+
+        try{
+            fis = getApplicationContext().openFileInput("userData");
+            InputStreamReader isr = new InputStreamReader(fis);
+
+            char[] inputBuffer = new char[fis.available()];
+
+            isr.read(inputBuffer);
+            data = new String(inputBuffer);
+            isr.close();
+            fis.close();
+
+        }catch(Exception e){
+            System.out.println("ERROR TRYING TO READ USER: " + e);
+            return user;
+        }
+
+
+        XmlPullParserFactory factory = null;
+
+        try {
+            factory = XmlPullParserFactory.newInstance();
+        }catch(Exception e ){
+
+        }
+
+        factory.setNamespaceAware(true);
+        XmlPullParser xpp = null;
+        int eventType = 0;
+        try{
+            xpp = factory.newPullParser();
+            xpp.setInput(new StringReader(data));
+            eventType = xpp.getEventType();
+        }catch(Exception e){
+
+        }
+
+
+        while(eventType != XmlPullParser.END_DOCUMENT){
+            String dataPointer = "";
+            switch(eventType){
+                case XmlPullParser.START_DOCUMENT:
+                    System.out.println("Start document");
+                    break;
+                case XmlPullParser.START_TAG:
+                    dataPointer = xpp.getName();
+                    System.out.println("Start tag " + xpp.getName());
+                    break;
+                case XmlPullParser.END_TAG:
+                    System.out.println("End tag " + xpp.getName());
+                    break;
+                case XmlPullParser.TEXT:
+                    userData.add(xpp.getText());
+                    break;
+            }
+
+            try{
+                eventType = xpp.next();
+            }catch(Exception e){
+                System.out.println("ERROR ON NEXT:" + e );
+                break;
+            }
+
+        }
+
+        try{
+            user.setId(userData.get(0));
+            user.setEmail(userData.get(1));
+            user.setPassword(userData.get(2));
+            user.setAuthToken(userData.get(3));
+        }catch(Exception e){
+
+        }finally {
+            return user;
+        }
+
+    }
+    private class UserLoginTask extends AsyncTask<Void, Void, br.com.app.applica.entitity.User> {
+        //FAVOR MOVER ISTO PARA ACTIVITY DE LOGIN!!!!
+        @Override
+        protected User doInBackground(Void... params){
+            try{
+                User user = new User();
+                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/authenticate";
+
+                RestTemplate restTemplate = new RestTemplate();
+                HttpHeaders requestHeaders = new HttpHeaders();
+
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+                //requestHeaders.add("x-access-token", getAuthToken());
+
+                user.setEmail("teste@gmail.com");
+                user.setPassword("felipe123");
+
+                LinkedHashMap<String, Object> _map = new LinkedHashMap<String, Object>();
+                _map.put("email", user.getEmail());
+                _map.put("password", user.getPassword());
+
+                StringWriter _writer = new StringWriter();
+                ObjectMapper mapper = new ObjectMapper();
+
+                try {
+                    mapper.writeValue(_writer, _map);
+                }catch(Exception e){
+
+                }
+
+                try {
+
+                    HttpEntity<String> httpEntity = new HttpEntity<String>(_writer.toString(), requestHeaders);
+
+                    ResponseEntity<Auth> result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Auth.class);
+
+                    Auth body = result.getBody();
+
+                    user.setId(body.getUser_id());
+                    user.setAuthToken(body.getToken());
+                }catch(Exception e){
+                    System.out.println("FAILS TO VALIDATE USER: " + e);
+                    return new User();
+                }finally{
+                    return user;
+                }
+
+            }catch(Exception e){
+                System.out.println("Error: " + e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(User user){
+
+            System.out.println("USER LOADED");
+        }
+    }
+
 }

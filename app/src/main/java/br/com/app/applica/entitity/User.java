@@ -98,7 +98,7 @@ public class User {
         this.authToken = authToken;
     }
 
-    private void setRestConfig(){
+    public void setRestConfig(){
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
         requestHeaders.add("x-access-token", getAuthToken());
@@ -145,15 +145,16 @@ public class User {
             HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
             ResponseEntity<?> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, this.getClass());
 
-            System.out.println("LOAD: " + result.getBody());
+            System.out.println("LOAD: " + result);
         }catch(Exception e){
             System.out.println("USER AUTHENTICATION ERROR: " + e);
         }
     }
 
     public void loadCardenetas(){
+        String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + getId() + "/cardenetas";
+        System.out.println(url);
         try {
-            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + getId() + "/cardenetas";
 
             HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
 
