@@ -226,7 +226,7 @@ public class MainNavActivity extends AppCompatActivity
         }
     }
 
-    private void setFloatActionButton(final String toAdd){
+    public void setFloatActionButton(final String toAdd){
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

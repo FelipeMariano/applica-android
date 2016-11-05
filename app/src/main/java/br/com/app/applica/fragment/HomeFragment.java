@@ -44,21 +44,18 @@ public class HomeFragment extends Fragment {
 
         CardenetasTask loadCardenetas = new CardenetasTask();
 
-        System.out.println(CURRENT_USER.getAuthToken());
-
-
         try{
             loadCardenetas.execute();
             loadCardenetas.get(5000, TimeUnit.MILLISECONDS);
+            cardenetas = CURRENT_USER.getListaCardenetas();
         }catch(Exception e){
 
         }
 
         RecyclerView.LayoutManager layout;
-            mAdapter = new CardenetaAdapter(CURRENT_USER.getListaCardenetas());
+            mAdapter = new CardenetaAdapter(cardenetas);
             recyclerView.setAdapter(mAdapter);
             layout = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-
 
         recyclerView.setLayoutManager(layout);
 
@@ -72,13 +69,12 @@ public class HomeFragment extends Fragment {
                 Fragment cardeneta = new CardenetaFragment();
 
                 Bundle bundle = new Bundle();
-                bundle.putString("card_id", "THIS IS CARD ID");
+                bundle.putString("card_id", vHolder.getId());
 
                 cardeneta.setArguments(bundle);
 
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-                getActivity().setTitle("ALGUEM AQUI!");
 
                 transaction.replace(R.id.fragment_layout, cardeneta);
                 transaction.addToBackStack(null);

@@ -5,9 +5,9 @@
     tools:context="br.com.app.applica.fragment.CardenetaFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/aplicacoes_recycler"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
+        android:layout_width="match_parent"
+        />
 </FrameLayout>
