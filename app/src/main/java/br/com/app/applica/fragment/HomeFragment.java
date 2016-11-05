@@ -10,8 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.MainNavActivity;
 import br.com.app.applica.R;
@@ -32,6 +42,17 @@ public class HomeFragment extends Fragment {
         cardenetas = new ArrayList<>();
 
         CardenetasTask loadCardenetas = new CardenetasTask();
+
+        System.out.println(CURRENT_USER.getAuthToken());
+
+
+        try{
+            loadCardenetas.execute();
+            loadCardenetas.get(5000, TimeUnit.MILLISECONDS);
+        }catch(Exception e){
+
+        }
+
         RecyclerView.LayoutManager layout;
             mAdapter = new CardenetaAdapter(CURRENT_USER.getListaCardenetas());
             recyclerView.setAdapter(mAdapter);
@@ -66,6 +87,9 @@ public class HomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cardeneta_recycler);
 
+//        System.out.println(CURRENT_USER.getId());
+//        System.out.println(CURRENT_USER.getEmail());
+
         setRecyclerLayout(mRecyclerView);
 
         return rootView;
@@ -75,8 +99,22 @@ public class HomeFragment extends Fragment {
 
         @Override
         protected User doInBackground(Void... params) {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders requestHeaders = new HttpHeaders();
 
-            CURRENT_USER.loadCardenetas();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+            requestHeaders.add("x-access-token", CURRENT_USER.getAuthToken());
+
+            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + CURRENT_USER.getId();
+            url += "/cardenetas";
+
+            HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
+
+            ResponseEntity<List<Cardeneta>> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<Cardeneta>>() {
+            });
+
+            CURRENT_USER.setListaCardenetas(result.getBody());
 
             return CURRENT_USER;
         }

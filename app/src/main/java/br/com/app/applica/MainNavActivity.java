@@ -248,9 +248,12 @@ public class MainNavActivity extends AppCompatActivity
                 RestTemplate restTemplate = new RestTemplate();
                 HttpHeaders requestHeaders = new HttpHeaders();
 
+                String authToken = CURRENT_USER.getAuthToken();
+                String userId = CURRENT_USER.getId();
+
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-                requestHeaders.add("x-access-token", CURRENT_USER.getAuthToken());
+                requestHeaders.add("x-access-token", authToken);
 
                 String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + CURRENT_USER.getId();
 
@@ -259,7 +262,8 @@ public class MainNavActivity extends AppCompatActivity
 
 
                 loggedUser = (User) result.getBody();
-                System.out.println(loggedUser);
+                loggedUser.setAuthToken(authToken);
+                loggedUser.setId(userId);
             }catch(Exception e){
                 System.out.println("USER AUTHENTICATION ERROR: " + e);
                 return CURRENT_USER;
