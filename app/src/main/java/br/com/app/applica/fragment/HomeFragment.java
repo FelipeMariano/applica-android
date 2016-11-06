@@ -102,6 +102,19 @@ public class HomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cardeneta_recycler);
 
+        navActivity.toggleFab(MainNavActivity.TAG_CARDENETA, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CardenetaFormFragment fragment = new CardenetaFormFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                transaction.replace(R.id.fragment_layout, fragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+            }
+        });
+
 //        System.out.println(CURRENT_USER.getId());
 //        System.out.println(CURRENT_USER.getEmail());
 

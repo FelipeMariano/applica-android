@@ -4,12 +4,14 @@ package br.com.app.applica.fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -46,16 +47,6 @@ public class CardenetaFragment extends Fragment {
     }
 
     private void setRecyclerLayout(RecyclerView recyclerView){
-        aplicacoes = new ArrayList<>();
-
-        for(int i = 0; i < 5; i++){
-            Aplicacao aplicacao = new Aplicacao();
-            aplicacao.setData("2016-11-02");
-            aplicacao.setVacina("Ambrosia " + (i + 1));
-            aplicacao.setDose("2a Dose");
-            aplicacao.setEfetivada(false);
-            aplicacoes.add(aplicacao);
-        }
 
         //Chamada para get
 
@@ -87,7 +78,7 @@ public class CardenetaFragment extends Fragment {
 
         String title_name = CURRENT_CARD.getNome() + " " + CURRENT_CARD.getSobrenome();
         navActivity.getSupportActionBar().setTitle(title_name);
-        System.out.println(title_name);
+        aplicacoes = CURRENT_CARD.getListaAplicacoes();
     }
 
 
@@ -102,7 +93,19 @@ public class CardenetaFragment extends Fragment {
             CURRENT_CARD_ID = bundle.getString("card_id");
 
             User user = navActivity.CURRENT_USER;
-            navActivity.setFloatActionButton("APLIC");
+            navActivity.toggleFab(MainNavActivity.TAG_APLICACAO, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AplicacaoFormFragment fragment = new AplicacaoFormFragment();
+
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                    transaction.replace(R.id.fragment_layout, fragment);
+                    transaction.addToBackStack(null);
+
+                    transaction.commit();
+                }
+            });
             AUTH_TOKEN = user.getAuthToken();
 
         }
@@ -120,17 +123,10 @@ public class CardenetaFragment extends Fragment {
     }
 
     private class CardenetaDadosTask extends AsyncTask<Void, Void, Cardeneta> {
+        private Cardeneta loadedCardeneta;
 
-        @Override
-        protected Cardeneta doInBackground(Void... params) {
-            Cardeneta loadedCardeneta;
-
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders requestHeaders = new HttpHeaders();
+        private void loadData(HttpHeaders requestHeaders, RestTemplate restTemplate){
             try {
-                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-                requestHeaders.add("x-access-token", AUTH_TOKEN);
 
                 String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
 
@@ -140,9 +136,37 @@ public class CardenetaFragment extends Fragment {
                 loadedCardeneta = (Cardeneta) result.getBody();
             }catch(Exception e){
                 System.out.println("ERRO AO LOAD CARDENETA: " + e);
-                return new Cardeneta();
+                loadedCardeneta = new Cardeneta();
             }
+        }
 
+        private void loadAplicacoes(HttpHeaders requestHeaders, RestTemplate restTemplate){
+            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
+            url += "/aplicacoes";
+
+            HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
+
+            ResponseEntity<List<Aplicacao>> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<Aplicacao>>() {
+            });
+
+            loadedCardeneta.setListaAplicacoes(result.getBody());
+            System.out.println(loadedCardeneta.getListaAplicacoes());
+        }
+
+        @Override
+        protected Cardeneta doInBackground(Void... params) {
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders requestHeaders = new HttpHeaders();
+
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+            requestHeaders.add("x-access-token", AUTH_TOKEN);
+
+            loadData(requestHeaders, restTemplate);
+
+            if(loadedCardeneta.get_id() != null)
+                loadAplicacoes(requestHeaders, restTemplate);
 
             //ResponseEntity<List<Cardeneta>> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<Cardeneta>>() {
             //});

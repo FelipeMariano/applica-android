@@ -195,7 +195,12 @@ public class MainNavActivity extends AppCompatActivity
         setToolbarTitle();
         selectNavMenu();
 
-        toggleFab(TAG_CARDENETA);
+        toggleFab(TAG_CARDENETA, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("BRAND");
+            }
+        });
 
     }
 
@@ -212,27 +217,23 @@ public class MainNavActivity extends AppCompatActivity
         }
     }
 
-    public void toggleFab(String toAdd){
+    public void toggleFab(String toAdd, View.OnClickListener listener){
+        fab.show();
         switch(toAdd){
             case TAG_CARDENETA:
-                setFloatActionButton(TAG_CARDENETA);
+                setFloatActionButton(listener);
                 break;
             case TAG_APLICACAO:
-                setFloatActionButton(TAG_APLICACAO);
+                setFloatActionButton(listener);
                 break;
-            default:
-                setFloatActionButton(TAG_CARDENETA);
+            case "HIDE":
+                fab.hide();
                 break;
         }
     }
 
-    public void setFloatActionButton(final String toAdd){
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    System.out.println("SETTED TO ADD: " + toAdd);
-                }
-            });
+    public void setFloatActionButton(View.OnClickListener listener){
+            fab.setOnClickListener(listener);
     }
 
 

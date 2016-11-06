@@ -1,0 +1,91 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.com.app.applica.fragment.CardenetaFormFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/txt_cardeneta_nome"
+        android:hint="Nome"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"/>
+
+
+    <EditText
+        android:id="@+id/txt_cardeneta_sobrenome"
+        android:hint="Sobrenome"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_cardeneta_nome"
+        android:layout_marginTop="50dp"/>
+
+    <RelativeLayout
+        android:id="@+id/relative_spinner"
+        android:layout_below="@+id/txt_cardeneta_sobrenome"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="20dp">
+        <TextView
+            android:id="@+id/label_cardeneta_sexo"
+            android:text="Sexo: "
+            android:textSize="15dp"
+            android:textColor="@color/cardview_dark_background"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Spinner
+            android:id="@+id/cardeneta_sexo"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/label_cardeneta_sexo"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_toRightOf="@+id/relative_spinner"
+        android:layout_below="@+id/txt_cardeneta_sobrenome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="20dp">
+
+        <TextView
+            android:id="@+id/label_cardeneta_data_nasc"
+            android:text="Nascimento: "
+            android:textSize="15dp"
+            android:textColor="@color/cardview_dark_background"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_below="@+id/label_cardeneta_data_nasc"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/cardeneta_data_nasc"
+            android:layout_width="match_parent"
+            android:layout_marginRight="20dp"
+            android:layout_height="30dp"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_add_cardeneta"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@color/colorWhite"
+        android:text="Salvar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+</FrameLayout>
