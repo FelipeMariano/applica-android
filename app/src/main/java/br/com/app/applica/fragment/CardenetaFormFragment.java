@@ -17,6 +17,8 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,7 +27,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.StringWriter;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.MainNavActivity;
@@ -91,6 +95,17 @@ public class CardenetaFormFragment extends Fragment {
     }
 
     private void saveCardeneta(){
+        CardenetaSaveTask saveCard = new CardenetaSaveTask();
+        if (CURRENT_CARD_ID == null){
+           try{
+               saveCard.execute();
+               saveCard.get(5000, TimeUnit.MILLISECONDS);
+               CURRENT_CARD_ID = CURRENT_CARD.get_id();
+               System.out.println("SUCCESSFULLY SAVED: " + CURRENT_CARD_ID);
+            }catch(Exception e){
+
+            }
+        }
 
     }
 
@@ -98,8 +113,8 @@ public class CardenetaFormFragment extends Fragment {
         TextView nome = (TextView) view.findViewById(R.id.txt_cardeneta_nome);
         TextView sobrenome = (TextView) view.findViewById(R.id.txt_cardeneta_sobrenome);
 
-        System.out.println(nome.getText() + " " + sobrenome.getText()  + " - saved!!");
-
+        CURRENT_CARD.setNome(nome.getText().toString());
+        CURRENT_CARD.setSobrenome(sobrenome.getText().toString());
     }
 
     private void setSexoSpinner(View view){
@@ -187,6 +202,45 @@ public class CardenetaFormFragment extends Fragment {
             //ResponseEntity<List<Cardeneta>> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<Cardeneta>>() {
             //});
             CURRENT_CARD = loadedCardeneta;
+            return CURRENT_CARD;
+        }
+    }
+
+    private class CardenetaSaveTask extends AsyncTask<Void, Void, Cardeneta> {
+
+        @Override
+        protected Cardeneta doInBackground(Void... params) {
+            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + navActivity.CURRENT_USER.getId();
+            url += "/cardenetas";
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders requestHeaders = new HttpHeaders();
+
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+            requestHeaders.add("x-access-token", AUTH_TOKEN);
+
+            LinkedHashMap<String, Object> _map = new LinkedHashMap<String, Object>();
+            _map.put("nome", CURRENT_CARD.getNome());
+            _map.put("sobrenome", CURRENT_CARD.getSobrenome());
+            _map.put("sexo", CURRENT_CARD.getSexo());
+            _map.put("dt_nasc", CURRENT_CARD.getDt_nasc());
+
+            StringWriter _writer = new StringWriter();
+            ObjectMapper mapper = new ObjectMapper();
+
+            try {
+                mapper.writeValue(_writer, _map);
+            }catch(Exception e){
+
+            }
+
+
+            HttpEntity<String> httpEntity = new HttpEntity<String>(_writer.toString(), requestHeaders);
+            ResponseEntity<Cardeneta> result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Cardeneta.class);
+
+            CURRENT_CARD = result.getBody();
+
             return CURRENT_CARD;
         }
     }

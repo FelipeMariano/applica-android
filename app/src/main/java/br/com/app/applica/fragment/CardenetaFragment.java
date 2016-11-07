@@ -99,7 +99,7 @@ public class CardenetaFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     AplicacaoFormFragment fragment = new AplicacaoFormFragment();
-
+                    fragment.CURRENT_APLICACAO_ID = null;
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
                     transaction.replace(R.id.fragment_layout, fragment);

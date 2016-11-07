@@ -106,6 +106,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 CardenetaFormFragment fragment = new CardenetaFormFragment();
+                fragment.CURRENT_CARD_ID = null;
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
                 transaction.replace(R.id.fragment_layout, fragment);
