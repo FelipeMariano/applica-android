@@ -97,7 +97,7 @@ public class MainNavActivity extends AppCompatActivity
         if(savedInstanceState == null){
             CURRENT_TAG = TAG_HOME;
             navItemIndex = 0 ;
-            //loadFragment();
+            loadFragment();
         }
 
         System.out.println(CURRENT_USER.getEmail());
