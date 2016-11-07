@@ -58,8 +58,6 @@ public class AplicacaoPersistActivity extends AppCompatActivity {
 
         setContentView(R.layout.aplicacao_form);
 
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_back);
         toolbar.setTitle("Nova aplicação");

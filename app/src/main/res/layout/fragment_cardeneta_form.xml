@@ -80,7 +80,7 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/btn_add_cardeneta"
+        android:id="@+id/btn_save_cardeneta"
         android:background="@color/colorPrimaryDark"
         android:textColor="@color/colorWhite"
         android:text="Salvar"

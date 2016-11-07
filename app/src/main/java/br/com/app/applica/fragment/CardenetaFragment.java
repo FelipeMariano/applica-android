@@ -57,6 +57,7 @@ public class CardenetaFragment extends Fragment {
 
         recyclerView.setLayoutManager(layout);
 
+
         ((AplicacaoAdapter) mAdapter).setOnItemClickListener(new AplicacaoAdapter.MyClickListener() {
             @Override
             public void onItemClick(int position, View v) {
@@ -79,6 +80,7 @@ public class CardenetaFragment extends Fragment {
         String title_name = CURRENT_CARD.getNome() + " " + CURRENT_CARD.getSobrenome();
         navActivity.getSupportActionBar().setTitle(title_name);
         aplicacoes = CURRENT_CARD.getListaAplicacoes();
+
     }
 
 
