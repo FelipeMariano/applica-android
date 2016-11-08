@@ -100,6 +100,7 @@ public class CardenetaFragment extends Fragment {
                 public void onClick(View v) {
                     AplicacaoFormFragment fragment = new AplicacaoFormFragment();
                     fragment.CURRENT_APLICACAO_ID = null;
+                    fragment.CURRENT_CARD_ID = CURRENT_CARD_ID;
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
                     transaction.replace(R.id.fragment_layout, fragment);

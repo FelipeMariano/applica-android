@@ -15,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -30,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
+import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.MainNavActivity;
 import br.com.app.applica.R;
@@ -40,6 +40,7 @@ import br.com.app.applica.entitity.Aplicacao;
  */
 public class AplicacaoFormFragment extends Fragment {
     MainNavActivity navActivity;
+    public static String CURRENT_CARD_ID = null;
     public static String CURRENT_APLICACAO_ID = null;
     public static Aplicacao CURRENT_APLICACAO;
     public String AUTH_TOKEN;
@@ -59,7 +60,10 @@ public class AplicacaoFormFragment extends Fragment {
 
         navActivity = (MainNavActivity) getActivity();
 
+        System.out.println(CURRENT_CARD_ID);
+
         navActivity.toggleFab("HIDE", null);
+        AUTH_TOKEN = navActivity.CURRENT_USER.getAuthToken();
 
         if(CURRENT_APLICACAO_ID != null)
             System.out.println("VAI FAZER LOAD PRA EDITAR!");
@@ -126,21 +130,34 @@ public class AplicacaoFormFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 setDadosAplicacao(view);
+                saveAplicacao();
             }
         });
     }
 
     private void setDadosAplicacao(View view){
-        TextView data = (TextView) view.findViewById(R.id.aplicacao_data);
+        Spinner dose = (Spinner) view.findViewById(R.id.aplicacao_dose);
+        Spinner vacina = (Spinner) view.findViewById(R.id.aplicacao_vacina);
 
-        CURRENT_APLICACAO.setData(data.getText().toString());
+        CURRENT_APLICACAO.setDose(dose.getSelectedItem().toString());
+        CURRENT_APLICACAO.setVacina(vacina.getSelectedItem().toString());
+
 
         System.out.println(CURRENT_APLICACAO.getData() + " - " + CURRENT_APLICACAO.getDose());
 
     }
 
     private void saveAplicacao(){
+        AplicacaoSaveTask saveAplicacao = new AplicacaoSaveTask();
+        if (CURRENT_APLICACAO_ID == null)
+            try{
+                saveAplicacao.execute();
+                saveAplicacao.get(5000, TimeUnit.MILLISECONDS);
+                CURRENT_APLICACAO_ID = CURRENT_APLICACAO.get_id();
+                System.out.println("APLICACAO SAVED SUCCESSFULLY: "+ CURRENT_APLICACAO_ID);
+            }catch(Exception e){
 
+            }
     }
 
     private void showDatePickerDialog(final View view){
@@ -166,7 +183,7 @@ public class AplicacaoFormFragment extends Fragment {
         @Override
         protected Aplicacao doInBackground(Void... params) {
 
-            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + navActivity.CURRENT_USER.getId();
+            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
             url += "/aplicacoes";
 
 
@@ -182,6 +199,10 @@ public class AplicacaoFormFragment extends Fragment {
             StringWriter _writer = new StringWriter();
             ObjectMapper mapper = new ObjectMapper();
 
+            System.out.println(CURRENT_APLICACAO.getData());
+            System.out.println(CURRENT_APLICACAO.getVacina());
+            System.out.println(CURRENT_APLICACAO.getDose());
+
 
             try {
 
@@ -190,7 +211,7 @@ public class AplicacaoFormFragment extends Fragment {
                 _map.put("vacina", CURRENT_APLICACAO.getVacina());
                 _map.put("dose", CURRENT_APLICACAO.getDose());
                 _map.put("efetivada", false);
-                _map.put("local", "");
+                _map.put("local", "local");
 
                 mapper.writeValue(_writer, _map);
             }catch(Exception e){
@@ -223,6 +244,11 @@ public class AplicacaoFormFragment extends Fragment {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             Button btn = (Button) navActivity.findViewById(R.id.aplicacao_data);
+
+            day_x = dayOfMonth;
+            month_x = month + 1;
+            year_x = year;
+
             btn.setText(day_x + "/" + month_x + "/" + year_x);
 
             String bd_format_date = year_x + "-" + month_x + "-" + day_x;

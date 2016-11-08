@@ -262,6 +262,11 @@ public class CardenetaFormFragment extends Fragment {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             Button btn = (Button) navActivity.findViewById(R.id.cardeneta_data_nasc);
+
+            day_x = dayOfMonth;
+            month_x = month + 1;
+            year_x = year;
+
             btn.setText(day_x + "/" + month_x + "/" + year_x);
 
             String bd_format_date = year_x + "-" + month_x + "-" + day_x;
