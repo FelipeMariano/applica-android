@@ -5,15 +5,15 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_assignament"
-            android:title="Home" />
+            android:title="Minhas cardenetas" />
         <item
             android:id="@+id/nav_unidades"
             android:icon="@drawable/ic_room"
-            android:title="Unidades" />
+            android:title="Unidades de vacinação" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_settings"
-            android:title="Tools" />
+            android:title="Configurações" />
     </group>
 
     <item android:title="Outros">

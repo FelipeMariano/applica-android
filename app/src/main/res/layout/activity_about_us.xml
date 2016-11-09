@@ -6,9 +6,11 @@ android:layout_height="match_parent"
 android:background="@color/colorPrimary"
 tools:context="br.com.app.applica.activity.AboutUsActivity">
 
-<!-- The primary full-screen view. This can be replaced with whatever view
-     is needed to present your content, e.g. VideoView, SurfaceView,
-     TextureView, etc. -->
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+    TextureView, etc. -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,10 +22,10 @@ tools:context="br.com.app.applica.activity.AboutUsActivity">
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:keepScreenOn="true"
-        android:text="ABOUT US!"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+            android:text="ABOUT US!"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/nome_1"
@@ -82,17 +84,11 @@ tools:context="br.com.app.applica.activity.AboutUsActivity">
             android:layout_height="wrap_content"
             android:layout_below="@+id/nome_4"
             android:layout_margin="50dp"
+            android:id="@+id/btn_about_back"
             android:text="Voltar"
             android:textColor="@color/colorPrimary"
             />
     </RelativeLayout>
-
-<!-- This FrameLayout insets its children based on system windows using
-     android:fitsSystemWindows. -->
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:id="@+id/fullscreen_content_controls"

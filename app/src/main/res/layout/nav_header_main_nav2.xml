@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="26dp"
-        android:src="@drawable/ic_profile_boy" />
+        android:src="@mipmap/ic_avatar_1" />
 
     <TextView
         android:layout_width="match_parent"

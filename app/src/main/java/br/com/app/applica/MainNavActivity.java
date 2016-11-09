@@ -157,6 +157,7 @@ public class MainNavActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Boolean selectable = true;
 
         if (id == R.id.nav_home) {
             navItemIndex = 0;
@@ -165,6 +166,7 @@ public class MainNavActivity extends AppCompatActivity
             navItemIndex = 1;
             CURRENT_TAG = TAG_UNIDADES;
         } else if (id == R.id.nav_about_us) {
+            selectable = false;
             Intent intent = new Intent(this, AboutUsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
@@ -173,8 +175,8 @@ public class MainNavActivity extends AppCompatActivity
 
         if(item.isChecked())
             item.setChecked(false);
-
-        item.setChecked(true);
+        if(selectable)
+            item.setChecked(true);
 
         loadFragment();
 
