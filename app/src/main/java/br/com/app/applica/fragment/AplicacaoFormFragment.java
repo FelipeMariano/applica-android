@@ -131,6 +131,7 @@ public class AplicacaoFormFragment extends Fragment {
             public void onClick(View v) {
                 setDadosAplicacao(view);
                 saveAplicacao();
+                navActivity.getSupportFragmentManager().popBackStack();
             }
         });
     }

@@ -165,6 +165,7 @@ public class CardenetaFormFragment extends Fragment {
             public void onClick(View v) {
                 setDadosCardeneta(view);
                 saveCardeneta();
+                navActivity.getSupportFragmentManager().popBackStack();
             }
         });
     }
