@@ -36,6 +36,7 @@ import br.com.app.applica.entitity.User;
 public class HomeFragment extends Fragment {
     private User CURRENT_USER;
     List<Cardeneta> cardenetas;
+    MainNavActivity navActivity;
     private RecyclerView.Adapter mAdapter;
 
     private void setRecyclerLayout(RecyclerView recyclerView){
@@ -96,11 +97,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        MainNavActivity navActivity = (MainNavActivity) getActivity();
+        navActivity = (MainNavActivity) getActivity();
         CURRENT_USER = navActivity.CURRENT_USER;
 
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cardeneta_recycler);
+
 
         navActivity.toggleFab(MainNavActivity.TAG_CARDENETA, new View.OnClickListener() {
             @Override
@@ -116,13 +118,12 @@ public class HomeFragment extends Fragment {
             }
         });
 
-//        System.out.println(CURRENT_USER.getId());
-//        System.out.println(CURRENT_USER.getEmail());
-
         setRecyclerLayout(mRecyclerView);
 
         return rootView;
     }
+
+
 
     private class CardenetasTask extends AsyncTask<Void, Void, User>{
 

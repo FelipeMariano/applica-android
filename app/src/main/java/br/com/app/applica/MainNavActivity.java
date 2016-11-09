@@ -1,5 +1,6 @@
 package br.com.app.applica;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.TimeUnit;
 
+import br.com.app.applica.activity.AboutUsActivity;
 import br.com.app.applica.entitity.User;
 import br.com.app.applica.fragment.HomeFragment;
 import br.com.app.applica.fragment.UnidadesFragment;
@@ -120,10 +122,10 @@ public class MainNavActivity extends AppCompatActivity
         TextView nome = (TextView) findViewById(R.id.nav_header_name);
         TextView email = (TextView) findViewById(R.id.nav_header_email);
 
-        nome.setText("Felipe Mariano");
-        email.setText("teste@gmail.com");
+        nome.setText("Alpha Test");
+        email.setText(CURRENT_USER.getEmail());
 
-        getMenuInflater().inflate(R.menu.main_nav, menu);
+        //getMenuInflater().inflate(R.menu.main_nav, menu);
         return true;
     }
 
@@ -159,15 +161,12 @@ public class MainNavActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
             navItemIndex = 0;
             CURRENT_TAG = TAG_HOME;
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_unidades) {
             navItemIndex = 1;
             CURRENT_TAG = TAG_UNIDADES;
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
         } else if (id == R.id.nav_about_us) {
-
+            Intent intent = new Intent(this, AboutUsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
 
         }
