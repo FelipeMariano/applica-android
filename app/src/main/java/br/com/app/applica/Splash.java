@@ -104,12 +104,11 @@ public class Splash extends AppCompatActivity {
         user = new User();
 
 
-        Thread welcomeThread = new Thread(){
+        final Thread launcherThread = new Thread(new Runnable() {
             @Override
-            public void run(){
+            public void run() {
                 try{
-                    super.run();
-
+                    Thread.sleep(3000);
                     File file = new File(getFilesDir(), "userData");
                     if(file.exists())
                         file.delete();
@@ -138,8 +137,10 @@ public class Splash extends AppCompatActivity {
                     finish();
                 }
             }
-        };
-        welcomeThread.start();
+        });
+
+        launcherThread.start();
+
     }
 
     @Override
