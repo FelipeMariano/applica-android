@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context="br.com.app.applica.activity.LoginActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/login_logo"
+                android:background="@mipmap/ic_vaccine"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="50dp"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:id="@+id/label_login"
+                android:layout_below="@+id/login_logo"
+                android:layout_marginLeft="20dp"
+                android:text="EMAIL"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.5"/>
+
+            <EditText
+                android:id="@+id/login_email"
+                android:inputType="textEmailAddress"
+                android:layout_marginLeft="40dp"
+                android:backgroundTint="@color/colorGrey"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/label_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/label_password"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/login_email"
+                android:text="PASSWORD"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.5"/>
+
+            <EditText
+                android:id="@+id/login_password"
+                android:inputType="textPassword"
+                android:layout_below="@+id/label_password"
+                android:layout_marginLeft="40dp"
+                android:backgroundTint="@color/colorGrey"
+                android:layout_centerHorizontal="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginRight="200dp"
+                android:layout_below="@+id/login_password"
+                android:id="@+id/btn_signin"
+                android:text="Entrar"
+                android:letterSpacing="0.2"
+                android:background="@drawable/mybutton"
+                android:textColor="@color/colorWhite"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="100dp"
+                android:layout_marginTop="50dp"
+                android:layout_below="@+id/btn_signin"
+                android:id="@+id/btn_signup"
+                android:text="Cadastre-se!"
+                android:letterSpacing="0.2"
+                android:background="@drawable/buttonsignup"
+                android:textColor="@color/colorWhite"
+                />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/fullscreen_content_controls"
+            style="?metaButtonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/black_overlay"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>

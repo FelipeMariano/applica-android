@@ -21,14 +21,15 @@ import org.springframework.web.client.RestTemplate;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.concurrent.TimeUnit;
 
+import br.com.app.applica.activity.LoginActivity;
 import br.com.app.applica.entitity.Auth;
 import br.com.app.applica.entitity.User;
 
@@ -100,10 +101,8 @@ public class Splash extends AppCompatActivity {
                 toggle();
             }
         });
-
-        final UserLoginTask loginUser = new UserLoginTask();
-
         user = new User();
+
 
         Thread welcomeThread = new Thread(){
             @Override
@@ -111,25 +110,31 @@ public class Splash extends AppCompatActivity {
                 try{
                     super.run();
 
+                    File file = new File(getFilesDir(), "userData");
+                    if(file.exists())
+                        file.delete();
+
                     user = getUserLocally();
 
+                    System.out.println(user.getEmail());
                     if (user.getEmail() != null)
                         System.out.println("Is Logged!");
-                    else
+                    else{
                         System.out.println("Login online!");
-
-
-                    loginUser.execute();
-                    user = loginUser.get(5000, TimeUnit.MILLISECONDS);
-                    System.out.println("---> " + user.getAuthToken());
-                }catch(Exception e){
-                    System.out.println("ERRO: " + e);
-                }finally{
+                        Intent intent = new Intent(Splash.this, LoginActivity.class);
+                        startActivity(intent);
+                        return;
+                    }
 
                     Intent intent = new Intent(Splash.this, MainNavActivity.class);
                     intent.putExtra("id", user.getId());
                     intent.putExtra("x-access-token", user.getAuthToken());
                     startActivity(intent);
+
+                }catch(Exception e){
+                    System.out.println("ERRO: " + e);
+                }finally{
+
                     finish();
                 }
             }

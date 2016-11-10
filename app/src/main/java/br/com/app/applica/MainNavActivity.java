@@ -28,7 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.TimeUnit;
 
-import br.com.app.applica.activity.AboutUsActivity;
+import br.com.app.applica.activity.LoginActivity;
 import br.com.app.applica.entitity.User;
 import br.com.app.applica.fragment.HomeFragment;
 import br.com.app.applica.fragment.UnidadesFragment;
@@ -167,7 +167,7 @@ public class MainNavActivity extends AppCompatActivity
             CURRENT_TAG = TAG_UNIDADES;
         } else if (id == R.id.nav_about_us) {
             selectable = false;
-            Intent intent = new Intent(this, AboutUsActivity.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
 

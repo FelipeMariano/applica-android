@@ -4,7 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#3F51B5</color>
     <color name="colorWhite">#FFF</color>
-    <color name="colorGreen">#31E85C</color>
-
+    <color name="colorGreen">#6FAE51</color>
+    <color name="colorSubPrimary">#8A9EE4</color>
+    <color name="colorGrey">#B0B9BE</color>
     <color name="black_overlay">#66000000</color>
 </resources>
