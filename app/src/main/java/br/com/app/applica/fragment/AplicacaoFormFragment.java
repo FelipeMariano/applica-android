@@ -113,7 +113,6 @@ public class AplicacaoFormFragment extends Fragment {
     }
 
     private void setLoadedAplicacao(Aplicacao aplicacao, View view){
-        
 
         if(!aplicacao.getData().equals(null)){
            String data = aplicacao.getFormattedData();
@@ -215,7 +214,6 @@ public class AplicacaoFormFragment extends Fragment {
         CURRENT_APLICACAO.setVacina(vacina.getSelectedItem().toString());
         CURRENT_APLICACAO.setEfetivada(isEfetivada.isChecked());
 
-        System.out.println(CURRENT_APLICACAO.getData() + " - " + CURRENT_APLICACAO.getDose());
 
     }
 
@@ -291,10 +289,6 @@ public class AplicacaoFormFragment extends Fragment {
             StringWriter _writer = new StringWriter();
             ObjectMapper mapper = new ObjectMapper();
 
-            System.out.println(CURRENT_APLICACAO.getData());
-            System.out.println(CURRENT_APLICACAO.getVacina());
-            System.out.println(CURRENT_APLICACAO.getDose());
-
 
             try {
 
@@ -312,7 +306,13 @@ public class AplicacaoFormFragment extends Fragment {
 
 
             HttpEntity<String> httpEntity = new HttpEntity<String>(_writer.toString(), requestHeaders);
-            ResponseEntity<Aplicacao> result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Aplicacao.class);
+            ResponseEntity<Aplicacao> result;
+            if(CURRENT_APLICACAO_ID != null){
+                System.out.println("THIS MUST EDIT!");
+                //url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/aplicacoes/" + CURRENT_APLICACAO_ID;
+                //result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Aplicacao.class);
+            }
+                result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Aplicacao.class);
 
             CURRENT_APLICACAO = result.getBody();
 
