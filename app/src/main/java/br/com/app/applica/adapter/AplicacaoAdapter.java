@@ -5,8 +5,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import br.com.app.applica.R;
@@ -15,10 +19,13 @@ import br.com.app.applica.entitity.Aplicacao;
 /**
  * Created by felipe on 30/10/16.
  */
-public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .AplicacaoViewHolder> {
+public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .AplicacaoViewHolder> implements Filterable{
     private List<Aplicacao> aplicacoes;
+    private List<Aplicacao> filteredAplicacoes;
+    private AplicacaoFilter aplicacaoFilter;
     private static String LOG_TAG = "AplicacaoAdapter";
     private static MyClickListener myClickListener;
+
 
 
     public static class AplicacaoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -51,7 +58,11 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
         }
     }
 
-    public AplicacaoAdapter(List<Aplicacao> aplicacoes){ this.aplicacoes = aplicacoes; }
+    public AplicacaoAdapter(List<Aplicacao> aplicacoes){
+        this.aplicacoes = aplicacoes;
+        this.filteredAplicacoes = new ArrayList<>();
+    }
+
 
 
     @Override
@@ -74,6 +85,15 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
         vHolder.vacina.setText(aplicacao.getVacina());
     }
 
+
+    @Override
+    public Filter getFilter(){
+        if(aplicacaoFilter == null)
+            aplicacaoFilter = new AplicacaoFilter(this, aplicacoes);
+
+        return aplicacaoFilter;
+    }
+
     @Override
     public int getItemCount() {
         return aplicacoes.size();
@@ -84,6 +104,50 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
     }
     public interface MyClickListener{
         public void onItemClick(int position, View v);
+    }
+
+
+    private static class AplicacaoFilter extends Filter{
+        private final AplicacaoAdapter adapter;
+        private final List<Aplicacao> originalList;
+        private final List<Aplicacao> filteredList;
+
+        private AplicacaoFilter(AplicacaoAdapter adapter, List<Aplicacao> originalList){
+            super();
+            this.adapter = adapter;
+            this.originalList = new LinkedList<>(originalList);
+            this.filteredList = new ArrayList<>();
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint){
+            filteredList.clear();
+            final FilterResults results = new FilterResults();
+
+            if(constraint.length() == 0){
+                filteredList.addAll(originalList);
+            }else{
+                final String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for(final Aplicacao aplicacao : originalList){
+                    System.out.println("FILTERING: " + aplicacao.getEfetivada());
+                    if(aplicacao.getEfetivada()){
+                        filteredList.add(aplicacao);
+                    }
+                }
+            }
+
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results){
+            adapter.filteredAplicacoes.clear();
+            adapter.filteredAplicacoes.addAll((ArrayList<Aplicacao>) results.values);
+            adapter.notifyDataSetChanged();
+        }
     }
 
 }

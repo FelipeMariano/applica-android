@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -46,12 +48,11 @@ public class CardenetaFragment extends Fragment {
         // Required empty public constructor
     }
 
-    private void setRecyclerLayout(RecyclerView recyclerView){
-
-        //Chamada para get
+    private void setRecyclerLayout(RecyclerView recyclerView, List<Aplicacao> listAplicacoes){
 
         RecyclerView.LayoutManager layout;
-        mAdapter = new AplicacaoAdapter(aplicacoes);
+        mAdapter = new AplicacaoAdapter(listAplicacoes);
+
         recyclerView.setAdapter(mAdapter);
         layout = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
@@ -97,12 +98,46 @@ public class CardenetaFragment extends Fragment {
 
     }
 
+    private List<Aplicacao> filterListaAplicacoes(String toggleAction){
+        switch(toggleAction){
+            case "agenda":
+                return getFuturasAplicacoes();
+            case "historico":
+                return getHistoricoAplicacoes();
+            default:
+                return aplicacoes;
+        }
+    }
+
+    private List<Aplicacao> getFuturasAplicacoes(){
+        List<Aplicacao> futurasAplicacoes = new ArrayList<>();
+        for(Aplicacao aplicacao : aplicacoes){
+            if(aplicacao.getEfetivada().equals(false)){
+                futurasAplicacoes.add(aplicacao);
+            }
+        }
+
+        return futurasAplicacoes;
+    }
+
+    private List<Aplicacao> getHistoricoAplicacoes(){
+        List<Aplicacao> realizadadasAplicacoes = new ArrayList<>();
+        for(Aplicacao aplicacao : aplicacoes){
+            if(aplicacao.getEfetivada().equals(true)){
+                realizadadasAplicacoes.add(aplicacao);
+            }
+        }
+
+        return realizadadasAplicacoes;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         navActivity = (MainNavActivity) getActivity();
+
 
         Bundle bundle = this.getArguments();
         if(bundle != null) {
@@ -125,6 +160,7 @@ public class CardenetaFragment extends Fragment {
             });
             AUTH_TOKEN = user.getAuthToken();
 
+
         }
         //Load cardeneta data by id acima /\
 
@@ -132,9 +168,38 @@ public class CardenetaFragment extends Fragment {
         loadDadadosCardeneta();
 
         View cardenetaView = inflater.inflate(R.layout.fragment_cardeneta, container, false);
-        RecyclerView mRecyclerView = (RecyclerView) cardenetaView.findViewById(R.id.aplicacoes_recycler);
+        final RecyclerView mRecyclerView = (RecyclerView) cardenetaView.findViewById(R.id.aplicacoes_recycler);
 
-        setRecyclerLayout(mRecyclerView);
+
+        final Button btnFilterAgenda = (Button) cardenetaView.findViewById(R.id.btn_filter_agenda);
+        final Button btnFilterHistorico= (Button) cardenetaView.findViewById(R.id.btn_filter_historico);
+
+        btnFilterAgenda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setRecyclerLayout(mRecyclerView, filterListaAplicacoes("agenda"));
+                btnFilterAgenda.setBackground(getResources().getDrawable(R.drawable.mybutton));
+                btnFilterAgenda.setTextColor(getResources().getColor(R.color.colorWhite));
+
+                btnFilterHistorico.setBackground(getResources().getDrawable(R.drawable.defaultbutton));
+                btnFilterHistorico.setTextColor(getResources().getColor(R.color.black_overlay));
+            }
+        });
+
+
+        btnFilterHistorico.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setRecyclerLayout(mRecyclerView, filterListaAplicacoes("historico"));
+                btnFilterAgenda.setBackground(getResources().getDrawable(R.drawable.defaultbutton));
+                btnFilterAgenda.setTextColor(getResources().getColor(R.color.black_overlay));
+
+                btnFilterHistorico.setBackground(getResources().getDrawable(R.drawable.mybutton));
+                btnFilterHistorico.setTextColor(getResources().getColor(R.color.colorWhite));
+            }
+        });
+
+        setRecyclerLayout(mRecyclerView, filterListaAplicacoes("agenda"));
 
         return cardenetaView;
     }

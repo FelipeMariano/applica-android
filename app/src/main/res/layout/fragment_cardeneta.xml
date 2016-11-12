@@ -3,11 +3,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="br.com.app.applica.fragment.CardenetaFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/aplicacoes_recycler"
-        android:layout_height="match_parent"
+    <RelativeLayout
         android:layout_width="match_parent"
-        />
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/btns_filter"
+            android:layout_width="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_filter_agenda"
+                android:text="AGENDA"
+                android:textSize="20px"
+                android:background="@drawable/mybutton"
+                android:textColor="@color/colorWhite"
+                android:layout_width="100dp"
+                android:layout_marginRight="10dp"
+                android:layout_height="30dp" />
+
+            <Button
+                android:id="@+id/btn_filter_historico"
+                android:text="HISTÓRICO"
+                android:textSize="20px"
+                android:background="@drawable/defaultbutton"
+                android:textColor="@color/black_overlay"
+                android:layout_toRightOf="@+id/btn_filter_agenda"
+                android:layout_width="100dp"
+                android:layout_marginRight="10dp"
+                android:layout_height="30dp"/>
+
+        </RelativeLayout>
+
+        <!-- TODO: Update blank fragment layout -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/aplicacoes_recycler"
+            android:layout_below="@+id/btns_filter"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            />
+    </RelativeLayout>
+
 </FrameLayout>

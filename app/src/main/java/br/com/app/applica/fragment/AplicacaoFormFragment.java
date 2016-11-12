@@ -296,7 +296,7 @@ public class AplicacaoFormFragment extends Fragment {
                 _map.put("data", CURRENT_APLICACAO.getData());
                 _map.put("vacina", CURRENT_APLICACAO.getVacina());
                 _map.put("dose", CURRENT_APLICACAO.getDose());
-                _map.put("efetivada", false);
+                _map.put("efetivada", true);
                 _map.put("local", "local");
 
                 mapper.writeValue(_writer, _map);

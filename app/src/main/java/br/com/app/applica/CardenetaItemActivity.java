@@ -102,6 +102,7 @@ public class CardenetaItemActivity extends AppCompatActivity{
 
     public void setRecyclerView(RecyclerView recyclerView){
         mAdapter = new AplicacaoAdapter(cardeneta.getListaAplicacoes());
+
         recyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layout);
