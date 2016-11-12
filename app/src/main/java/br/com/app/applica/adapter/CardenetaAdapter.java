@@ -23,8 +23,9 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
        private List<Cardeneta> cardenetas;
        private static String LOG_TAG = "CardenetaAdapter";
        private static MyClickListener myClickListener;
+       private static MyLongClickListener myLongClickListener;
 
-    public static class CardenetaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class CardenetaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         private String id;
         public final ImageView perf_img;
         public final TextView nome;
@@ -53,6 +54,11 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
         public void onClick(View v) {
             myClickListener.onItemClick(getPosition(), v);
         }
+
+        @Override
+        public boolean onLongClick(View v){
+            return myLongClickListener.onItemHold(getPosition(), v);
+        }
     }
 
     public CardenetaAdapter(List<Cardeneta> cardenetas){
@@ -61,6 +67,10 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
 
     public void setOnItemClickListener(MyClickListener myClickListener){
         this.myClickListener = myClickListener;
+    }
+
+    public void setOnItemHoldListener(MyLongClickListener myLongClickListener){
+        this.myLongClickListener = myLongClickListener;
     }
 
     @Override
@@ -113,6 +123,10 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
 
     public interface MyClickListener{
         public void onItemClick(int position, View v);
+    }
+
+    public interface MyLongClickListener{
+        public boolean onItemHold(int position, View v);
     }
 
     private int getMonths(LocalDate birthDate){

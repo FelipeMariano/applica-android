@@ -59,23 +59,88 @@ public class AplicacaoFormFragment extends Fragment {
         View formAplicacaoView = inflater.inflate(R.layout.fragment_aplicacao_form, container, false);
 
         navActivity = (MainNavActivity) getActivity();
+        final Calendar calendar = Calendar.getInstance();
 
-        System.out.println(CURRENT_CARD_ID);
+        year_x = calendar.get(Calendar.YEAR);
+        month_x = calendar.get(Calendar.MONTH);
+        day_x = calendar.get(Calendar.DAY_OF_MONTH);
+
+        Bundle bundle = this.getArguments();
+
+        if(bundle != null) {
+            CURRENT_APLICACAO_ID = bundle.getString("aplicacao_id");
+            CURRENT_CARD_ID = bundle.getString("card_id");
+        }
+
+        System.out.println("---> " + CURRENT_APLICACAO_ID);
+        System.out.println("---> " + CURRENT_CARD_ID);
+
 
         navActivity.toggleFab("HIDE", null);
         AUTH_TOKEN = navActivity.CURRENT_USER.getAuthToken();
-
-        if(CURRENT_APLICACAO_ID != null)
-            System.out.println("VAI FAZER LOAD PRA EDITAR!");
-        else
-            CURRENT_APLICACAO = new Aplicacao();
 
         showDatePickerDialog(formAplicacaoView);
         setDoseSpinner(formAplicacaoView);
         setVacinaSpinner(formAplicacaoView);
         setSaveButtonAction(formAplicacaoView);
 
+        if(CURRENT_APLICACAO_ID != null)
+            CURRENT_APLICACAO = loadAplicacao(formAplicacaoView);
+        else
+            CURRENT_APLICACAO = new Aplicacao();
+
+
+
         return formAplicacaoView;
+    }
+
+    private Aplicacao loadAplicacao(View view){
+
+        AplicacaoLoadTask aplicacaoLoad = new AplicacaoLoadTask();
+        Aplicacao loadedAplicacao = new Aplicacao();
+        try{
+            aplicacaoLoad.execute();
+            loadedAplicacao = aplicacaoLoad.get(5000, TimeUnit.MILLISECONDS);
+            setLoadedAplicacao(loadedAplicacao, view);
+        }catch(Exception e){
+            System.out.println("ERRO AO CARREGAR APLICACAO PARA EDIÇÃO: " + e);
+        }
+
+        System.out.println(loadedAplicacao.getData());
+
+        return new Aplicacao();
+    }
+
+    private void setLoadedAplicacao(Aplicacao aplicacao, View view){
+
+
+
+        if(!aplicacao.getData().equals(null)){
+           String data = aplicacao.getFormattedData();
+           Button dataButton = (Button) view.findViewById(R.id.aplicacao_data);
+           dataButton.setText(data);
+           day_x = Integer.parseInt(data.substring(0,2));
+            month_x = Integer.parseInt(data.substring(3,5));
+            year_x = Integer.parseInt(data.substring(6, 10));
+        }
+
+        if(!aplicacao.getDose().equals(null)){
+            Spinner dose_spinner = (Spinner) view.findViewById(R.id.aplicacao_dose);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(navActivity, R.array.dose_arrays,
+                    android.R.layout.simple_spinner_item);
+            int itemPosition = adapter.getPosition(aplicacao.getDose());
+
+            dose_spinner.setSelection(itemPosition);
+        }
+
+        if(!aplicacao.getVacina().equals(null)){
+            Spinner vacina_spinner = (Spinner) view.findViewById(R.id.aplicacao_vacina);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(navActivity, R.array.vacina_arrays,
+                    android.R.layout.simple_spinner_item);
+            int itemPosition = adapter.getPosition(aplicacao.getVacina());
+
+            vacina_spinner.setSelection(itemPosition    );
+        }
     }
 
     private void setDoseSpinner(View view){
@@ -164,9 +229,7 @@ public class AplicacaoFormFragment extends Fragment {
     private void showDatePickerDialog(final View view){
 
         final Calendar calendar = Calendar.getInstance();
-        year_x = calendar.get(Calendar.YEAR);
-        month_x = calendar.get(Calendar.MONTH);
-        day_x = calendar.get(Calendar.DAY_OF_MONTH);
+
 
         Button btnDataAplic = (Button) view.findViewById(R.id.aplicacao_data);
 
@@ -177,6 +240,28 @@ public class AplicacaoFormFragment extends Fragment {
                 newFragment.show(navActivity.getFragmentManager(), "DatePicker");
             }
         });
+    }
+
+    private class AplicacaoLoadTask extends AsyncTask<Void, Void, Aplicacao>{
+
+        @Override
+        protected Aplicacao doInBackground(Void... params) {
+            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/aplicacoes/" + CURRENT_APLICACAO_ID;
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders requestHeaders = new HttpHeaders();
+
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+            requestHeaders.add("x-access-token", AUTH_TOKEN);
+
+            HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
+            ResponseEntity<Aplicacao> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, Aplicacao.class);
+
+            CURRENT_APLICACAO = result.getBody();
+
+            return CURRENT_APLICACAO;
+        }
     }
 
     private class AplicacaoSaveTask extends AsyncTask<Void, Void, Aplicacao> {
@@ -233,11 +318,7 @@ public class AplicacaoFormFragment extends Fragment {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState){
-            final Calendar calendar = Calendar.getInstance();
 
-            year_x = calendar.get(Calendar.YEAR);
-            month_x = calendar.get(Calendar.MONTH);
-            day_x = calendar.get(Calendar.DAY_OF_MONTH);
 
             return new DatePickerDialog(getActivity(), this, year_x, month_x, day_x);
         }

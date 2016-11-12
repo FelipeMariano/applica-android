@@ -55,10 +55,19 @@ public class HomeFragment extends Fragment {
 
         RecyclerView.LayoutManager layout;
             mAdapter = new CardenetaAdapter(cardenetas);
+
             recyclerView.setAdapter(mAdapter);
             layout = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(layout);
+
+        ((CardenetaAdapter) mAdapter).setOnItemHoldListener(new CardenetaAdapter.MyLongClickListener() {
+            @Override
+            public boolean onItemHold(int position, View v) {
+                System.out.println("I WAS LONG CLICKED!");
+                return true;
+            }
+        });
 
 
         ((CardenetaAdapter) mAdapter).setOnItemClickListener(new CardenetaAdapter.MyClickListener(){

@@ -61,7 +61,21 @@ public class CardenetaFragment extends Fragment {
         ((AplicacaoAdapter) mAdapter).setOnItemClickListener(new AplicacaoAdapter.MyClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                System.out.println("I WAS CLICKED!");
+                AplicacaoAdapter.AplicacaoViewHolder vHolder = (AplicacaoAdapter.AplicacaoViewHolder) v.getTag();
+
+                Fragment aplicacaoForm = new AplicacaoFormFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("aplicacao_id", vHolder.getId());
+                bundle.putString("card_id", CURRENT_CARD_ID);
+
+                aplicacaoForm.setArguments(bundle);
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_layout, aplicacaoForm);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
             }
         });
     }
