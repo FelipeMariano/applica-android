@@ -8,6 +8,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -128,9 +131,27 @@ public class HomeFragment extends Fragment {
         });
 
         setRecyclerLayout(mRecyclerView);
-
+        setHasOptionsMenu(true);
         return rootView;
     }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu, inflater);
+        navActivity.getMenuInflater().inflate(R.menu.home_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.action_sync:
+                System.out.println("Sync!");
+                return true;
+        }
+        return false;
+    }
+
 
     private class CardenetasTask extends AsyncTask<Void, Void, User>{
 
