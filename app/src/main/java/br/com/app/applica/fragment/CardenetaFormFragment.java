@@ -74,8 +74,6 @@ public class CardenetaFormFragment extends Fragment {
         setSexoSpinner(rootView);
         setSaveButtonAction(rootView);
 
-
-
         return rootView;
     }
 

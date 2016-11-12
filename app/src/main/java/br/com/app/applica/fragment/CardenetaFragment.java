@@ -8,6 +8,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -159,8 +162,6 @@ public class CardenetaFragment extends Fragment {
                 }
             });
             AUTH_TOKEN = user.getAuthToken();
-
-
         }
         //Load cardeneta data by id acima /\
 
@@ -200,8 +201,27 @@ public class CardenetaFragment extends Fragment {
         });
 
         setRecyclerLayout(mRecyclerView, filterListaAplicacoes("agenda"));
-
+        setHasOptionsMenu(true);
         return cardenetaView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu, inflater);
+        navActivity.getMenuInflater().inflate(R.menu.main_nav, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.action_edit:
+                System.out.println("I WILL EDIT YOU!");
+                return true;
+            case R.id.action_delete:
+                System.out.println("I WILL DELETE YOU!");
+                return true;
+        }
+        return false;
     }
 
     private class CardenetaDadosTask extends AsyncTask<Void, Void, Cardeneta> {

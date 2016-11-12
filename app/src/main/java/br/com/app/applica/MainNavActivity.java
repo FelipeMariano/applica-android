@@ -43,6 +43,7 @@ public class MainNavActivity extends AppCompatActivity
     private FloatingActionButton fab;
 
     public static int navItemIndex = 0;
+
     public static final String TAG_HOME = "home";
     public static final String TAG_UNIDADES = "unidades";
 
@@ -63,6 +64,7 @@ public class MainNavActivity extends AppCompatActivity
         setContentView(R.layout.activity_main_nav);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -124,7 +126,6 @@ public class MainNavActivity extends AppCompatActivity
 
         nome.setText("Alpha Test");
         email.setText(CURRENT_USER.getEmail());
-
         //getMenuInflater().inflate(R.menu.main_nav, menu);
         return true;
     }

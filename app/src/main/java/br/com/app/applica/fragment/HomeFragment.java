@@ -132,8 +132,6 @@ public class HomeFragment extends Fragment {
         return rootView;
     }
 
-
-
     private class CardenetasTask extends AsyncTask<Void, Void, User>{
 
         @Override
