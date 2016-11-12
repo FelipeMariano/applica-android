@@ -121,6 +121,7 @@ public class AplicacaoFormFragment extends Fragment {
            day_x = Integer.parseInt(data.substring(0,2));
             month_x = Integer.parseInt(data.substring(3,5));
             year_x = Integer.parseInt(data.substring(6, 10));
+
         }
 
         if(!aplicacao.getDose().equals(null)){
@@ -141,7 +142,7 @@ public class AplicacaoFormFragment extends Fragment {
             vacina_spinner.setSelection(itemPosition    );
         }
 
-        if(aplicacao.getEfetivada()){
+        if(aplicacao.getEfetivada() != null && aplicacao.getEfetivada()){
             CheckBox isEfetivada = (CheckBox) view.findViewById(R.id.aplicacao_efetivada);
             isEfetivada.setChecked(true);
         }
@@ -209,17 +210,18 @@ public class AplicacaoFormFragment extends Fragment {
         Spinner dose = (Spinner) view.findViewById(R.id.aplicacao_dose);
         Spinner vacina = (Spinner) view.findViewById(R.id.aplicacao_vacina);
         CheckBox isEfetivada = (CheckBox) view.findViewById(R.id.aplicacao_efetivada);
+        String data = year_x + "-" + month_x + "-" + day_x;
 
         CURRENT_APLICACAO.setDose(dose.getSelectedItem().toString());
         CURRENT_APLICACAO.setVacina(vacina.getSelectedItem().toString());
         CURRENT_APLICACAO.setEfetivada(isEfetivada.isChecked());
-
+        CURRENT_APLICACAO.setData(data);
 
     }
 
     private void saveAplicacao(){
         AplicacaoSaveTask saveAplicacao = new AplicacaoSaveTask();
-        if (CURRENT_APLICACAO_ID == null)
+        //if (CURRENT_APLICACAO_ID == null)
             try{
                 saveAplicacao.execute();
                 saveAplicacao.get(5000, TimeUnit.MILLISECONDS);
@@ -309,13 +311,14 @@ public class AplicacaoFormFragment extends Fragment {
             ResponseEntity<Aplicacao> result;
             if(CURRENT_APLICACAO_ID != null){
                 System.out.println("THIS MUST EDIT!");
-                //url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/aplicacoes/" + CURRENT_APLICACAO_ID;
-                //result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Aplicacao.class);
-            }
+                url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/aplicacoes/" + CURRENT_APLICACAO_ID;
+                result = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, Aplicacao.class);
+            }else {
                 result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Aplicacao.class);
+            }
 
             CURRENT_APLICACAO = result.getBody();
-
+            System.out.println(CURRENT_APLICACAO.getEfetivada());
             return CURRENT_APLICACAO;
         }
     }

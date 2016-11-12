@@ -92,10 +92,12 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
 
         int idade_months = 0;
 
-        if(cardeneta.getDt_nasc() != null || cardeneta.getDt_nasc() == "") {
+        if(cardeneta.getDt_nasc() != null) {
             String dt = cardeneta.getDt_nasc().substring(0, 10);
 
             String splittedBirthDate[] = dt.split("-");
+            System.out.println(splittedBirthDate[0]);
+
             LocalDate localDate = new LocalDate(Integer.parseInt(splittedBirthDate[0]), Integer.parseInt(splittedBirthDate[1]), Integer.parseInt(splittedBirthDate[2]));
 
             idade_months = getMonths(localDate);
@@ -135,7 +137,7 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
     }
 
     private String getIdadeByDataNasc(int meses){
-        if(meses > 12)
+        if(meses >= 24)
             return ((int) meses / 12) + " anos";
         else
             return meses + " meses";

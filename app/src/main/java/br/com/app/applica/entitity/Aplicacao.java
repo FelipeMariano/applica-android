@@ -66,10 +66,14 @@ public class Aplicacao {
     }
 
     public String getFormattedData(){
-        String strDate = this.data.toString();
-        String separetedDate[] = strDate.substring(0, 10).split("-");
+        if(this.data != null) {
+            String strDate = this.data.toString();
+            String separetedDate[] = strDate.substring(0, 10).split("-");
 
-        return separetedDate[2] + "/" + separetedDate[1] + "/" + separetedDate[0];
+            return separetedDate[2] + "/" + separetedDate[1] + "/" + separetedDate[0];
+        }
+
+        return "";
     }
 
 }
