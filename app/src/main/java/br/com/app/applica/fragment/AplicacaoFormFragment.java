@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 
@@ -112,8 +113,7 @@ public class AplicacaoFormFragment extends Fragment {
     }
 
     private void setLoadedAplicacao(Aplicacao aplicacao, View view){
-
-
+        
 
         if(!aplicacao.getData().equals(null)){
            String data = aplicacao.getFormattedData();
@@ -140,6 +140,11 @@ public class AplicacaoFormFragment extends Fragment {
             int itemPosition = adapter.getPosition(aplicacao.getVacina());
 
             vacina_spinner.setSelection(itemPosition    );
+        }
+
+        if(aplicacao.getEfetivada()){
+            CheckBox isEfetivada = (CheckBox) view.findViewById(R.id.aplicacao_efetivada);
+            isEfetivada.setChecked(true);
         }
     }
 
@@ -204,10 +209,11 @@ public class AplicacaoFormFragment extends Fragment {
     private void setDadosAplicacao(View view){
         Spinner dose = (Spinner) view.findViewById(R.id.aplicacao_dose);
         Spinner vacina = (Spinner) view.findViewById(R.id.aplicacao_vacina);
+        CheckBox isEfetivada = (CheckBox) view.findViewById(R.id.aplicacao_efetivada);
 
         CURRENT_APLICACAO.setDose(dose.getSelectedItem().toString());
         CURRENT_APLICACAO.setVacina(vacina.getSelectedItem().toString());
-
+        CURRENT_APLICACAO.setEfetivada(isEfetivada.isChecked());
 
         System.out.println(CURRENT_APLICACAO.getData() + " - " + CURRENT_APLICACAO.getDose());
 
@@ -296,7 +302,7 @@ public class AplicacaoFormFragment extends Fragment {
                 _map.put("data", CURRENT_APLICACAO.getData());
                 _map.put("vacina", CURRENT_APLICACAO.getVacina());
                 _map.put("dose", CURRENT_APLICACAO.getDose());
-                _map.put("efetivada", true);
+                _map.put("efetivada", CURRENT_APLICACAO.getEfetivada());
                 _map.put("local", "local");
 
                 mapper.writeValue(_writer, _map);
