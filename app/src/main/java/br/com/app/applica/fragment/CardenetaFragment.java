@@ -85,6 +85,7 @@ public class CardenetaFragment extends Fragment {
                 transaction.commit();
             }
         });
+
     }
 
     private void loadDadadosCardeneta(){

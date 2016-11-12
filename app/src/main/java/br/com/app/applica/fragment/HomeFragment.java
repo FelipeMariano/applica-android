@@ -64,11 +64,12 @@ public class HomeFragment extends Fragment {
 
         recyclerView.setLayoutManager(layout);
 
-        ((CardenetaAdapter) mAdapter).setOnItemHoldListener(new CardenetaAdapter.MyLongClickListener() {
+        ((CardenetaAdapter) mAdapter).setOnItemHold(new View.OnLongClickListener() {
             @Override
-            public boolean onItemHold(int position, View v) {
-                System.out.println("I WAS LONG CLICKED!");
-                return true;
+            public boolean onLongClick(View v) {
+                CardenetaAdapter.CardenetaViewHolder vHolder = (CardenetaAdapter.CardenetaViewHolder) v.getTag();
+                System.out.println("I WAS HOLDED: " + vHolder.getId());
+                return false;
             }
         });
 
@@ -115,6 +116,7 @@ public class HomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cardeneta_recycler);
 
+        registerForContextMenu(mRecyclerView);
 
         navActivity.toggleFab(MainNavActivity.TAG_CARDENETA, new View.OnClickListener() {
             @Override
@@ -141,6 +143,8 @@ public class HomeFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         navActivity.getMenuInflater().inflate(R.menu.home_menu, menu);
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
