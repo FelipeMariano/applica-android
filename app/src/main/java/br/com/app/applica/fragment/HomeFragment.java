@@ -41,6 +41,7 @@ public class HomeFragment extends Fragment {
     List<Cardeneta> cardenetas;
     MainNavActivity navActivity;
     private RecyclerView.Adapter mAdapter;
+    private Menu mMenu;
 
     private void setRecyclerLayout(RecyclerView recyclerView){
 
@@ -69,6 +70,7 @@ public class HomeFragment extends Fragment {
             public boolean onLongClick(View v) {
                 CardenetaAdapter.CardenetaViewHolder vHolder = (CardenetaAdapter.CardenetaViewHolder) v.getTag();
                 System.out.println("I WAS HOLDED: " + vHolder.getId());
+                navActivity.getMenuInflater().inflate(R.menu.main_nav, mMenu);
                 return false;
             }
         });
@@ -141,6 +143,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
+        mMenu = menu;
         navActivity.getMenuInflater().inflate(R.menu.home_menu, menu);
     }
 
