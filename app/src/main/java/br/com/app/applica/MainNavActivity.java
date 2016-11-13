@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 import br.com.app.applica.activity.AboutUsActivity;
 import br.com.app.applica.entitity.User;
 import br.com.app.applica.fragment.HomeFragment;
+import br.com.app.applica.fragment.MapsFragment;
 import br.com.app.applica.fragment.UnidadesFragment;
 
 public class MainNavActivity extends AppCompatActivity
@@ -200,6 +203,17 @@ public class MainNavActivity extends AppCompatActivity
 
     private void loadFragment(){
         //
+
+        if(CURRENT_TAG.equals(TAG_UNIDADES)){
+            Fragment mapsFragment = new MapsFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_layout, mapsFragment);
+            Toast.makeText(this,"MAPS",Toast.LENGTH_SHORT).show();
+            fragmentTransaction.commit();
+            return;
+
+        }
 
         Fragment homeFragment = getFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
