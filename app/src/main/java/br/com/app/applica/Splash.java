@@ -110,8 +110,8 @@ public class Splash extends AppCompatActivity {
                 try{
                     Thread.sleep(3000);
                     File file = new File(getFilesDir(), "userData");
-                    if(file.exists())
-                        file.delete();
+                    //if(file.exists())
+                    //    file.delete();
 
                     user = getUserLocally();
 
@@ -131,7 +131,7 @@ public class Splash extends AppCompatActivity {
                     startActivity(intent);
 
                 }catch(Exception e){
-                    System.out.println("ERRO: " + e);
+                    System.out.println("SPLASH PAGE - ERRO: " + e);
                 }finally{
 
                     finish();

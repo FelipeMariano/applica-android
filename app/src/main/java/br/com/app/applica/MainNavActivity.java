@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.activity.AboutUsActivity;
@@ -172,7 +173,16 @@ public class MainNavActivity extends AppCompatActivity
             Intent intent = new Intent(this, AboutUsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
+            try{
+                File file = new File(getFilesDir(), "userData");
+                if(file.exists())
+                   file.delete();
 
+                Intent intent = new Intent(this, Splash.class);
+                startActivity(intent);
+            }catch(Exception e){
+                System.out.println("ERROR TRYING TO LOG OUT!");
+            }
         }
 
         if(item.isChecked())

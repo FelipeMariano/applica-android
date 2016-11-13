@@ -1,9 +1,11 @@
 package br.com.app.applica.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Xml;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,7 +21,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+import org.xmlpull.v1.XmlSerializer;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.StringWriter;
 import java.util.LinkedHashMap;
 import java.util.concurrent.TimeUnit;
@@ -70,6 +75,12 @@ public class LoginActivity extends AppCompatActivity {
             loginUser.execute();
             user = loginUser.get(5000, TimeUnit.MILLISECONDS);
             System.out.println("---> " + user.getAuthToken());
+
+            FileOutputStream fos = new FileOutputStream(new File(getFilesDir(), "userData.xml"));
+            FileOutputStream fileos = openFileOutput("userData", Context.MODE_PRIVATE);
+
+            storageUserData(fos, fileos, user);
+
         } catch (Exception e) {
             System.out.println("ERRO: " + e);
         } finally {
@@ -79,6 +90,43 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
+    }
+
+    private void storageUserData(FileOutputStream fos, FileOutputStream fileos, User user){
+        XmlSerializer xmlSerializer = Xml.newSerializer();
+        StringWriter writer = new StringWriter();
+        try {
+            xmlSerializer.setOutput(writer);
+            xmlSerializer.startDocument("UTF-8", true);
+            xmlSerializer.startTag(null, "userData");
+
+            xmlSerializer.startTag(null, "id");
+            xmlSerializer.text(user.getId());
+            xmlSerializer.endTag(null, "id");
+
+            xmlSerializer.startTag(null, "email");
+            xmlSerializer.text(user.getEmail());
+            xmlSerializer.endTag(null, "email");
+
+            xmlSerializer.startTag(null, "password");
+            xmlSerializer.text(user.getPassword());
+            xmlSerializer.endTag(null, "password");
+
+            xmlSerializer.startTag(null, "x-access-token");
+            xmlSerializer.text(user.getAuthToken());
+            xmlSerializer.endTag(null, "x-access-token");
+
+            xmlSerializer.endTag(null, "userData");
+            xmlSerializer.endDocument();
+            xmlSerializer.flush();
+            String dataWrite = writer.toString();
+            fileos.write(dataWrite.getBytes());
+            fileos.close();
+        }catch(Exception e){
+            System.out.println("----> ERROR TO SAVE USER: " + e);
+        }
+        System.out.println("USER SAVED: " + user.getId());
 
     }
 
@@ -139,4 +187,6 @@ public class LoginActivity extends AppCompatActivity {
             System.out.println("USER LOADED");
         }
     }
+
+
 }
