@@ -90,8 +90,6 @@ public class AplicacaoFormFragment extends Fragment {
         else
             CURRENT_APLICACAO = new Aplicacao();
 
-
-
         return formAplicacaoView;
     }
 
@@ -103,6 +101,7 @@ public class AplicacaoFormFragment extends Fragment {
             aplicacaoLoad.execute();
             loadedAplicacao = aplicacaoLoad.get(5000, TimeUnit.MILLISECONDS);
             setLoadedAplicacao(loadedAplicacao, view);
+            return loadedAplicacao;
         }catch(Exception e){
             System.out.println("ERRO AO CARREGAR APLICACAO PARA EDIÇÃO: " + e);
         }
@@ -139,7 +138,7 @@ public class AplicacaoFormFragment extends Fragment {
                     android.R.layout.simple_spinner_item);
             int itemPosition = adapter.getPosition(aplicacao.getVacina());
 
-            vacina_spinner.setSelection(itemPosition    );
+            vacina_spinner.setSelection(itemPosition);
         }
 
         if(aplicacao.getEfetivada() != null && aplicacao.getEfetivada()){
@@ -318,7 +317,7 @@ public class AplicacaoFormFragment extends Fragment {
             }
 
             CURRENT_APLICACAO = result.getBody();
-            System.out.println(CURRENT_APLICACAO.getEfetivada());
+
             return CURRENT_APLICACAO;
         }
     }

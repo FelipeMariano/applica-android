@@ -56,6 +56,7 @@ public class CardenetaFormFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_cardeneta_form, container, false);
 
         navActivity = (MainNavActivity) getActivity();
 
@@ -63,56 +64,101 @@ public class CardenetaFormFragment extends Fragment {
         AUTH_TOKEN = navActivity.CURRENT_USER.getAuthToken();
 
 
-        if(CURRENT_CARD_ID == null)
-            CURRENT_CARD = new Cardeneta();
-        else
-            loadDadosCardeneta();
+        Bundle bundle = this.getArguments();
 
-        View rootView = inflater.inflate(R.layout.fragment_cardeneta_form, container, false);
+        if(bundle != null) {
+            CURRENT_CARD_ID = bundle.getString("card_id");
+            System.out.println("I WILL EDIT THIS: " + CURRENT_CARD_ID);
+        }
 
         showDatePickerDialog(rootView);
         setSexoSpinner(rootView);
         setSaveButtonAction(rootView);
 
+
+        if(CURRENT_CARD_ID == null)
+            CURRENT_CARD = new Cardeneta();
+        else {
+            CURRENT_CARD = loadDados(rootView);
+        }
+
         return rootView;
     }
 
-    private void loadDadosCardeneta(){
+    private Cardeneta loadDados(View view){
 
-        CardenetaDadosTask loadCardDados = new CardenetaDadosTask();
-
+        CardenetaLoadTask loadCardDados = new CardenetaLoadTask();
+        Cardeneta loadedCardeneta;
         try{
             loadCardDados.execute();
-            loadCardDados.get(5000, TimeUnit.MILLISECONDS);
+            loadedCardeneta = loadCardDados.get(5000, TimeUnit.MILLISECONDS);
+            setLoadedCardeneta(loadedCardeneta, view);
+            return loadedCardeneta;
         }catch(Exception e){
             System.out.println("ERRO AO CHAMAR TASK PARA LOAD CARD: " + e);
         }
 
-        String title_name = CURRENT_CARD.getNome() + " " + CURRENT_CARD.getSobrenome();
-        navActivity.getSupportActionBar().setTitle(title_name);
+        return new Cardeneta();
+    }
+
+    private void setLoadedCardeneta(Cardeneta cardeneta, View view){
+        if(!cardeneta.getNome().equals(null) && !cardeneta.getSobrenome().equals(null)) {
+            String title_name = cardeneta.getNome() + " " + cardeneta.getSobrenome();
+            navActivity.getSupportActionBar().setTitle(title_name);
+
+            TextView nome = (TextView) view.findViewById(R.id.txt_cardeneta_nome);
+            TextView sobrenome = (TextView) view.findViewById(R.id.txt_cardeneta_sobrenome);
+
+            nome.setText(cardeneta.getNome());
+            sobrenome.setText(cardeneta.getSobrenome());
+        }
+
+        if(!cardeneta.getSexo().equals(null)) {
+            Spinner sexoSpinner = (Spinner) view.findViewById(R.id.cardeneta_sexo);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(navActivity, R.array.sexo_arrays,
+                    android.R.layout.simple_spinner_item);
+
+
+            int itemPosition = adapter.getPosition(cardeneta.getSexo());
+            sexoSpinner.setSelection(itemPosition);
+        }
+
+        if(!cardeneta.getDt_nasc().equals(null)) {
+            String data = cardeneta.getDt_nasc();
+            Button dataButton = (Button) view.findViewById(R.id.cardeneta_data_nasc);
+            System.out.println(data);
+            day_x = Integer.parseInt(data.substring(8, 10));
+            month_x = Integer.parseInt(data.substring(5, 7));
+            year_x = Integer.parseInt(data.substring(0, 4));
+            dataButton.setText(day_x + "/" + month_x + "/" + year_x);
+        }
     }
 
     private void saveCardeneta(){
         CardenetaSaveTask saveCard = new CardenetaSaveTask();
-        if (CURRENT_CARD_ID == null){
+        //if (CURRENT_CARD_ID == null){
            try{
                saveCard.execute();
                saveCard.get(5000, TimeUnit.MILLISECONDS);
-               CURRENT_CARD_ID = CURRENT_CARD.get_id();
+              // CURRENT_CARD_ID = CURRENT_CARD.get_id();
                System.out.println("SUCCESSFULLY SAVED: " + CURRENT_CARD_ID);
             }catch(Exception e){
 
             }
-        }
+        //}
 
     }
 
     private void setDadosCardeneta(View view){
         TextView nome = (TextView) view.findViewById(R.id.txt_cardeneta_nome);
         TextView sobrenome = (TextView) view.findViewById(R.id.txt_cardeneta_sobrenome);
+        Spinner sexoSpinner = (Spinner) view.findViewById(R.id.cardeneta_sexo);
+        String data = year_x + "-" + month_x + "-" + day_x;
 
         CURRENT_CARD.setNome(nome.getText().toString());
         CURRENT_CARD.setSobrenome(sobrenome.getText().toString());
+        CURRENT_CARD.setSexo((String) sexoSpinner.getSelectedItem());
+        CURRENT_CARD.setDt_nasc(data);
     }
 
     private void setSexoSpinner(View view){
@@ -168,26 +214,10 @@ public class CardenetaFormFragment extends Fragment {
         });
     }
 
-    private class CardenetaDadosTask extends AsyncTask<Void, Void, Cardeneta> {
-        private Cardeneta loadedCardeneta;
-
-        private void loadData(HttpHeaders requestHeaders, RestTemplate restTemplate){
-            try {
-
-                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
-
-                HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
-
-                ResponseEntity<?> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, Cardeneta.class);
-                loadedCardeneta = (Cardeneta) result.getBody();
-            }catch(Exception e){
-                System.out.println("ERRO AO LOAD CARDENETA: " + e);
-                loadedCardeneta = new Cardeneta();
-            }
-        }
-
+    private class CardenetaLoadTask extends AsyncTask<Void, Void, Cardeneta> {
         @Override
         protected Cardeneta doInBackground(Void... params) {
+            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
 
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders requestHeaders = new HttpHeaders();
@@ -196,11 +226,11 @@ public class CardenetaFormFragment extends Fragment {
             requestHeaders.setContentType(MediaType.APPLICATION_JSON);
             requestHeaders.add("x-access-token", AUTH_TOKEN);
 
-            loadData(requestHeaders, restTemplate);
+            HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
+            ResponseEntity<Cardeneta> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, Cardeneta.class);
 
-            //ResponseEntity<List<Cardeneta>> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<Cardeneta>>() {
-            //});
-            CURRENT_CARD = loadedCardeneta;
+            CURRENT_CARD = result.getBody();
+
             return CURRENT_CARD;
         }
     }
@@ -236,7 +266,14 @@ public class CardenetaFormFragment extends Fragment {
 
 
             HttpEntity<String> httpEntity = new HttpEntity<String>(_writer.toString(), requestHeaders);
-            ResponseEntity<Cardeneta> result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Cardeneta.class);
+            ResponseEntity<Cardeneta> result;
+            if(CURRENT_CARD_ID != null) {
+                System.out.println("THIS MUST EDIT!");
+                url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
+                result = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, Cardeneta.class);
+            }else{
+                result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Cardeneta.class);
+            }
 
             CURRENT_CARD = result.getBody();
 

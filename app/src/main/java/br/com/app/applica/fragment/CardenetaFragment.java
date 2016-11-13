@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -215,11 +216,26 @@ public class CardenetaFragment extends Fragment {
         navActivity.getMenuInflater().inflate(R.menu.main_nav, menu);
     }
 
+    public static void setToEdit(String toEdit, FragmentManager fragmentManager){
+        CardenetaFormFragment cardForm = new CardenetaFormFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("card_id", toEdit);
+
+        cardForm.setArguments(bundle);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_layout, cardForm);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.action_edit:
-                System.out.println("I WILL EDIT YOU!");
+                setToEdit(CURRENT_CARD_ID, getFragmentManager());
                 return true;
             case R.id.action_delete:
                 deleteCardeneta();

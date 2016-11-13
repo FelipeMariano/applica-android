@@ -23,9 +23,10 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
        private List<Cardeneta> cardenetas;
        private static String LOG_TAG = "CardenetaAdapter";
        private static View.OnLongClickListener onItemHold;
+       private static View.OnTouchListener onItemTouch;
        private static MyClickListener myClickListener;
 
-    public static class CardenetaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class CardenetaViewHolder extends RecyclerView.ViewHolder{
         private String id;
         public final ImageView perf_img;
         public final TextView nome;
@@ -47,12 +48,6 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
             perf_img = (ImageView) itemView.findViewById(R.id.card_perf_img);
 
             Log.i(LOG_TAG, "Adding Listener");
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            myClickListener.onItemClick(getPosition(), v);
         }
 
     }
@@ -69,6 +64,10 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
         this.onItemHold = onItemHold;
     }
 
+    public void setOnItemTouch(View.OnTouchListener onItemTouch){
+        this.onItemTouch = onItemTouch;
+    }
+
     @Override
     public CardenetaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardeneta_item, parent, false);
@@ -83,10 +82,12 @@ public class CardenetaAdapter extends RecyclerView.Adapter<CardenetaAdapter .Car
         CardenetaViewHolder vHolder =  holder;
 
         holder.itemView.setLongClickable(true);
+        holder.itemView.setClickable(true);
+        holder.itemView.setOnTouchListener(onItemTouch);
 
         Cardeneta cardeneta = cardenetas.get(position);
 
-        holder.itemView.setOnLongClickListener(onItemHold);
+        //holder.itemView.setOnLongClickListener(onItemHold);
 
         vHolder.setId(cardeneta.get_id());
         vHolder.nome.setText(cardeneta.toString());

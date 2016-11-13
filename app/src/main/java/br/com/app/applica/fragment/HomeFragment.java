@@ -7,10 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -36,14 +38,17 @@ import br.com.app.applica.entitity.User;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment{
     private User CURRENT_USER;
+    private Boolean OPTIONS_SHOW = false;
     List<Cardeneta> cardenetas;
     MainNavActivity navActivity;
     private RecyclerView.Adapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private String CURRENT_CARD_ID;
     private Menu mMenu;
 
-    private void setRecyclerLayout(RecyclerView recyclerView){
+    private void setRecyclerLayout(final RecyclerView recyclerView){
 
         cardenetas = new ArrayList<>();
 
@@ -65,40 +70,17 @@ public class HomeFragment extends Fragment {
 
         recyclerView.setLayoutManager(layout);
 
-        ((CardenetaAdapter) mAdapter).setOnItemHold(new View.OnLongClickListener() {
+        ((CardenetaAdapter) mAdapter).setOnItemTouch(new View.OnTouchListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
                 CardenetaAdapter.CardenetaViewHolder vHolder = (CardenetaAdapter.CardenetaViewHolder) v.getTag();
-                System.out.println("I WAS HOLDED: " + vHolder.getId());
-                navActivity.getMenuInflater().inflate(R.menu.main_nav, mMenu);
-                return false;
+                CURRENT_CARD_ID = vHolder.getId();
+                //return getGestureDetector(event, v);
+                return gestureDetector.onTouchEvent(event);
             }
         });
 
-
-        ((CardenetaAdapter) mAdapter).setOnItemClickListener(new CardenetaAdapter.MyClickListener(){
-            @Override
-            public void onItemClick(int position, View v){
-
-                CardenetaAdapter.CardenetaViewHolder vHolder = (CardenetaAdapter.CardenetaViewHolder) v.getTag();
-
-                Fragment cardeneta = new CardenetaFragment();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("card_id", vHolder.getId());
-
-                cardeneta.setArguments(bundle);
-
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-
-                transaction.replace(R.id.fragment_layout, cardeneta);
-                transaction.addToBackStack(null);
-
-                transaction.commit();
-            }
-        });
-
+        //setOnClickListener();
 
 
     }
@@ -116,14 +98,14 @@ public class HomeFragment extends Fragment {
         CURRENT_USER = navActivity.CURRENT_USER;
 
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cardeneta_recycler);
-
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cardeneta_recycler);
         registerForContextMenu(mRecyclerView);
 
         navActivity.toggleFab(MainNavActivity.TAG_CARDENETA, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CardenetaFormFragment fragment = new CardenetaFormFragment();
+
                 fragment.CURRENT_CARD_ID = null;
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
@@ -136,9 +118,32 @@ public class HomeFragment extends Fragment {
 
         setRecyclerLayout(mRecyclerView);
         setHasOptionsMenu(true);
+
         return rootView;
     }
 
+    final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener(){
+       public void onLongPress(MotionEvent e){
+            navActivity.getMenuInflater().inflate(R.menu.main_nav, mMenu);
+       }
+
+        public boolean onSingleTapUp(MotionEvent e ){
+            Fragment cardeneta = new CardenetaFragment();
+
+            Bundle bundle = new Bundle();
+            bundle.putString("card_id", CURRENT_CARD_ID);
+            cardeneta.setArguments(bundle);
+
+            FragmentTransaction transaction= getFragmentManager().beginTransaction();
+
+            transaction.replace(R.id.fragment_layout, cardeneta);
+            transaction.addToBackStack(null);
+
+            transaction.commit();
+
+            return true;
+        }
+    });
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
@@ -154,6 +159,10 @@ public class HomeFragment extends Fragment {
         switch (item.getItemId()){
             case R.id.action_sync:
                 System.out.println("Sync!");
+                return true;
+            case R.id.action_edit:
+                OPTIONS_SHOW = false;
+                CardenetaFragment.setToEdit(CURRENT_CARD_ID, getFragmentManager());
                 return true;
         }
         return false;

@@ -53,7 +53,7 @@ public class MainNavActivity extends AppCompatActivity
     public static String CURRENT_TAG = TAG_HOME;
 
 
-    private static Toolbar toolbar;
+    public static Toolbar toolbar;
 
     public User CURRENT_USER;
 
@@ -107,6 +107,7 @@ public class MainNavActivity extends AppCompatActivity
         System.out.println(CURRENT_USER.getEmail());
 
     }
+
 
     @Override
     public void onBackPressed() {
