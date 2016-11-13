@@ -161,7 +161,12 @@ public class HomeFragment extends Fragment{
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.action_sync:
-                System.out.println("Sync!");
+                try{
+                    setRecyclerLayout(mRecyclerView);
+                    Toast.makeText(navActivity, "DADOS ATUALIZADOS!", Toast.LENGTH_SHORT).show();
+                }catch(Exception e){
+                    Toast.makeText(navActivity, "ERRO AO ATUALIZAR!", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             case R.id.action_edit:
                 OPTIONS_SHOW = false;

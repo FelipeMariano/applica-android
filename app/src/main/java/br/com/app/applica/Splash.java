@@ -21,7 +21,6 @@ import org.springframework.web.client.RestTemplate;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -109,7 +108,7 @@ public class Splash extends AppCompatActivity {
             public void run() {
                 try{
                     Thread.sleep(3000);
-                    File file = new File(getFilesDir(), "userData");
+                    //File file = new File(getFilesDir(), "userData");
                     //if(file.exists())
                     //    file.delete();
 
