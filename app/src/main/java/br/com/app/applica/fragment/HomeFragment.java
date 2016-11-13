@@ -163,9 +163,9 @@ public class HomeFragment extends Fragment{
             case R.id.action_sync:
                 try{
                     setRecyclerLayout(mRecyclerView);
-                    Toast.makeText(navActivity, "DADOS ATUALIZADOS!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(navActivity, "Dados atualizados", Toast.LENGTH_SHORT).show();
                 }catch(Exception e){
-                    Toast.makeText(navActivity, "ERRO AO ATUALIZAR!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(navActivity, "Erro ao atualizar", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.action_edit:
