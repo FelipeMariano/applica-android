@@ -1,11 +1,13 @@
 package br.com.app.applica.fragment;
 
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -214,30 +216,44 @@ public class CardenetaFragment extends Fragment {
         navActivity.getMenuInflater().inflate(R.menu.main_nav, menu);
     }
 
-    public static boolean delete(String toDelete, MainNavActivity navActivity){
+    public static boolean delete(String token, String toDelete, final MainNavActivity navActivity){
 
         if (toDelete == null || toDelete.equals("")) return false;
 
         CURRENT_CARD_ID = toDelete;
+        AUTH_TOKEN = token;
 
-        try{
-            CardenetaDeleteTask deleteTask = new CardenetaDeleteTask();
-            try{
-                deleteTask.execute();
-                if (deleteTask.get(5000, TimeUnit.MILLISECONDS) == null) {
-                    Toast.makeText(navActivity, "Cardeneta deletada!", Toast.LENGTH_SHORT).show();
+        Boolean deleted = false;
 
-                    if(navActivity != null)
-                        navActivity.getSupportFragmentManager().popBackStack();
+        new AlertDialog.Builder(navActivity).setTitle("Deletar cardeneta")
+                .setMessage("Você realmente deseja deletar a cardeneta permanentemente? Todos os dados aqui serão perdidos!")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int whichButton){
 
-                }
-            }catch(Exception e){
-                System.out.println("TIME EXCEPTION WHILE DELETING! " + e);
-            }
-        }catch(Exception e){
-            System.out.println("INVALID ID");
+                        try{
+                            CardenetaDeleteTask deleteTask = new CardenetaDeleteTask();
+                            try{
+                                deleteTask.execute();
+                                if (deleteTask.get(5000, TimeUnit.MILLISECONDS) == null) {
+                                    Toast.makeText(navActivity, "Cardeneta deletada!", Toast.LENGTH_SHORT).show();
 
-        }
+                                    if(navActivity != null)
+                                        navActivity.getSupportFragmentManager().popBackStack();
+
+                                }
+                            }catch(Exception e){
+                                System.out.println("TIME EXCEPTION WHILE DELETING! " + e);
+                            }
+                        }catch(Exception e){
+                            System.out.println("INVALID ID");
+
+                        }
+                            Toast.makeText(navActivity, "Cardeneta deletada!", Toast.LENGTH_SHORT).show();
+                    }
+                }).setNegativeButton(android.R.string.no, null).show();
+
+
         return false;
     }
 
@@ -263,7 +279,7 @@ public class CardenetaFragment extends Fragment {
                 setToEdit(CURRENT_CARD_ID, getFragmentManager());
                 return true;
             case R.id.action_delete:
-                delete(CURRENT_CARD_ID, navActivity);
+                delete(AUTH_TOKEN, CURRENT_CARD_ID, null);
                 return true;
         }
         return false;

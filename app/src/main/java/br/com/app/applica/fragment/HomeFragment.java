@@ -1,12 +1,10 @@
 package br.com.app.applica.fragment;
 
 
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
@@ -173,16 +171,7 @@ public class HomeFragment extends Fragment{
                 CardenetaFragment.setToEdit(CURRENT_CARD_ID, getFragmentManager());
                 return true;
             case R.id.action_delete:
-                new AlertDialog.Builder(navActivity).setTitle("Deletar cardeneta")
-                        .setMessage("Você realmente deseja deletar a cardeneta permanentemente? Todos os dados aqui serão perdidos!")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener(){
-                            public void onClick(DialogInterface dialog, int whichButton){
-                                if(CardenetaFragment.delete(CURRENT_CARD_ID, null))
-                                    Toast.makeText(navActivity, "Cardeneta deletada!", Toast.LENGTH_SHORT).show();
-                            }
-                        }).setNegativeButton(android.R.string.no, null).show();
-
+                CardenetaFragment.delete(CURRENT_USER.getAuthToken(), CURRENT_CARD_ID, navActivity);
                 return true;
         }
         return false;
