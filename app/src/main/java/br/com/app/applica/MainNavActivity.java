@@ -35,7 +35,6 @@ import br.com.app.applica.activity.AboutUsActivity;
 import br.com.app.applica.activity.LoginActivity;
 import br.com.app.applica.entitity.User;
 import br.com.app.applica.fragment.HomeFragment;
-import br.com.app.applica.fragment.MapsFragment;
 import br.com.app.applica.fragment.UnidadesFragment;
 
 public class MainNavActivity extends AppCompatActivity
@@ -214,12 +213,15 @@ public class MainNavActivity extends AppCompatActivity
         //
 
         if(CURRENT_TAG.equals(TAG_UNIDADES)){
-            Fragment mapsFragment = new MapsFragment();
+           // Fragment mapsFragment = new MapsFragment();
+            Fragment unidadesFragment = new UnidadesFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_layout, mapsFragment);
+            //fragmentTransaction.replace(R.id.fragment_layout, mapsFragment);
+            fragmentTransaction.replace(R.id.fragment_layout, unidadesFragment);
             Toast.makeText(this,"MAPS",Toast.LENGTH_SHORT).show();
             fragmentTransaction.commit();
+            toggleFab("HIDE", null);
             return;
 
         }

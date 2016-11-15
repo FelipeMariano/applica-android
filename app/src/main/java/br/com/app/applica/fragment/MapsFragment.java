@@ -2,14 +2,19 @@ package br.com.app.applica.fragment;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,6 +25,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import br.com.app.applica.MainNavActivity;
 import br.com.app.applica.R;
 
 /**
@@ -28,7 +34,7 @@ import br.com.app.applica.R;
 public class MapsFragment extends Fragment {
     MapView mMapView;
     private GoogleMap myGoogleMap;
-    private Activity navActivity;
+    private MainNavActivity navActivity;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -38,13 +44,15 @@ public class MapsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View mapsView = inflater.inflate(R.layout.fragment_unidades, container, false);
+        View mapsView = inflater.inflate(R.layout.fragment_maps_view, container, false);
 
         mMapView = (MapView) mapsView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume(); //needed to get the map to display immediately;
-        navActivity = getActivity();
+        navActivity = (MainNavActivity) getActivity();
+
+        setHasOptionsMenu(true);
 
         try {
             MapsInitializer.initialize(navActivity.getApplicationContext());
@@ -88,6 +96,31 @@ public class MapsFragment extends Fragment {
     public void onResume(){
         super.onResume();
         mMapView.onResume();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu, inflater);
+        navActivity.getMenuInflater().inflate(R.menu.locations_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case(R.id.action_map_unidades):
+                Toast.makeText(navActivity, "MAP SHOWS!", Toast.LENGTH_SHORT).show();
+                return true;
+            case(R.id.action_list_unidades):
+                Toast.makeText(navActivity, "LIST SHOWS!", Toast.LENGTH_SHORT).show();
+                Fragment listUnidadesFragment = new UnidadesFragment();
+                FragmentManager fragmentManager = navActivity.getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_layout, listUnidadesFragment);
+                fragmentTransaction.commit();
+                return true;
+            default:
+                return false;
+        }
     }
 
 }

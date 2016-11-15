@@ -11,6 +11,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="br.com.app.applica.MainNavActivity"
     tools:showIn="@layout/app_bar_main_nav"
-    android:id="@+id/fragment_layout">
+    android:id="@+id/fragment_layout" >
 
 </RelativeLayout>
