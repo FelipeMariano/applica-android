@@ -32,6 +32,7 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.activity.AboutUsActivity;
+import br.com.app.applica.activity.LoginActivity;
 import br.com.app.applica.entitity.User;
 import br.com.app.applica.fragment.HomeFragment;
 import br.com.app.applica.fragment.MapsFragment;
@@ -102,13 +103,18 @@ public class MainNavActivity extends AppCompatActivity
 
         }
 
-        if(savedInstanceState == null){
+        if(CURRENT_USER.getId() == null){
+            System.out.println("ID IS NULL!");
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        if(savedInstanceState == null && CURRENT_USER.getId() != null){
             CURRENT_TAG = TAG_HOME;
             navItemIndex = 0 ;
             loadFragment();
         }
-
-        System.out.println(CURRENT_USER.getEmail());
 
     }
 
@@ -125,6 +131,7 @@ public class MainNavActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if (CURRENT_USER.getId() != null){
         // Inflate the menu; this adds items to the action bar if it is present.
         TextView nome = (TextView) findViewById(R.id.nav_header_name);
         TextView email = (TextView) findViewById(R.id.nav_header_email);
@@ -132,7 +139,9 @@ public class MainNavActivity extends AppCompatActivity
         nome.setText("Alpha Test");
         email.setText(CURRENT_USER.getEmail());
         //getMenuInflater().inflate(R.menu.main_nav, menu);
-        return true;
+        }
+
+       return true;
     }
 
     private void setToolbarTitle(){
@@ -294,7 +303,7 @@ public class MainNavActivity extends AppCompatActivity
                 loggedUser.setId(userId);
             }catch(Exception e){
                 System.out.println("USER AUTHENTICATION ERROR: " + e);
-                return CURRENT_USER;
+                return new User();
             }
             return loggedUser;
         }

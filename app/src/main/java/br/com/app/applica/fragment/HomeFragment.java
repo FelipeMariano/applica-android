@@ -178,7 +178,7 @@ public class HomeFragment extends Fragment{
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener(){
                             public void onClick(DialogInterface dialog, int whichButton){
-                                if(CardenetaFragment.delete(CURRENT_CARD_ID))
+                                if(CardenetaFragment.delete(CURRENT_CARD_ID, null))
                                     Toast.makeText(navActivity, "Cardeneta deletada!", Toast.LENGTH_SHORT).show();
                             }
                         }).setNegativeButton(android.R.string.no, null).show();

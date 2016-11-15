@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -40,9 +41,9 @@ import br.com.app.applica.entitity.User;
  * A simple {@link Fragment} subclass.
  */
 public class CardenetaFragment extends Fragment {
-    private Cardeneta CURRENT_CARD;
-    private String CURRENT_CARD_ID;
-    private String AUTH_TOKEN;
+    private static Cardeneta CURRENT_CARD;
+    private static String CURRENT_CARD_ID;
+    private static String AUTH_TOKEN;
     private List<Aplicacao> aplicacoes;
     private RecyclerView.Adapter mAdapter;
 
@@ -213,8 +214,31 @@ public class CardenetaFragment extends Fragment {
         navActivity.getMenuInflater().inflate(R.menu.main_nav, menu);
     }
 
-    public static boolean delete(String toDelete){
-        return true;
+    public static boolean delete(String toDelete, MainNavActivity navActivity){
+
+        if (toDelete == null || toDelete.equals("")) return false;
+
+        CURRENT_CARD_ID = toDelete;
+
+        try{
+            CardenetaDeleteTask deleteTask = new CardenetaDeleteTask();
+            try{
+                deleteTask.execute();
+                if (deleteTask.get(5000, TimeUnit.MILLISECONDS) == null) {
+                    Toast.makeText(navActivity, "Cardeneta deletada!", Toast.LENGTH_SHORT).show();
+
+                    if(navActivity != null)
+                        navActivity.getSupportFragmentManager().popBackStack();
+
+                }
+            }catch(Exception e){
+                System.out.println("TIME EXCEPTION WHILE DELETING! " + e);
+            }
+        }catch(Exception e){
+            System.out.println("INVALID ID");
+
+        }
+        return false;
     }
 
     public static void setToEdit(String toEdit, FragmentManager fragmentManager){
@@ -239,10 +263,39 @@ public class CardenetaFragment extends Fragment {
                 setToEdit(CURRENT_CARD_ID, getFragmentManager());
                 return true;
             case R.id.action_delete:
-                delete(CURRENT_CARD_ID);
+                delete(CURRENT_CARD_ID, navActivity);
                 return true;
         }
         return false;
+    }
+
+    private static class CardenetaDeleteTask extends AsyncTask<Void, Void, Cardeneta>{
+
+        @Override
+        protected Cardeneta doInBackground(Void... params) {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders requestHeaders = new HttpHeaders();
+
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+            requestHeaders.add("x-access-token", AUTH_TOKEN);
+
+            try {
+
+                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
+
+                HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
+
+                ResponseEntity<?> result = restTemplate.exchange(url, HttpMethod.DELETE, httpEntity, Object.class);
+                System.out.println(result.getBody());
+                CURRENT_CARD_ID = null;
+            }catch(Exception e){
+                System.out.println("ERRO AO DELETAR CARDENETA: " + e);
+            }
+
+
+            return null;
+        }
     }
 
     private class CardenetaDadosTask extends AsyncTask<Void, Void, Cardeneta> {
