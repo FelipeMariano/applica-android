@@ -173,6 +173,8 @@ public class HomeFragment extends Fragment{
             case R.id.action_delete:
                 CardenetaFragment.delete(CURRENT_USER.getAuthToken(), CURRENT_CARD_ID, navActivity);
                 return true;
+            case R.id.action_share:
+                CardenetaFragment.share(CURRENT_USER.getAuthToken(), CURRENT_CARD_ID, navActivity);
         }
         return false;
     }

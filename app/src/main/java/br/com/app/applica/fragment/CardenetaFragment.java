@@ -1,6 +1,7 @@
 package br.com.app.applica.fragment;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,7 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -28,7 +34,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -216,6 +224,63 @@ public class CardenetaFragment extends Fragment {
         navActivity.getMenuInflater().inflate(R.menu.main_nav, menu);
     }
 
+    public static boolean share(String token, final String card, final MainNavActivity navActivity){
+        Context context = navActivity;
+        LayoutInflater li = LayoutInflater.from(context);
+        final View promptsView = li.inflate(R.layout.share_dialog, null);
+
+        AUTH_TOKEN = token;
+
+        final EditText input = new EditText(navActivity);
+        final TextView label = new TextView(navActivity);
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+
+        label.setLayoutParams(lp);
+        input.setLayoutParams(lp);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(navActivity);
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Compartilhar",
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                String emailToShare = input.getText().toString();
+                                Toast.makeText(navActivity, "Cardeneta compartilhada com sucesso", Toast.LENGTH_SHORT).show();
+                                share(card, navActivity.CURRENT_USER, emailToShare.trim().toLowerCase());
+                            }
+                        })
+                .setNegativeButton("Cancelar",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.setMessage("Digite o e-mail de destino");
+        alertDialog.setView(input);
+        alertDialog.show();
+
+        return true;
+    }
+
+    private static void share(String card, User userOrig, String emailDest){
+        String emailOrig = userOrig.getEmail();
+
+        CardenetaShareTask cardenetaShareTask = new CardenetaShareTask();
+
+        try{
+            cardenetaShareTask.execute(card, emailOrig, emailDest);
+        }catch(Exception e){
+            System.out.println("ERRO AO COMPARTILHAR: " + e);
+        }
+    }
+
     public static boolean delete(String token, String toDelete, final MainNavActivity navActivity){
 
         if (toDelete == null || toDelete.equals("")) return false;
@@ -285,7 +350,53 @@ public class CardenetaFragment extends Fragment {
         return false;
     }
 
-    private static class CardenetaDeleteTask extends AsyncTask<Void, Void, Cardeneta>{
+    private static class CardenetaShareTask extends AsyncTask<String, String, Cardeneta>{
+
+        @Override
+        protected Cardeneta doInBackground(String... params) {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders requestHeaders = new HttpHeaders();
+
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+            requestHeaders.add("x-access-token", AUTH_TOKEN);
+
+            String card = params[0];
+            String emailOrig = params[1];
+            String emailDest = params[2];
+
+
+            LinkedHashMap<String, Object> _map = new LinkedHashMap<String, Object>();
+            _map.put("email_orig", emailOrig);
+            _map.put("email_dest", emailDest);
+
+            StringWriter _writer = new StringWriter();
+            ObjectMapper mapper = new ObjectMapper();
+
+            try {
+                mapper.writeValue(_writer, _map);
+            }catch(Exception e){
+
+            }
+
+            try {
+
+                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + card;
+                url += "/share";
+
+                HttpEntity<String> httpEntity = new HttpEntity<String>(_writer.toString(), requestHeaders);
+
+                ResponseEntity<?> result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Object.class);
+                System.out.println(result.getBody());
+            }catch(Exception e){
+                System.out.println("ERRO AO COMPARTILHAR CARDENETA: " + e);
+            }
+
+            return null;
+        }
+    }
+
+    private static class CardenetaDeleteTask extends AsyncTask<Void, Void, br.com.app.applica.entitity.Cardeneta>{
 
         @Override
         protected Cardeneta doInBackground(Void... params) {
