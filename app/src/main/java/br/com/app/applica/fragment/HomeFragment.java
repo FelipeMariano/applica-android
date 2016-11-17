@@ -170,6 +170,20 @@ public class HomeFragment extends Fragment{
                     Toast.makeText(navActivity, "Erro ao atualizar", Toast.LENGTH_SHORT).show();
                 }
                 return true;
+            case R.id.pending:
+                try{
+                    PendenciaFragment fragment = new PendenciaFragment();
+
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                    transaction.replace(R.id.fragment_layout, fragment);
+                    transaction.addToBackStack(null);
+
+                    transaction.commit();
+                }catch(Exception e){
+                    System.out.println("NAO FOI POSSIVEL CARREGAR AS NOTIFICAÇÕES: " + e);
+                }
+                return true;
             case R.id.action_edit:
                 OPTIONS_SHOW = false;
                 CardenetaFragment.setToEdit(CURRENT_CARD_ID, getFragmentManager());
