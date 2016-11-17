@@ -12,7 +12,7 @@
         android:orderInCategory="100"
         android:title="share"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_public"
+        android:icon="@drawable/ic_share"
         />
 
     <item android:id="@+id/action_edit"

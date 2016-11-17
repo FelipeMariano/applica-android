@@ -150,6 +150,10 @@ public class HomeFragment extends Fragment{
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
         mMenu = menu;
+
+        if(CURRENT_USER.getPendings().size() > 0)
+            navActivity.getMenuInflater().inflate(R.menu.pending_menu, mMenu);
+
         navActivity.getMenuInflater().inflate(R.menu.home_menu, menu);
     }
 
