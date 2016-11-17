@@ -36,6 +36,8 @@ public class User {
 
     private String email;
     private String password;
+    private List<String> pendings;
+
 
     private List<Cardeneta> listaCardenetas;
 
@@ -46,10 +48,11 @@ public class User {
     private RestTemplate restTemplate = new RestTemplate();
     private HttpHeaders requestHeaders = new HttpHeaders();
 
-    public User(String email, String password) {
+
+    public User(String email, String password, List<String> pendings) {
         this.email = email;
         this.password = password;
-
+        this.pendings = pendings;
         setRestConfig();
 
     }
@@ -96,6 +99,14 @@ public class User {
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
+    }
+
+    public List<String> getPendings() {
+        return pendings;
+    }
+
+    public void setPendings(List<String> pendings) {
+        this.pendings = pendings;
     }
 
     public void setRestConfig(){
