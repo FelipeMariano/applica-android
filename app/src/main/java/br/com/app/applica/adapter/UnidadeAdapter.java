@@ -21,6 +21,7 @@ public class UnidadeAdapter extends RecyclerView.Adapter<UnidadeAdapter .Unidade
     public static class UnidadeViewHolder extends RecyclerView.ViewHolder{
         private String id;
         public final TextView nome;
+        public final TextView address;
 
         public void setId(String id){
             this.id = id;
@@ -34,6 +35,7 @@ public class UnidadeAdapter extends RecyclerView.Adapter<UnidadeAdapter .Unidade
             super(itemView);
             itemView.setTag(this);
             nome = (TextView) itemView.findViewById(R.id.unidade_item_nome);
+            address = (TextView) itemView.findViewById(R.id.unidade_item_address);
         }
 
     }
@@ -65,6 +67,7 @@ public class UnidadeAdapter extends RecyclerView.Adapter<UnidadeAdapter .Unidade
 
         vHolder.setId(unidade.get_id());
         vHolder.nome.setText(unidade.getNome());
+        vHolder.address.setText(unidade.getLocation().getAddress());
 
     }
 

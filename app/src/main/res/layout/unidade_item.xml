@@ -23,10 +23,21 @@
 
             <TextView
                 android:id="@+id/unidade_item_nome"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
                 android:textSize="20dp"
+                />
+            <TextView
+                android:id="@+id/unidade_item_address"
+                android:layout_width="match_parent"
+                android:layout_alignLeft="@+id/unidade_item_nome"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/unidade_item_nome"
+                android:textSize="10dp"
                 />
 
 
