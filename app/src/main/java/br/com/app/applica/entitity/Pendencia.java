@@ -1,21 +1,24 @@
 package br.com.app.applica.entitity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by felipe on 17/11/16.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Pendencia {
     private String _id;
-    private User origem;
-    private User destino;
+    private User user_origin;
+    private User user_dest;
     private Cardeneta cardeneta;
 
     public Pendencia() {
     }
 
-    public Pendencia(String _id, User origem, User destino, Cardeneta cardeneta) {
+    public Pendencia(String _id, User user_origin, User user_dest, Cardeneta cardeneta) {
         this._id = _id;
-        this.origem = origem;
-        this.destino = destino;
+        this.user_origin = user_origin;
+        this.user_dest = user_dest;
         this.cardeneta = cardeneta;
     }
 
@@ -27,20 +30,20 @@ public class Pendencia {
         this._id = _id;
     }
 
-    public User getOrigem() {
-        return origem;
+    public User getUser_origin() {
+        return user_origin;
     }
 
-    public void setOrigem(User origem) {
-        this.origem = origem;
+    public void setUser_origin(User user_origin) {
+        this.user_origin = user_origin;
     }
 
-    public User getDestino() {
-        return destino;
+    public User getUser_dest() {
+        return user_dest;
     }
 
-    public void setDestino(User destino) {
-        this.destino = destino;
+    public void setUser_dest(User user_dest) {
+        this.user_dest = user_dest;
     }
 
     public Cardeneta getCardeneta() {
@@ -51,11 +54,7 @@ public class Pendencia {
         this.cardeneta = cardeneta;
     }
 
-    public String getEmailOrigem(){
-        return origem.getEmail();
-    }
-
-    public String getEmailDestino(){
-        return destino.getEmail();
+    public String getCardenetaNome(){
+        return getCardeneta().getNome() + " " + getCardeneta().getSobrenome();
     }
 }

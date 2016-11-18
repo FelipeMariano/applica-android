@@ -16,25 +16,38 @@
         >
         <RelativeLayout
             android:id="@+id/card_infos_pending"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_toLeftOf="@+id/card_buttons_pending"
             android:layout_height="match_parent"
             >
 
             <TextView
-                android:id="@+id/share_email_origem"
+                android:id="@+id/share_nome_origem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:textSize="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="25dp"
                 />
 
             <TextView
-                android:id="@+id/cardeneta_item_idade"
-                android:textSize="15dp"
+                android:id="@+id/share_email_origem"
+                android:layout_below="@+id/share_nome_origem"
+                android:layout_alignLeft="@+id/share_nome_origem"
                 android:layout_width="match_parent"
-                android:layout_marginTop="50dp"
-                android:layout_marginLeft="20dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                />
+
+            <TextView
+                android:id="@+id/share_cardeneta"
+                android:layout_below="@+id/share_email_origem"
+                android:layout_alignLeft="@+id/share_email_origem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                />
+
             <!--
                 <ImageButton
                     android:scaleType="fitCenter"
@@ -46,7 +59,27 @@
                     android:layout_alignRight="@id/cardeneta_item_idade" />
             -->
         </RelativeLayout>
-
+    <RelativeLayout
+        android:id="@+id/card_buttons_pending"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        >
+        <Button
+            android:id="@+id/pending_accept"
+            android:background="@drawable/round_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="10dp"/>
+        <Button
+            android:id="@+id/pending_reject"
+            android:layout_below="@+id/pending_accept"
+            android:layout_alignLeft="@+id/pending_accept"
+            android:background="@drawable/round_button_close"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        </RelativeLayout>
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

@@ -20,8 +20,8 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter .Pending
     public static class PendingViewHolder extends RecyclerView.ViewHolder{
         private String id;
         private final TextView emailOrigem;
-        //private final TextView nomeUserOrigem;
-        //private final TextView cardenetaToShare;
+        private final TextView nomeUserOrigem;
+        private final TextView cardenetaToShare;
 
         public String getId() {
             return id;
@@ -34,7 +34,8 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter .Pending
         public PendingViewHolder(final View itemView){
             super(itemView);
             itemView.setTag(this);
-
+            nomeUserOrigem = (TextView) itemView.findViewById(R.id.share_nome_origem);
+            cardenetaToShare = (TextView) itemView.findViewById(R.id.share_cardeneta);
             emailOrigem = (TextView) itemView.findViewById(R.id.share_email_origem);
         }
     }
@@ -59,8 +60,9 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter .Pending
         Pendencia pendencia = pendings.get(position);
 
         vHolder.setId(pendencia.get_id());
-        vHolder.emailOrigem.setText(pendencia.getEmailOrigem());
-
+        vHolder.emailOrigem.setText(pendencia.getUser_origin().getEmail());
+        vHolder.cardenetaToShare.setText(pendencia.getCardenetaNome());
+        vHolder.nomeUserOrigem.setText("user name here");
     }
 
     @Override
