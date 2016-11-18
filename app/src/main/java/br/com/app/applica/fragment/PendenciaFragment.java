@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -51,6 +52,22 @@ public class PendenciaFragment extends Fragment {
         RecyclerView.LayoutManager layout;
 
         mAdapter = new PendingAdapter(pendings);
+
+        ((PendingAdapter) mAdapter).setAcceptClickListener(new PendingAdapter.AcceptClickListener() {
+            @Override
+            public void onAcceptClick(int position, View v) {
+                PendingAdapter.PendingViewHolder vHolder = (PendingAdapter.PendingViewHolder) v.getTag();
+                Toast.makeText(navActivity, "ACCEPTED: " + vHolder.getId(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ((PendingAdapter) mAdapter).setRejectClickListener(new PendingAdapter.RejectClickListener() {
+            @Override
+            public void onRejectClick(int position, View v) {
+                PendingAdapter.PendingViewHolder vHolder = (PendingAdapter.PendingViewHolder) v.getTag();
+                Toast.makeText(navActivity, "REJECTED: " + vHolder.getId(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         recyclerView.setAdapter(mAdapter);
         layout = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
