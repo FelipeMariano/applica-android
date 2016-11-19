@@ -61,6 +61,7 @@ public class UnidadeAdapter extends RecyclerView.Adapter<UnidadeAdapter .Unidade
     public void onBindViewHolder(UnidadeViewHolder holder, int position){
         UnidadeViewHolder vHolder = holder;
 
+        holder.itemView.setClickable(true);
         vHolder.itemView.setOnTouchListener(onItemTouch);
 
         Unidade unidade = unidades.get(position);

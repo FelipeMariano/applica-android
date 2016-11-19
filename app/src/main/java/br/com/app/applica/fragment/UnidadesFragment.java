@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,6 +42,7 @@ import br.com.app.applica.entitity.Unidade;
 public class UnidadesFragment extends Fragment {
     public static MainNavActivity navActivity;
     private static String AUTH_TOKEN;
+    private static String CURRENT_UNIDADE_ID;
     private List<Unidade> unidades;
     private RecyclerView.Adapter mAdapter;
 
@@ -119,23 +121,33 @@ public class UnidadesFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 UnidadeAdapter.UnidadeViewHolder vHolder = (UnidadeAdapter.UnidadeViewHolder) v.getTag();
+                CURRENT_UNIDADE_ID = vHolder.getId();
 
-                UnidadeFragment unidadeFragment = new UnidadeFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("unidade_id", vHolder.getId());
-
-                unidadeFragment.setArguments(bundle);
-
-                transaction.replace(R.id.fragment_layout, unidadeFragment);
-                transaction.addToBackStack(null);
-
-                transaction.commit();
-                return true;
+                return gestureDetector.onTouchEvent(event);
             }
         });
     }
+
+    final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener(){
+
+        public boolean onSingleTapUp(MotionEvent e ){
+
+            UnidadeFragment unidadeFragment = new UnidadeFragment();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+            Bundle bundle = new Bundle();
+            bundle.putString("unidade_id", CURRENT_UNIDADE_ID);
+
+            unidadeFragment.setArguments(bundle);
+
+            transaction.replace(R.id.fragment_layout, unidadeFragment);
+            transaction.addToBackStack(null);
+
+            transaction.commit();
+
+            return true;
+        }
+    });
 
     private List<Unidade> loadUnidades(){
         List<Unidade> loadedUnidades = new ArrayList<>();

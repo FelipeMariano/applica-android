@@ -19,8 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.MainNavActivity;
@@ -52,8 +50,8 @@ public class UnidadeFragment extends Fragment {
         Bundle bundle = this.getArguments();
 
         CURRENT_UNIDADE_ID = bundle.getString("unidade_id");
-
-        setUnidade(unidadeView, loadUnidade());
+        loadUnidade();
+        setUnidade(unidadeView, CURRENT_UNIDADE);
 
         return unidadeView;
     }
@@ -64,12 +62,6 @@ public class UnidadeFragment extends Fragment {
 
         nome.setText(unidade.getNome());
         endereco.setText(unidade.getLocation().getAddress());
-
-        List<String> vacinas = new ArrayList<>();
-        vacinas.add("Hepatite B");
-        vacinas.add("Gripe");
-
-        unidade.setVacinas(vacinas);
 
         ArrayAdapter adapter = new ArrayAdapter<String>(navActivity, R.layout.vacina_unidade_item, unidade.getVacinas());
 
@@ -113,7 +105,6 @@ public class UnidadeFragment extends Fragment {
                 HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
 
                 ResponseEntity<Unidade> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, Unidade.class);
-                System.out.println(result.getBody());
 
                 loadedUnidade = result.getBody();
 

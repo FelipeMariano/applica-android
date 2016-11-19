@@ -76,7 +76,7 @@ public class HomeFragment extends Fragment{
             public boolean onTouch(View v, MotionEvent event) {
                 CardenetaAdapter.CardenetaViewHolder vHolder = (CardenetaAdapter.CardenetaViewHolder) v.getTag();
                 CURRENT_CARD_ID = vHolder.getId();
-                //return getGestureDetector(event, v);
+
                 return gestureDetector.onTouchEvent(event);
             }
         });
