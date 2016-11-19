@@ -37,6 +37,7 @@ public class User {
     private String email;
     private String password;
     private List<String> pendings;
+    private Localizacao location;
 
 
     private List<Cardeneta> listaCardenetas;
@@ -55,6 +56,15 @@ public class User {
         this.pendings = pendings;
         setRestConfig();
 
+    }
+
+    public User(String id, String authToken, String email, String password, List<String> pendings, Localizacao location) {
+        this.id = id;
+        this.authToken = authToken;
+        this.email = email;
+        this.password = password;
+        this.pendings = pendings;
+        this.location = location;
     }
 
     public User(){
@@ -91,6 +101,14 @@ public class User {
 
     public void setListaCardenetas(List<Cardeneta> listaCardenetas) {
         this.listaCardenetas = listaCardenetas;
+    }
+
+    public Localizacao getLocation() {
+        return location;
+    }
+
+    public void setLocation(Localizacao location) {
+        this.location = location;
     }
 
     public String getAuthToken() {

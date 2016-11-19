@@ -69,7 +69,7 @@ public class UnidadesFragment extends Fragment {
             dummy_unidades.add(un);
         }
         unidades = loadUnidades();
-        System.out.println(unidades.get(0).getLocation().getCoordinates());
+
         setRecyclerLayout(mRecyclerView, unidades);
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
@@ -144,7 +144,8 @@ public class UnidadesFragment extends Fragment {
             requestHeaders.setContentType(MediaType.APPLICATION_JSON);
             requestHeaders.add("x-access-token", AUTH_TOKEN);
 
-            String url = navActivity.BASE_URL + "/api/locais/";
+            String url = navActivity.BASE_URL + "/api/locais/near/";
+            url += navActivity.CURRENT_USER.getId();
 
             HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
 
