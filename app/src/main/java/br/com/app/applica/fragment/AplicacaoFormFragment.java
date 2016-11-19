@@ -127,9 +127,9 @@ public class AplicacaoFormFragment extends Fragment {
             Spinner dose_spinner = (Spinner) view.findViewById(R.id.aplicacao_dose);
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(navActivity, R.array.dose_arrays,
                     android.R.layout.simple_spinner_item);
-            int itemPosition = adapter.getPosition(aplicacao.getDose());
+            //int itemPosition = adapter.getPosition(aplicacao.getDose().toString());
 
-            dose_spinner.setSelection(itemPosition);
+            dose_spinner.setSelection(aplicacao.getDose());
         }
 
         if(!aplicacao.getVacina().equals(null)){
@@ -153,7 +153,7 @@ public class AplicacaoFormFragment extends Fragment {
         dose_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                CURRENT_APLICACAO.setDose((String) parent.getItemAtPosition(position));
+                CURRENT_APLICACAO.setDose(position);
             }
 
             @Override
@@ -211,7 +211,7 @@ public class AplicacaoFormFragment extends Fragment {
         CheckBox isEfetivada = (CheckBox) view.findViewById(R.id.aplicacao_efetivada);
         String data = year_x + "-" + month_x + "-" + day_x;
 
-        CURRENT_APLICACAO.setDose(dose.getSelectedItem().toString());
+        CURRENT_APLICACAO.setDose(dose.getSelectedItemPosition());
         CURRENT_APLICACAO.setVacina(vacina.getSelectedItem().toString());
         CURRENT_APLICACAO.setEfetivada(isEfetivada.isChecked());
         CURRENT_APLICACAO.setData(data);

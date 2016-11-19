@@ -10,14 +10,14 @@ public class Aplicacao {
     private String _id;
     private String vacina;
     private String data;
-    private String dose;
+    private Integer dose;
     private Boolean efetivada;
 
     public Aplicacao(){
 
     }
 
-    public Aplicacao(String _id, String vacina, String data, String dose, Boolean efetivada) {
+    public Aplicacao(String _id, String vacina, String data, Integer dose, Boolean efetivada) {
         this._id = _id;
         this.vacina = vacina;
         this.data = data;
@@ -49,11 +49,11 @@ public class Aplicacao {
         this.vacina = vacina;
     }
 
-    public String getDose() {
+    public Integer getDose() {
         return dose;
     }
 
-    public void setDose(String dose) {
+    public void setDose(Integer dose) {
         this.dose = dose;
     }
 

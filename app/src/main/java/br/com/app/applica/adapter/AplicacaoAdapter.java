@@ -80,8 +80,21 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
         vHolder.setId(aplicacao.get_id());
        // vHolder.data.setText(aplicacao.get_id());
 
-        vHolder.data.setText("Data: " + aplicacao.getFormattedData());
-        vHolder.dose.setText(aplicacao.getDose());
+
+        String data;
+        if(aplicacao.getData() == null)
+            data = "*Necessário adicionar data";
+        else
+            data = "Data: " + aplicacao.getFormattedData();
+
+        vHolder.data.setText(data);
+
+        String dose;
+        if(aplicacao.getDose().equals(0))
+            dose = "Dose única";
+        else
+            dose = aplicacao.getDose() + "ª dose";
+        vHolder.dose.setText(dose);
         vHolder.vacina.setText(aplicacao.getVacina());
     }
 
