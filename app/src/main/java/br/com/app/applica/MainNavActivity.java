@@ -139,7 +139,7 @@ public class MainNavActivity extends AppCompatActivity
         TextView nome = (TextView) findViewById(R.id.nav_header_name);
         TextView email = (TextView) findViewById(R.id.nav_header_email);
 
-        nome.setText("Alpha Test");
+        nome.setText(CURRENT_USER.getFullName());
         email.setText(CURRENT_USER.getEmail());
         //getMenuInflater().inflate(R.menu.main_nav, menu);
         }

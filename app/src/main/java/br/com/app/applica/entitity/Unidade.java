@@ -13,6 +13,9 @@ public class Unidade {
     private String nome;
     private String cnpj;
     private String razao_social;
+    private String telefone;
+    private String email;
+    private String website;
     private Localizacao location;
     private List<String> vacinas;
 
@@ -24,6 +27,18 @@ public class Unidade {
         this.nome = nome;
         this.cnpj = cnpj;
         this.razao_social = razao_social;
+        this.location = location;
+        this.vacinas = vacinas;
+    }
+
+    public Unidade(String _id, String nome, String cnpj, String razao_social, String telefone, String email, String website, Localizacao location, List<String> vacinas) {
+        this._id = _id;
+        this.nome = nome;
+        this.cnpj = cnpj;
+        this.razao_social = razao_social;
+        this.telefone = telefone;
+        this.email = email;
+        this.website = website;
         this.location = location;
         this.vacinas = vacinas;
     }
@@ -70,6 +85,30 @@ public class Unidade {
 
     public List<String> getVacinas() {
         return vacinas;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
     public void setVacinas(List<String> vacinas) {

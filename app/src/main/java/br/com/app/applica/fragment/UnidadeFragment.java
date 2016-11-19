@@ -59,9 +59,15 @@ public class UnidadeFragment extends Fragment {
     private void setUnidade(View view, Unidade unidade){
         TextView nome = (TextView) view.findViewById(R.id.unidade_nome);
         TextView endereco = (TextView) view.findViewById(R.id.unidade_endereco);
+        TextView telefone = (TextView) view.findViewById(R.id.unidade_tel);
+        TextView email = (TextView) view.findViewById(R.id.unidade_email);
+        TextView website = (TextView) view.findViewById(R.id.unidade_website);
 
         nome.setText(unidade.getNome());
         endereco.setText(unidade.getLocation().getAddress());
+        telefone.setText(unidade.getTelefone());
+        email.setText(unidade.getEmail());
+        website.setText(unidade.getWebsite());
 
         ArrayAdapter adapter = new ArrayAdapter<String>(navActivity, R.layout.vacina_unidade_item, unidade.getVacinas());
 
