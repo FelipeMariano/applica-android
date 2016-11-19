@@ -269,7 +269,7 @@ public class CardenetaFormFragment extends Fragment {
             ResponseEntity<Cardeneta> result;
             if(CURRENT_CARD_ID != null) {
                 System.out.println("THIS MUST EDIT!");
-                url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
+                url = navActivity.BASE_URL + "/api/cardenetas/" + CURRENT_CARD_ID;
                 result = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, Cardeneta.class);
             }else{
                 result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Cardeneta.class);

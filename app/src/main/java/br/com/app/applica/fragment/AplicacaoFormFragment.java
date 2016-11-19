@@ -310,7 +310,7 @@ public class AplicacaoFormFragment extends Fragment {
             ResponseEntity<Aplicacao> result;
             if(CURRENT_APLICACAO_ID != null){
                 System.out.println("THIS MUST EDIT!");
-                url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/aplicacoes/" + CURRENT_APLICACAO_ID;
+                url = navActivity.BASE_URL + "/api/aplicacoes/" + CURRENT_APLICACAO_ID;
                 result = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, Aplicacao.class);
             }else {
                 result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Aplicacao.class);

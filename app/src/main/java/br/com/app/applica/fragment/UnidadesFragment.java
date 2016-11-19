@@ -38,7 +38,7 @@ import br.com.app.applica.entitity.Unidade;
  * A simple {@link Fragment} subclass.
  */
 public class UnidadesFragment extends Fragment {
-    MainNavActivity navActivity;
+    public static MainNavActivity navActivity;
     private static String AUTH_TOKEN;
     private List<Unidade> unidades;
     private RecyclerView.Adapter mAdapter;
@@ -144,7 +144,7 @@ public class UnidadesFragment extends Fragment {
             requestHeaders.setContentType(MediaType.APPLICATION_JSON);
             requestHeaders.add("x-access-token", AUTH_TOKEN);
 
-            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/locais/";
+            String url = navActivity.BASE_URL + "/api/locais/";
 
             HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
 

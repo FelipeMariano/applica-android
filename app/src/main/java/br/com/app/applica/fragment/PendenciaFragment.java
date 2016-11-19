@@ -41,7 +41,7 @@ public class PendenciaFragment extends Fragment {
     private List<Pendencia> pendencias;
 
 
-    MainNavActivity navActivity;
+    public static MainNavActivity navActivity;
 
     public PendenciaFragment() {
         // Required empty public constructor
@@ -160,7 +160,7 @@ public class PendenciaFragment extends Fragment {
 
             try {
 
-                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + CURRENT_USER_ID;
+                String url = navActivity.BASE_URL + "/api/users/" + CURRENT_USER_ID;
                 url += "/pendings";
 
                 HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
@@ -194,7 +194,7 @@ public class PendenciaFragment extends Fragment {
 
             try {
 
-                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/share/" + PENDING_ID;
+                String url = navActivity.BASE_URL +  "/api/share/" + PENDING_ID;
                 url += "/accept";
 
                 HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
