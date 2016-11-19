@@ -90,13 +90,17 @@ public class HomeFragment extends Fragment{
         // Required empty public constructor
     }
 
+    private void setCurrentUser(){
+        CURRENT_USER = navActivity.CURRENT_USER;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         navActivity = (MainNavActivity) getActivity();
-        CURRENT_USER = navActivity.CURRENT_USER;
+
+        setCurrentUser();
 
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cardeneta_recycler);
@@ -125,6 +129,7 @@ public class HomeFragment extends Fragment{
 
     final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener(){
        public void onLongPress(MotionEvent e){
+            mMenu.clear();
             navActivity.getMenuInflater().inflate(R.menu.main_nav, mMenu);
        }
 
@@ -150,15 +155,31 @@ public class HomeFragment extends Fragment{
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
         mMenu = menu;
+        setPendingsAlert();
 
-        if(CURRENT_USER.getPendings().size() > 0)
-            navActivity.getMenuInflater().inflate(R.menu.pending_menu, mMenu);
-
-        navActivity.getMenuInflater().inflate(R.menu.home_menu, menu);
+        inflateMainMenu();
     }
 
+    private void inflateMainMenu(){
+        navActivity.getMenuInflater().inflate(R.menu.home_menu, mMenu);
+    }
 
+    @Override
+    public void onResume(){
+        super.onResume();
 
+        if(mMenu != null)
+            setPendingsAlert();
+    }
+
+    private void setPendingsAlert() {
+        mMenu.clear();
+        setCurrentUser();
+        System.out.println("PENDINGS: " + CURRENT_USER.getPendings().size());
+        if (CURRENT_USER.getPendings().size() > 0) {
+            navActivity.getMenuInflater().inflate(R.menu.pending_menu, mMenu);
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
@@ -166,6 +187,8 @@ public class HomeFragment extends Fragment{
                 try{
                     setRecyclerLayout(mRecyclerView);
                     Toast.makeText(navActivity, "Dados atualizados", Toast.LENGTH_SHORT).show();
+                    setPendingsAlert();
+                    inflateMainMenu();
                 }catch(Exception e){
                     Toast.makeText(navActivity, "Erro ao atualizar", Toast.LENGTH_SHORT).show();
                 }

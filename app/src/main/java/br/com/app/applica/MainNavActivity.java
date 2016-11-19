@@ -60,6 +60,7 @@ public class MainNavActivity extends AppCompatActivity
     public static Toolbar toolbar;
 
     public User CURRENT_USER;
+    public Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

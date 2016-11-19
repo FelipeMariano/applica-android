@@ -57,7 +57,7 @@ public class PendenciaFragment extends Fragment {
             @Override
             public void onAcceptClick(int position, View v) {
                 PendingAdapter.PendingViewHolder vHolder = (PendingAdapter.PendingViewHolder) v.getTag();
-                Toast.makeText(navActivity, "ACCEPTED: " + vHolder.getId(), Toast.LENGTH_SHORT).show();
+                accept(vHolder.getId());
             }
         });
 
@@ -65,6 +65,7 @@ public class PendenciaFragment extends Fragment {
             @Override
             public void onRejectClick(int position, View v) {
                 PendingAdapter.PendingViewHolder vHolder = (PendingAdapter.PendingViewHolder) v.getTag();
+
                 Toast.makeText(navActivity, "REJECTED: " + vHolder.getId(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -82,6 +83,7 @@ public class PendenciaFragment extends Fragment {
         try{
             pendingsLoadTask.execute();
             pendings = pendingsLoadTask.get(5000, TimeUnit.MILLISECONDS);
+
         }catch (Exception e){
             System.out.println("ERRO AO CARREGAR PENDENCIAS: " + e);
             pendings = new ArrayList<>();
@@ -125,6 +127,24 @@ public class PendenciaFragment extends Fragment {
         return pendingsView;
     }
 
+    private Cardeneta accept(String pending){
+        PendingAcceptTask pendingAcceptTask = new PendingAcceptTask();
+
+        try{
+            pendingAcceptTask.execute(pending);
+            pendingAcceptTask.get(5000, TimeUnit.MILLISECONDS);
+
+            Toast.makeText(navActivity, "Cardeneta aceita com sucesso!", Toast.LENGTH_SHORT).show();
+            navActivity.getSupportFragmentManager().popBackStack();
+           navActivity.CURRENT_USER.getPendings().remove(pending);
+        }catch(Exception e){
+            System.out.println("ERRO AO ACEITAR PENDÊNCIA" + e);
+        }
+
+        return null;
+    }
+
+
     private static class PendingsLoadTask extends AsyncTask<Void, Void, List<Pendencia>> {
 
         @Override
@@ -159,4 +179,35 @@ public class PendenciaFragment extends Fragment {
     }
 
 
+    private static class PendingAcceptTask extends AsyncTask<String, Void, Cardeneta>{
+
+        @Override
+        protected Cardeneta doInBackground(String... params) {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders requestHeaders = new HttpHeaders();
+
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+            requestHeaders.add("x-access-token", AUTH_TOKEN);
+
+            String PENDING_ID = params[0];
+
+            try {
+
+                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/share/" + PENDING_ID;
+                url += "/accept";
+
+                HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
+
+                ResponseEntity<?> result = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, Object.class);
+                System.out.println(result.getBody());
+
+            }catch(Exception e){
+                System.out.println("ERRO AO DELETAR CARDENETA: " + e);
+
+            }
+
+            return null;
+        }
+    }
 }
