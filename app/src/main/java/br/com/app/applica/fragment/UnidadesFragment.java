@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -54,6 +55,8 @@ public class UnidadesFragment extends Fragment {
 
         navActivity = (MainNavActivity) getActivity();
         AUTH_TOKEN = navActivity.CURRENT_USER.getAuthToken();
+
+        navActivity.toggleFab("HIDE", null);
 
         ///
 
@@ -112,7 +115,26 @@ public class UnidadesFragment extends Fragment {
 
         recyclerView.setLayoutManager(layout);
 
+        ((UnidadeAdapter) mAdapter).setOnItemTouch(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                UnidadeAdapter.UnidadeViewHolder vHolder = (UnidadeAdapter.UnidadeViewHolder) v.getTag();
 
+                UnidadeFragment unidadeFragment = new UnidadeFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("unidade_id", vHolder.getId());
+
+                unidadeFragment.setArguments(bundle);
+
+                transaction.replace(R.id.fragment_layout, unidadeFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+                return true;
+            }
+        });
     }
 
     private List<Unidade> loadUnidades(){

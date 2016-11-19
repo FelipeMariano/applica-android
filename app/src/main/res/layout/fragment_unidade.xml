@@ -1,0 +1,83 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.com.app.applica.fragment.UnidadeFragment">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/unidade_infos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+            <TextView
+                android:text="Nome:"
+                android:id="@+id/label_unidade_nome"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"/>
+            <TextView
+                android:text="Nome"
+                android:id="@+id/unidade_nome"
+                android:layout_below="@+id/label_unidade_nome"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content" />
+
+
+
+            <TextView
+                android:text="Telefone:"
+                android:id="@+id/label_unidade_tel"
+                android:layout_below="@+id/unidade_nome"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"/>
+            <TextView
+                android:text="Telefone"
+                android:id="@+id/unidade_tel"
+                android:layout_alignStart="@+id/label_unidade_tel"
+                android:layout_below="@+id/label_unidade_tel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="Endereço:"
+                android:id="@+id/label_unidade_endco"
+                android:layout_alignStart="@+id/unidade_tel"
+                android:layout_below="@+id/unidade_tel"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textStyle="bold"/>
+            <TextView
+                android:text="Endereço"
+                android:id="@+id/unidade_endereco"
+
+                android:layout_alignStart="@+id/label_unidade_endco"
+                android:layout_below="@+id/label_unidade_endco"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <TextView
+            android:text="Vacinas disponíveis:"
+            android:layout_below="@+id/unidade_infos"
+            android:id="@+id/label_vacinas"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"/>
+        <ListView
+            android:id="@+id/vacinas_unidade"
+            android:layout_below="@+id/label_vacinas"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+    </RelativeLayout>
+
+</FrameLayout>
