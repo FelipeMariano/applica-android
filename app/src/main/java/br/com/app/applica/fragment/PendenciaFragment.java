@@ -65,8 +65,7 @@ public class PendenciaFragment extends Fragment {
             @Override
             public void onRejectClick(int position, View v) {
                 PendingAdapter.PendingViewHolder vHolder = (PendingAdapter.PendingViewHolder) v.getTag();
-
-                Toast.makeText(navActivity, "REJECTED: " + vHolder.getId(), Toast.LENGTH_SHORT).show();
+                reject(vHolder.getId());
             }
         });
 
@@ -144,6 +143,21 @@ public class PendenciaFragment extends Fragment {
         return null;
     }
 
+    private void reject(String pending){
+        PendingRejectTask pendingRejectTask = new PendingRejectTask();
+
+        try{
+            pendingRejectTask.execute(pending);
+            pendingRejectTask.get(5000, TimeUnit.MILLISECONDS);
+
+            Toast.makeText(navActivity, "A cardeneta foi rejeitada", Toast.LENGTH_SHORT).show();
+            navActivity.getSupportFragmentManager().popBackStack();
+            navActivity.CURRENT_USER.getPendings().remove(pending);
+        }catch(Exception e){
+            System.out.println("ERRO AO REJEITAR PENDÊNCIA" + e);
+        }
+    }
+
 
     private static class PendingsLoadTask extends AsyncTask<Void, Void, List<Pendencia>> {
 
@@ -178,6 +192,35 @@ public class PendenciaFragment extends Fragment {
         }
     }
 
+    private static class PendingRejectTask extends AsyncTask<String, Void, User>{
+
+        @Override
+        protected User doInBackground(String... params) {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders requestHeaders = new HttpHeaders();
+
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+            requestHeaders.add("x-access-token", AUTH_TOKEN);
+
+            String PENDING_ID = params[0];
+
+            try{
+                String url = navActivity.BASE_URL +  "/api/share/" + PENDING_ID;
+                url += "/reject";
+
+                HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
+
+                ResponseEntity<?> result = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, Object.class);
+                System.out.println(result.getBody());
+
+            }catch(Exception e){
+                System.out.println("ERRO AO REJEITAR CARD: " + e);
+            }
+
+            return null;
+        }
+    }
 
     private static class PendingAcceptTask extends AsyncTask<String, Void, Cardeneta>{
 
