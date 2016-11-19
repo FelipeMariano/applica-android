@@ -40,7 +40,7 @@ import br.com.app.applica.entitity.Aplicacao;
  * A simple {@link Fragment} subclass.
  */
 public class AplicacaoFormFragment extends Fragment {
-    MainNavActivity navActivity;
+    public static MainNavActivity navActivity;
     public static String CURRENT_CARD_ID = null;
     public static String CURRENT_APLICACAO_ID = null;
     public static Aplicacao CURRENT_APLICACAO;
@@ -251,7 +251,7 @@ public class AplicacaoFormFragment extends Fragment {
 
         @Override
         protected Aplicacao doInBackground(Void... params) {
-            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/aplicacoes/" + CURRENT_APLICACAO_ID;
+            String url = navActivity.BASE_URL + "/api/aplicacoes/" + CURRENT_APLICACAO_ID;
 
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders requestHeaders = new HttpHeaders();
@@ -274,7 +274,7 @@ public class AplicacaoFormFragment extends Fragment {
         @Override
         protected Aplicacao doInBackground(Void... params) {
 
-            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
+            String url = navActivity.BASE_URL + "/api/cardenetas/" + CURRENT_CARD_ID;
             url += "/aplicacoes";
 
 

@@ -37,10 +37,14 @@ import br.com.app.applica.entitity.User;
 public class LoginActivity extends AppCompatActivity {
 
     private User user;
+    String baseUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        baseUrl = getResources().getString(R.string.base_url);
 
         user = new User();
 
@@ -136,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
         protected User doInBackground(Void... params){
             try{
                 //User loggedUser = new User();
-                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/authenticate";
+                String url = baseUrl + "/authenticate";
 
                 RestTemplate restTemplate = new RestTemplate();
                 HttpHeaders requestHeaders = new HttpHeaders();

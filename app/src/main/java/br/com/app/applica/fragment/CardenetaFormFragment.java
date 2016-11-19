@@ -217,7 +217,7 @@ public class CardenetaFormFragment extends Fragment {
     private class CardenetaLoadTask extends AsyncTask<Void, Void, Cardeneta> {
         @Override
         protected Cardeneta doInBackground(Void... params) {
-            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
+            String url = navActivity.BASE_URL + "/api/cardenetas/" + CURRENT_CARD_ID;
 
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders requestHeaders = new HttpHeaders();
@@ -239,7 +239,7 @@ public class CardenetaFormFragment extends Fragment {
 
         @Override
         protected Cardeneta doInBackground(Void... params) {
-            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + navActivity.CURRENT_USER.getId();
+            String url = navActivity.BASE_URL + "/api/users/" + navActivity.CURRENT_USER.getId();
             url += "/cardenetas";
 
             RestTemplate restTemplate = new RestTemplate();

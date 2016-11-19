@@ -57,7 +57,7 @@ public class CardenetaFragment extends Fragment {
     private List<Aplicacao> aplicacoes;
     private RecyclerView.Adapter mAdapter;
 
-    MainNavActivity navActivity;
+    public static MainNavActivity navActivity;
 
     public CardenetaFragment() {
         // Required empty public constructor
@@ -381,7 +381,7 @@ public class CardenetaFragment extends Fragment {
 
             try {
 
-                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + card;
+                String url = navActivity.BASE_URL +  "/api/cardenetas/" + card;
                 url += "/share";
 
                 HttpEntity<String> httpEntity = new HttpEntity<String>(_writer.toString(), requestHeaders);
@@ -409,7 +409,7 @@ public class CardenetaFragment extends Fragment {
 
             try {
 
-                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
+                String url = navActivity.BASE_URL + "/api/cardenetas/" + CURRENT_CARD_ID;
 
                 HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
 
@@ -431,7 +431,7 @@ public class CardenetaFragment extends Fragment {
         private void loadData(HttpHeaders requestHeaders, RestTemplate restTemplate){
             try {
 
-                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
+                String url = navActivity.BASE_URL + "/api/cardenetas/" + CURRENT_CARD_ID;
 
                 HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
 
@@ -444,7 +444,7 @@ public class CardenetaFragment extends Fragment {
         }
 
         private void loadAplicacoes(HttpHeaders requestHeaders, RestTemplate restTemplate){
-            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/cardenetas/" + CURRENT_CARD_ID;
+            String url = navActivity.BASE_URL + "/api/cardenetas/" + CURRENT_CARD_ID;
             url += "/aplicacoes";
 
             HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);

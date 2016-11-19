@@ -232,7 +232,7 @@ public class HomeFragment extends Fragment{
             requestHeaders.setContentType(MediaType.APPLICATION_JSON);
             requestHeaders.add("x-access-token", CURRENT_USER.getAuthToken());
 
-            String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + CURRENT_USER.getId();
+            String url = navActivity.BASE_URL + "/api/users/" + CURRENT_USER.getId();
             url += "/cardenetas";
 
             HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);

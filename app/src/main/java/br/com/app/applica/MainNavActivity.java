@@ -41,6 +41,7 @@ public class MainNavActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView.Adapter mAdapter;
+    public static String BASE_URL;
 
     private String[] activityTitles;
     private NavigationView navigationView;
@@ -69,6 +70,8 @@ public class MainNavActivity extends AppCompatActivity
         setContentView(R.layout.activity_main_nav);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        BASE_URL = getResources().getString(R.string.base_url);
 
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -295,7 +298,7 @@ public class MainNavActivity extends AppCompatActivity
                 requestHeaders.setContentType(MediaType.APPLICATION_JSON);
                 requestHeaders.add("x-access-token", authToken);
 
-                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/api/users/" + CURRENT_USER.getId();
+                String url = BASE_URL + "/api/users/" + CURRENT_USER.getId();
 
                 HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
                 ResponseEntity<?> result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, User.class);

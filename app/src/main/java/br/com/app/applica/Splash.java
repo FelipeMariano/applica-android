@@ -38,6 +38,7 @@ import br.com.app.applica.entitity.User;
  */
 public class Splash extends AppCompatActivity {
     private User user;
+    private String baseUrl;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -88,6 +89,8 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash);
+
+        baseUrl = getResources().getString(R.string.base_url);
 
         mVisible = true;
         mContentView = findViewById(R.id.fullscreen_content);
@@ -282,7 +285,7 @@ public class Splash extends AppCompatActivity {
         protected User doInBackground(Void... params){
             try{
                 User user = new User();
-                String url = "http://applica-ihc.44fs.preview.openshiftapps.com/authenticate";
+                String url = baseUrl + "/authenticate";
 
                 RestTemplate restTemplate = new RestTemplate();
                 HttpHeaders requestHeaders = new HttpHeaders();
