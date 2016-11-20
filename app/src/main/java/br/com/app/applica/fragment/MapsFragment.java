@@ -28,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -95,6 +96,14 @@ public class MapsFragment extends Fragment {
                     public void onMyLocationChange(Location location) {
                         if(LOCATION_MOVE) {
                             LOCATION_MOVE = false;
+
+                         //   myGoogleMap.addMarker(
+                          //          new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude()))
+                          //                  .title("Minha localização")
+                          //                  .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_my_location))
+                           // );
+
+
                             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16);
                             myGoogleMap.animateCamera(update);
 
@@ -111,6 +120,7 @@ public class MapsFragment extends Fragment {
                                         new MarkerOptions().position(LOC)
                                                 .title(unidade.getNome())
                                                 .snippet(desc)
+                                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_default_location))
                                 );
 
                                 myGoogleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
