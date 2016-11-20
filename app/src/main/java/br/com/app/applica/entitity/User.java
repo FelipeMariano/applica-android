@@ -2,7 +2,6 @@ package br.com.app.applica.entitity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,7 +21,7 @@ public class User {
     private Localizacao location;
 
     private String sexo;
-    private Date dt_nasc;
+    private String dt_nasc;
 
 
     private List<Cardeneta> listaCardenetas;
@@ -141,11 +140,11 @@ public class User {
         this.sexo = sexo;
     }
 
-    public Date getDt_nasc() {
+    public String getDt_nasc() {
         return dt_nasc;
     }
 
-    public void setDt_nasc(Date dt_nasc) {
+    public void setDt_nasc(String dt_nasc) {
         this.dt_nasc = dt_nasc;
     }
 
