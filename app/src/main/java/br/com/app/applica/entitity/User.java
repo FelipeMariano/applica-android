@@ -2,6 +2,7 @@ package br.com.app.applica.entitity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +20,9 @@ public class User {
     private String sobrenome;
     private List<String> pendings;
     private Localizacao location;
+
+    private String sexo;
+    private Date dt_nasc;
 
 
     private List<Cardeneta> listaCardenetas;
@@ -127,6 +131,22 @@ public class User {
 
     public void setSobrenome(String sobrenome) {
         this.sobrenome = sobrenome;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public Date getDt_nasc() {
+        return dt_nasc;
+    }
+
+    public void setDt_nasc(Date dt_nasc) {
+        this.dt_nasc = dt_nasc;
     }
 
     @Override

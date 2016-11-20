@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="br.com.app.applica.activity.SignupActivity">
+    <RelativeLayout
+        android:id="@+id/signup_infos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <EditText
+            android:id="@+id/signup_nome"
+            android:inputType="text"
+            android:hint="Nome"
+            android:backgroundTint="@color/colorGrey"
+            android:textSize="15sp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/signup_sobrenome"
+            android:hint="Sobrenome"
+            android:textSize="15sp"
+            android:backgroundTint="@color/colorGrey"
+            android:layout_marginTop="5dp"
+            android:layout_alignStart="@+id/signup_nome"
+            android:layout_below="@+id/signup_nome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/label_signup_sexo"
+            android:text="Sexo:"
+            android:layout_alignStart="@+id/signup_sobrenome"
+            android:layout_marginStart="5dp"
+            android:layout_below="@+id/signup_sobrenome"
+            android:layout_marginTop="10dp"
+            android:textSize="13sp"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/signup_sexo"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:layout_below="@+id/label_signup_sexo"
+            android:layout_alignStart="@+id/label_signup_sexo"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/label_signup_dt_nasc"
+            android:text="Dt. Nascimento:"
+            android:textSize="13sp"
+            android:layout_marginStart="40dp"
+            android:layout_toEndOf="@+id/label_signup_sexo"
+            android:layout_alignBaseline="@+id/label_signup_sexo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/signup_dt_nasc"
+            android:layout_alignBaseline="@+id/signup_sexo"
+            android:hint="dd/mm/aaaa"
+            android:inputType="date"
+            android:textSize="15sp"
+            android:backgroundTint="@color/colorGrey"
+            android:layout_alignStart="@+id/label_signup_dt_nasc"
+            android:layout_below="@+id/label_signup_dt_nasc"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content" />
+        <!--
+
+            -->
+        <EditText
+            android:id="@+id/signup_email"
+            android:hint="E-mail"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_alignStart="@+id/signup_sexo"
+            android:layout_below="@+id/signup_sexo"
+            android:backgroundTint="@color/colorGrey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/signup_password"
+            android:hint="Password"
+            android:textSize="15sp"
+            android:inputType="textPassword"
+            android:layout_marginTop="10dp"
+            android:layout_alignStart="@+id/signup_email"
+            android:layout_below="@+id/signup_email"
+            android:layout_width="match_parent"
+            android:backgroundTint="@color/colorGrey"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/signup_password_repeat"
+            android:hint="Repita o password"
+            android:textSize="15sp"
+            android:inputType="textPassword"
+            android:backgroundTint="@color/colorGrey"
+            android:layout_marginTop="10dp"
+            android:layout_alignStart="@+id/signup_password"
+            android:layout_below="@+id/signup_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp">
+       <Button
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Enviar"
+           android:letterSpacing="0.2"
+           android:id="@+id/signup_btn_send"
+           android:textSize="12sp"
+           android:textColor="@color/colorWhite"
+           android:background="@drawable/buttonsignup"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -62,6 +62,14 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
+
+        Button buttonSignup = (Button) findViewById(R.id.btn_signup);
+        buttonSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signUp();
+            }
+        });
     }
 
     private void setFields(){
@@ -70,6 +78,12 @@ public class LoginActivity extends AppCompatActivity {
 
         user.setEmail(email.getText().toString().toLowerCase());
         user.setPassword(password.getText().toString().toLowerCase());
+    }
+
+    private void signUp(){
+        Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void login() {

@@ -67,26 +67,7 @@ public class MainNavActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         System.out.println("INITIALIZING MAIN NAV");
-        setContentView(R.layout.activity_main_nav);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        BASE_URL = getResources().getString(R.string.base_url);
-
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-
-
-        activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
         String userId = "";
         String userToken = "";
         Bundle extras = getIntent().getExtras();
@@ -112,6 +93,29 @@ public class MainNavActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         }
+
+
+        setContentView(R.layout.activity_main_nav);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        BASE_URL = getResources().getString(R.string.base_url);
+
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
+
+        activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
 
         if(savedInstanceState == null && CURRENT_USER.getId() != null){
             CURRENT_TAG = TAG_HOME;
