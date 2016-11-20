@@ -106,14 +106,14 @@ public class AplicacaoFormFragment extends Fragment {
             System.out.println("ERRO AO CARREGAR APLICACAO PARA EDIÇÃO: " + e);
         }
 
-        System.out.println(loadedAplicacao.getData());
+        System.out.println("APLICACAO: " + loadedAplicacao.getVacina());
 
         return new Aplicacao();
     }
 
     private void setLoadedAplicacao(Aplicacao aplicacao, View view){
 
-        if(!aplicacao.getData().equals(null)){
+        if(aplicacao.getData() != null){
            String data = aplicacao.getFormattedData();
            Button dataButton = (Button) view.findViewById(R.id.aplicacao_data);
            dataButton.setText(data);
