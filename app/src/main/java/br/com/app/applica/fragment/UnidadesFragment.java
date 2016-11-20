@@ -94,6 +94,7 @@ public class UnidadesFragment extends Fragment {
             case(R.id.action_map_unidades):
                 Toast.makeText(navActivity, "MAP SHOWS!", Toast.LENGTH_SHORT).show();
                 Fragment mapsFragment = new MapsFragment();
+                MapsFragment.unidades = unidades;
                 FragmentManager fragmentManager = navActivity.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_layout, mapsFragment);
