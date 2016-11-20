@@ -42,7 +42,7 @@ import br.com.app.applica.entitity.User;
 public class HomeFragment extends Fragment{
     private User CURRENT_USER;
     private Boolean OPTIONS_SHOW = false;
-    List<Cardeneta> cardenetas;
+    public static List<Cardeneta> cardenetas;
     MainNavActivity navActivity;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -82,8 +82,6 @@ public class HomeFragment extends Fragment{
         });
 
         //setOnClickListener();
-
-
     }
 
     public HomeFragment() {
@@ -180,6 +178,7 @@ public class HomeFragment extends Fragment{
             navActivity.getMenuInflater().inflate(R.menu.pending_menu, mMenu);
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
@@ -213,6 +212,7 @@ public class HomeFragment extends Fragment{
                 return true;
             case R.id.action_delete:
                 CardenetaFragment.delete(CURRENT_USER.getAuthToken(), CURRENT_CARD_ID, navActivity);
+                setRecyclerLayout(mRecyclerView);
                 return true;
             case R.id.action_share:
                 CardenetaFragment.share(CURRENT_USER.getAuthToken(), CURRENT_CARD_ID, navActivity);

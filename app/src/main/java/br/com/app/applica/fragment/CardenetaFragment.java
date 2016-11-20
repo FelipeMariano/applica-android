@@ -281,14 +281,12 @@ public class CardenetaFragment extends Fragment {
         }
     }
 
-    public static boolean delete(String token, String toDelete, final MainNavActivity navActivity){
+    public static boolean delete(String token, final String toDelete, final MainNavActivity navActivity){
 
         if (toDelete == null || toDelete.equals("")) return false;
 
         CURRENT_CARD_ID = toDelete;
         AUTH_TOKEN = token;
-
-        Boolean deleted = false;
 
         new AlertDialog.Builder(navActivity).setTitle("Deletar cardeneta")
                 .setMessage("Você realmente deseja deletar a cardeneta permanentemente? Todos os dados aqui serão perdidos!")
@@ -315,11 +313,17 @@ public class CardenetaFragment extends Fragment {
 
                         }
                             Toast.makeText(navActivity, "Cardeneta deletada!", Toast.LENGTH_SHORT).show();
+                            for(Cardeneta card : HomeFragment.cardenetas){
+                                if(card.get_id().equals(toDelete)){
+                                    HomeFragment.cardenetas.remove(card);
+                                    break;
+                                }
+                            }
                     }
                 }).setNegativeButton(android.R.string.no, null).show();
 
 
-        return false;
+        return true;
     }
 
     public static void setToEdit(String toEdit, FragmentManager fragmentManager){
@@ -344,8 +348,10 @@ public class CardenetaFragment extends Fragment {
                 setToEdit(CURRENT_CARD_ID, getFragmentManager());
                 return true;
             case R.id.action_delete:
-                delete(AUTH_TOKEN, CURRENT_CARD_ID, null);
+                delete(AUTH_TOKEN, CURRENT_CARD_ID, navActivity);
                 return true;
+            case R.id.action_share:
+                share(AUTH_TOKEN, CURRENT_CARD_ID, navActivity);
         }
         return false;
     }
