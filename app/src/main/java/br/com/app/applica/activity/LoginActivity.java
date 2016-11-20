@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void storageUserData(FileOutputStream fos, FileOutputStream fileos, User user){
+    public static void storageUserData(FileOutputStream fos, FileOutputStream fileos, User user){
         XmlSerializer xmlSerializer = Xml.newSerializer();
         StringWriter writer = new StringWriter();
         try {
