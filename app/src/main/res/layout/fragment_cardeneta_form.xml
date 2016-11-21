@@ -17,6 +17,17 @@
         android:layout_height="50dp"
         android:layout_marginTop="20dp"/>
 
+        <TextView
+            android:id="@+id/error_cardeneta_nome"
+            android:layout_alignStart="@+id/txt_cardeneta_nome"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/txt_cardeneta_nome"
+            android:textSize="12sp"
+            android:text="error"
+            android:textColor="@color/colorRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
 
     <EditText
         android:id="@+id/txt_cardeneta_sobrenome"
@@ -27,6 +38,18 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/txt_cardeneta_nome"
         android:layout_marginTop="50dp"/>
+
+
+        <TextView
+            android:id="@+id/error_cardeneta_sobrenome"
+            android:layout_alignStart="@+id/txt_cardeneta_sobrenome"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/txt_cardeneta_sobrenome"
+            android:textSize="12sp"
+            android:text="error"
+            android:textColor="@color/colorRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     <RelativeLayout
         android:id="@+id/relative_spinner"
@@ -76,6 +99,18 @@
             android:layout_width="match_parent"
             android:layout_marginRight="20dp"
             android:layout_height="30dp"/>
+
+
+        <TextView
+            android:id="@+id/error_cardeneta_data_nasc"
+            android:layout_alignStart="@+id/cardeneta_data_nasc"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/cardeneta_data_nasc"
+            android:textSize="12sp"
+            android:text="error"
+            android:textColor="@color/colorRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </RelativeLayout>
 

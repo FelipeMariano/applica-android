@@ -67,7 +67,7 @@ public class SignupActivity extends AppCompatActivity {
 
         System.out.println(password.getText().toString());
         System.out.println(confirmPassword.getText().toString());
-        if(!password.getText().toString().equals(confirmPassword.getText().toString()) && (!password.getText().toString().equals("")))
+        if(!isValidPassword(password.getText().toString(), confirmPassword.getText().toString()))
             return false;
 
         USER.setPassword(password.getText().toString());
@@ -89,6 +89,26 @@ public class SignupActivity extends AppCompatActivity {
 
         return true;
 
+    }
+
+    private boolean isValidPassword(String password, String repeatedPassword){
+        Boolean isValid = true;
+        TextView errorPass = (TextView) findViewById(R.id.error_signup_password);
+        TextView errorPassRep = (TextView) findViewById(R.id.error_signup_password_repeat);
+
+        if((password == null) || (password.length() <  8)){
+            isValid = false;
+            errorPass.setText("A senha deve conter no mínimo 8 caracteres, com ao menos 1 letra");
+        }
+
+        if(!password.equals(repeatedPassword)){
+            isValid = false;
+            errorPassRep.setText("As senhas não batem.");
+        }else{
+            errorPassRep.setText("");
+        }
+
+        return isValid;
     }
 
     private void signUp(){

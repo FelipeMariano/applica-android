@@ -23,15 +23,37 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content" />
 
+        <TextView
+            android:id="@+id/error_signup_nome"
+            android:layout_alignStart="@+id/signup_nome"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/signup_nome"
+            android:textSize="10sp"
+            android:text="error"
+            android:textColor="@color/colorRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <EditText
             android:id="@+id/signup_sobrenome"
             android:hint="Sobrenome"
             android:textSize="15sp"
             android:backgroundTint="@color/colorGrey"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_alignStart="@+id/signup_nome"
             android:layout_below="@+id/signup_nome"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/error_signup_sobrenome"
+            android:layout_alignStart="@+id/signup_sobrenome"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/signup_sobrenome"
+            android:textSize="10sp"
+            android:text="error"
+            android:textColor="@color/colorRed"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
@@ -40,7 +62,7 @@
             android:layout_alignStart="@+id/signup_sobrenome"
             android:layout_marginStart="5dp"
             android:layout_below="@+id/signup_sobrenome"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:textSize="13sp"
             android:layout_width="150dp"
             android:layout_height="wrap_content" />
@@ -65,6 +87,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+
+
         <EditText
             android:id="@+id/signup_dt_nasc"
             android:layout_alignBaseline="@+id/signup_sexo"
@@ -76,6 +100,7 @@
             android:layout_below="@+id/label_signup_dt_nasc"
             android:layout_width="150dp"
             android:layout_height="wrap_content" />
+
         <!--
 
             -->
@@ -91,29 +116,62 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <TextView
+            android:id="@+id/error_signup_email"
+            android:layout_alignStart="@+id/signup_email"
+            android:layout_below="@+id/signup_email"
+            android:layout_marginLeft="5dp"
+            android:textSize="10sp"
+            android:text="error"
+            android:textColor="@color/colorRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <EditText
             android:id="@+id/signup_password"
             android:hint="Password"
             android:textSize="15sp"
             android:inputType="textPassword"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_alignStart="@+id/signup_email"
             android:layout_below="@+id/signup_email"
             android:layout_width="match_parent"
             android:backgroundTint="@color/colorGrey"
             android:layout_height="wrap_content" />
 
+        <TextView
+            android:id="@+id/error_signup_password"
+            android:layout_alignStart="@+id/signup_password"
+            android:layout_below="@+id/signup_password"
+            android:layout_marginLeft="5dp"
+            android:textSize="10sp"
+            android:text="error"
+            android:textColor="@color/colorRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <EditText
             android:id="@+id/signup_password_repeat"
             android:hint="Repita o password"
             android:textSize="15sp"
             android:inputType="textPassword"
             android:backgroundTint="@color/colorGrey"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_alignStart="@+id/signup_password"
             android:layout_below="@+id/signup_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/error_signup_password_repeat"
+            android:layout_alignStart="@+id/signup_password_repeat"
+            android:layout_below="@+id/signup_password_repeat"
+            android:layout_marginLeft="5dp"
+            android:textSize="10sp"
+            android:text="error"
+            android:textColor="@color/colorRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
