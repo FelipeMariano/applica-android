@@ -11,6 +11,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,7 +36,7 @@ import br.com.app.applica.entitity.Auth;
 import br.com.app.applica.entitity.User;
 
 public class LoginActivity extends AppCompatActivity {
-
+    public static String LOGIN_ERROR;
     private User user;
     String baseUrl;
 
@@ -47,12 +48,20 @@ public class LoginActivity extends AppCompatActivity {
         baseUrl = getResources().getString(R.string.base_url);
 
         user = new User();
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_login);
+
+
+        TextView error = (TextView) findViewById(R.id.login_error);
+        if(LOGIN_ERROR != null){
+            error.setText(LOGIN_ERROR);
+        }else{
+            error.setText("");
+        }
+
 
         Button buttonLogin = (Button) findViewById(R.id.btn_signin);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
@@ -175,13 +184,13 @@ public class LoginActivity extends AppCompatActivity {
                 }catch(Exception e){
 
                 }
-
+                ResponseEntity<Auth> result;
                 try {
 
                     HttpEntity<String> httpEntity = new HttpEntity<String>(_writer.toString(), requestHeaders);
 
-                    ResponseEntity<Auth> result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Auth.class);
-
+                    result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Auth.class);
+                    System.out.println("--> " + result.getStatusCode());
                     Auth body = result.getBody();
 
                     user.setId(body.getUser_id());

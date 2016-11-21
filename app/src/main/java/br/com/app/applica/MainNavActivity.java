@@ -110,6 +110,7 @@ public class MainNavActivity extends AppCompatActivity
 
         if(CURRENT_USER.getId() == null){
             System.out.println("ID IS NULL!");
+            LoginActivity.LOGIN_ERROR = "*Erro ao realizar login. Verifique os dados.";
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
