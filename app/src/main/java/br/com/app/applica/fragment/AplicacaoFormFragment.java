@@ -4,10 +4,15 @@ package br.com.app.applica.fragment;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,6 +23,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -93,10 +99,52 @@ public class AplicacaoFormFragment extends Fragment {
         else
             CURRENT_APLICACAO = new Aplicacao();
 
+        setHasOptionsMenu(true);
         return formAplicacaoView;
     }
 
-    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu, inflater);
+        navActivity.getMenuInflater().inflate(R.menu.delete_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.action_delete:
+                delete();
+
+                return true;
+        }
+        return false;
+    }
+
+    private void delete(){
+
+        new AlertDialog.Builder(navActivity).setTitle("Deletar cardeneta")
+                .setMessage("Você realmente deseja deletar a cardeneta permanentemente? Todos os dados aqui serão perdidos!")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int whichButton){
+                        try{
+
+                            AplicacaoDeleteTask deleteTask = new AplicacaoDeleteTask();
+
+                            deleteTask.execute();
+                            deleteTask.get(5000, TimeUnit.MILLISECONDS);
+
+                            navActivity.getSupportFragmentManager().popBackStack();
+                        }catch(Exception e){
+
+                        }
+                        Toast.makeText(navActivity, "Aplicação deletada!", Toast.LENGTH_SHORT).show();
+                    }
+                }).setNegativeButton(android.R.string.no, null).show();
+
+
+
+    }
 
     private Aplicacao loadAplicacao(View view){
 
@@ -284,7 +332,7 @@ public class AplicacaoFormFragment extends Fragment {
         });
     }
 
-    private class AplicacaoLoadTask extends AsyncTask<Void, Void, Aplicacao>{
+    private class AplicacaoLoadTask extends AsyncTask<Void, Void, Aplicacao> {
 
         @Override
         protected Aplicacao doInBackground(Void... params) {
@@ -303,6 +351,34 @@ public class AplicacaoFormFragment extends Fragment {
             CURRENT_APLICACAO = result.getBody();
 
             return CURRENT_APLICACAO;
+        }
+    }
+
+    private class AplicacaoDeleteTask extends AsyncTask<Void, Void, Aplicacao>{
+
+        @Override
+        protected Aplicacao doInBackground(Void... params) {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders requestHeaders = new HttpHeaders();
+
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+            requestHeaders.add("x-access-token", AUTH_TOKEN);
+
+            try {
+
+                String url = navActivity.BASE_URL + "/api/aplicacoes/" + CURRENT_APLICACAO_ID;
+
+                HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
+
+                ResponseEntity<?> result = restTemplate.exchange(url, HttpMethod.DELETE, httpEntity, Object.class);
+                System.out.println(result.getBody());
+                CURRENT_APLICACAO_ID = null;
+            }catch(Exception e){
+                System.out.println("ERRO AO DELETAR APLICACAO: " + e);
+            }
+
+            return null;
         }
     }
 
