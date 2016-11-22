@@ -144,14 +144,20 @@ public class AplicacaoFormFragment extends Fragment {
             vacina_spinner.setSelection(itemPosition);
         }
 
+
+        System.out.println("LOTE: " + aplicacao.getLote());
+
         if(aplicacao.getEfetivada() != null && aplicacao.getEfetivada()){
             CheckBox isEfetivada = (CheckBox) view.findViewById(R.id.aplicacao_efetivada);
             isEfetivada.setChecked(true);
+
+
 
             if (aplicacao.getLote() != null) {
                 TextView lote = (TextView) view.findViewById(R.id.aplicacao_lote);
                 lote.setText(aplicacao.getLote());
             }
+
         }
     }
 
@@ -327,6 +333,11 @@ public class AplicacaoFormFragment extends Fragment {
                 _map.put("vacina", CURRENT_APLICACAO.getVacina());
                 _map.put("dose", CURRENT_APLICACAO.getDose());
                 _map.put("efetivada", CURRENT_APLICACAO.getEfetivada());
+                if(CURRENT_APLICACAO.getEfetivada() == null)
+                    _map.put("lote", null);
+                else
+                    _map.put("lote", CURRENT_APLICACAO.getLote());
+                
                 _map.put("local", "local");
 
                 mapper.writeValue(_writer, _map);
