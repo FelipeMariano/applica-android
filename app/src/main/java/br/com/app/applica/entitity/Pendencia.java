@@ -57,4 +57,9 @@ public class Pendencia {
     public String getCardenetaNome(){
         return getCardeneta().getNome() + " " + getCardeneta().getSobrenome();
     }
+
+    public String getOrigemNome(){
+       User orig_user = getUser_origin();
+        return orig_user.getNome() + " " + orig_user.getSobrenome();
+    }
 }

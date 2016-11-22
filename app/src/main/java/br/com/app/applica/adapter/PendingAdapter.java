@@ -83,7 +83,7 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter .Pending
         vHolder.setId(pendencia.get_id());
         vHolder.emailOrigem.setText(pendencia.getUser_origin().getEmail());
         vHolder.cardenetaToShare.setText(pendencia.getCardenetaNome());
-        vHolder.nomeUserOrigem.setText("user name here");
+        vHolder.nomeUserOrigem.setText(pendencia.getOrigemNome());
     }
 
     @Override
