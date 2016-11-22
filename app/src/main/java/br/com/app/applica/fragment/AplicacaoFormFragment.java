@@ -14,8 +14,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -84,6 +86,7 @@ public class AplicacaoFormFragment extends Fragment {
         setDoseSpinner(formAplicacaoView);
         setVacinaSpinner(formAplicacaoView);
         setSaveButtonAction(formAplicacaoView);
+        setEfetivadaCheck(formAplicacaoView);
 
         if(CURRENT_APLICACAO_ID != null)
             CURRENT_APLICACAO = loadAplicacao(formAplicacaoView);
@@ -144,6 +147,11 @@ public class AplicacaoFormFragment extends Fragment {
         if(aplicacao.getEfetivada() != null && aplicacao.getEfetivada()){
             CheckBox isEfetivada = (CheckBox) view.findViewById(R.id.aplicacao_efetivada);
             isEfetivada.setChecked(true);
+
+            if (aplicacao.getLote() != null) {
+                TextView lote = (TextView) view.findViewById(R.id.aplicacao_lote);
+                lote.setText(aplicacao.getLote());
+            }
         }
     }
 
@@ -168,6 +176,24 @@ public class AplicacaoFormFragment extends Fragment {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dose_spinner.setAdapter(adapter);
+    }
+
+    private void setEfetivadaCheck(View view){
+
+        final CheckBox  efetivada_check = (CheckBox) view.findViewById(R.id.aplicacao_efetivada);
+        final View efetivada_layout = view.findViewById(R.id.aplicacao_efetivada_options);
+        efetivada_layout.setVisibility(View.GONE);
+
+        efetivada_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(efetivada_check.isChecked()){
+                    efetivada_layout.setVisibility(View.VISIBLE);
+                }else{
+                    efetivada_layout.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private void setVacinaSpinner(View view) {
@@ -210,12 +236,15 @@ public class AplicacaoFormFragment extends Fragment {
         Spinner vacina = (Spinner) view.findViewById(R.id.aplicacao_vacina);
         CheckBox isEfetivada = (CheckBox) view.findViewById(R.id.aplicacao_efetivada);
         String data = year_x + "-" + month_x + "-" + day_x;
+        TextView lote = (TextView) view.findViewById(R.id.aplicacao_lote);
 
         CURRENT_APLICACAO.setDose(dose.getSelectedItemPosition());
         CURRENT_APLICACAO.setVacina(vacina.getSelectedItem().toString());
         CURRENT_APLICACAO.setEfetivada(isEfetivada.isChecked());
         CURRENT_APLICACAO.setData(data);
 
+        if(CURRENT_APLICACAO.getEfetivada())
+            CURRENT_APLICACAO.setLote(lote.getText().toString());
     }
 
     private void saveAplicacao(){

@@ -84,6 +84,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <RelativeLayout
+            android:id="@+id/aplicacao_efetivada_options"
+            android:layout_below="@+id/aplicacao_efetivada"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content">
+
+
+            <EditText
+                android:id="@+id/aplicacao_lote"
+                android:hint="Lote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="(Opcional)"
+                android:layout_alignStart="@id/aplicacao_lote"
+                android:layout_below="@+id/aplicacao_lote"
+                android:textSize="10sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
     </RelativeLayout>
 
 

@@ -67,15 +67,32 @@ public class SignupActivity extends AppCompatActivity {
 
         System.out.println(password.getText().toString());
         System.out.println(confirmPassword.getText().toString());
-        if(!isValidPassword(password.getText().toString(), confirmPassword.getText().toString()))
-            return false;
 
+        Boolean isValid = true;
         USER.setPassword(password.getText().toString());
         USER.setEmail(email.getText().toString());
         USER.setDt_nasc(dtNasc.getText().toString());
         USER.setSexo(sexo.getSelectedItem().toString());
         USER.setNome(nome.getText().toString());
         USER.setSobrenome(sobrenome.getText().toString());
+
+
+        if(!isValidPassword(USER.getPassword(), confirmPassword.getText().toString()))
+            isValid = false;
+
+        if(!isValidEmail(USER.getEmail()))
+            isValid = false;
+
+        if(!isValidNome(USER.getNome()))
+            isValid = false;
+
+        if(!isValidSobrenome(USER.getSobrenome()))
+            isValid = false;
+
+
+        if(!isValid)
+            return false;
+
 
         System.out.println(USER.getPassword());
         System.out.println(USER.getEmail());
@@ -84,11 +101,51 @@ public class SignupActivity extends AppCompatActivity {
         System.out.println(USER.getSobrenome());
         System.out.println(USER.getSexo());
 
-        if(USER.getNome() == null || USER.getSobrenome() == null || USER.getSexo() == null || USER.getEmail() == null || USER.getDt_nasc() == null)
-            return false;
-
         return true;
 
+    }
+
+    private boolean isValidNome(String nome){
+        Boolean isValid = true;
+
+        TextView errorNome = (TextView) findViewById(R.id.error_signup_nome);
+
+        if ((nome == null) || (nome.length() < 1)){
+            isValid = false;
+            errorNome.setText("*Nome inválido");
+        }else{
+            errorNome.setText("");
+        }
+
+        return isValid;
+    }
+
+    private boolean isValidSobrenome(String sobrenome){
+        Boolean isValid = true;
+        TextView errorSobrenome = (TextView) findViewById(R.id.error_signup_sobrenome);
+
+        if((sobrenome == null) || (sobrenome.length() < 1)){
+            isValid = false;
+            errorSobrenome.setText("*Sobrenome inválido");
+        }else{
+            errorSobrenome.setText("");
+        }
+
+        return isValid;
+    }
+
+    private boolean isValidEmail(String email){
+        Boolean isValid = true;
+        TextView errorEmail = (TextView) findViewById(R.id.error_signup_email);
+
+        if((email == null) || (email.length() < 5)){
+            isValid = false;
+            errorEmail.setText("*Email inválido");
+        }else{
+            errorEmail.setText("");
+        }
+
+        return isValid;
     }
 
     private boolean isValidPassword(String password, String repeatedPassword){
@@ -98,7 +155,9 @@ public class SignupActivity extends AppCompatActivity {
 
         if((password == null) || (password.length() <  8)){
             isValid = false;
-            errorPass.setText("A senha deve conter no mínimo 8 caracteres, com ao menos 1 letra");
+            errorPass.setText("*A senha deve conter no mínimo 8 caracteres, com ao menos 1 letra");
+        }else{
+            errorPass.setText("");
         }
 
         if(!password.equals(repeatedPassword)){

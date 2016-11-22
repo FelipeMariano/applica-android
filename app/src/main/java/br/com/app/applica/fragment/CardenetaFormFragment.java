@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,7 +29,9 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -123,7 +126,7 @@ public class CardenetaFormFragment extends Fragment {
             sexoSpinner.setSelection(itemPosition);
         }
 
-        if(!cardeneta.getDt_nasc().equals(null)) {
+        if(!(cardeneta.getDt_nasc() == null)){
             String data = cardeneta.getDt_nasc();
             Button dataButton = (Button) view.findViewById(R.id.cardeneta_data_nasc);
             System.out.println(data);
@@ -136,6 +139,7 @@ public class CardenetaFormFragment extends Fragment {
 
     private void saveCardeneta(){
         CardenetaSaveTask saveCard = new CardenetaSaveTask();
+
         //if (CURRENT_CARD_ID == null){
            try{
                saveCard.execute();
@@ -147,6 +151,52 @@ public class CardenetaFormFragment extends Fragment {
             }
         //}
 
+    }
+
+    private boolean isValidNasc(){
+        Boolean isValid = true;
+        TextView errorDtNasc = (TextView) navActivity.findViewById(R.id.error_cardeneta_data_nasc);
+        String strDate = day_x + "/" + month_x + "/" + year_x;
+        SimpleDateFormat format = new SimpleDateFormat("d/MM/yyyy");
+        Date selectedDate;
+
+        try {
+            selectedDate = format.parse(strDate);
+        }catch(Exception e){
+            System.out.println("ERRO AO FORMATAR DATA");
+            return false;
+        }
+
+        if(year_x == 0 || month_x == 0 || day_x == 0 || (new Date().before(selectedDate))){
+            isValid = false;
+            errorDtNasc.setText("*Data inválida");
+        }
+
+        return isValid;
+    }
+
+    private boolean isValidSobrenome(String sobrenome){
+        Boolean isValid = true;
+        TextView errorSobrenome = (TextView) navActivity.findViewById(R.id.error_cardeneta_sobrenome);
+
+        if ((sobrenome == null) || (sobrenome.length() < 1)){
+            isValid = false;
+            errorSobrenome.setText("*Sobrenome inválido");
+        }
+
+        return isValid;
+    }
+
+    private boolean isValidNome(String nome){
+        Boolean isValid = true;
+        TextView errorNome = (TextView) navActivity.findViewById(R.id.error_cardeneta_nome);
+
+        if((nome == null) || (nome.length() < 1)){
+            isValid = false;
+            errorNome.setText("*Nome inválido");
+        }
+
+        return isValid;
     }
 
     private void setDadosCardeneta(View view){
@@ -185,11 +235,6 @@ public class CardenetaFormFragment extends Fragment {
 
     private void showDatePickerDialog(final View view){
 
-        final Calendar calendar = Calendar.getInstance();
-        year_x = calendar.get(Calendar.YEAR);
-        month_x = calendar.get(Calendar.MONTH);
-        day_x = calendar.get(Calendar.DAY_OF_MONTH);
-
         Button btnDataNasc = (Button) view.findViewById(R.id.cardeneta_data_nasc);
 
         btnDataNasc.setOnClickListener(new View.OnClickListener() {
@@ -208,6 +253,20 @@ public class CardenetaFormFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 setDadosCardeneta(view);
+
+                Boolean isValid = true;
+
+                if(!isValidNasc()) isValid = false;
+
+                if(!isValidSobrenome(CURRENT_CARD.getSobrenome())) isValid = false;
+
+                if(!isValidNome(CURRENT_CARD.getNome())) isValid = false;
+
+                if(!isValid){
+                    Toast.makeText(navActivity, "Dados inválidos", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 saveCardeneta();
                 navActivity.getSupportFragmentManager().popBackStack();
             }

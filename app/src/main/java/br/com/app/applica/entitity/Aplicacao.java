@@ -12,6 +12,7 @@ public class Aplicacao {
     private String data;
     private Integer dose;
     private Boolean efetivada;
+    private String lote;
 
     public Aplicacao(){
 
@@ -47,6 +48,14 @@ public class Aplicacao {
 
     public void setVacina(String vacina) {
         this.vacina = vacina;
+    }
+
+    public String getLote() {
+        return lote;
+    }
+
+    public void setLote(String lote) {
+        this.lote = lote;
     }
 
     public Integer getDose() {
