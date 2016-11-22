@@ -96,6 +96,8 @@ public class AplicacaoFormFragment extends Fragment {
         return formAplicacaoView;
     }
 
+    
+
     private Aplicacao loadAplicacao(View view){
 
         AplicacaoLoadTask aplicacaoLoad = new AplicacaoLoadTask();
