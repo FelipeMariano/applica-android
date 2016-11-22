@@ -1,6 +1,7 @@
 package br.com.app.applica;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,12 +29,15 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.activity.AboutUsActivity;
 import br.com.app.applica.activity.LoginActivity;
+import br.com.app.applica.entitity.Unidade;
 import br.com.app.applica.entitity.User;
 import br.com.app.applica.fragment.HomeFragment;
+import br.com.app.applica.fragment.MapsFragment;
 import br.com.app.applica.fragment.UnidadesFragment;
 
 public class MainNavActivity extends AppCompatActivity
@@ -42,6 +45,8 @@ public class MainNavActivity extends AppCompatActivity
 
     private RecyclerView.Adapter mAdapter;
     public static String BASE_URL;
+    public static Location CURRENT_LOCATION;
+    public List<Unidade> UNIDADES_NEAR;
 
     private String[] activityTitles;
     private NavigationView navigationView;
@@ -221,12 +226,12 @@ public class MainNavActivity extends AppCompatActivity
 
         if(CURRENT_TAG.equals(TAG_UNIDADES)){
            // Fragment mapsFragment = new MapsFragment();
-            Fragment unidadesFragment = new UnidadesFragment();
+            Fragment mapsFragment = new MapsFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
             //fragmentTransaction.replace(R.id.fragment_layout, mapsFragment);
-            fragmentTransaction.replace(R.id.fragment_layout, unidadesFragment);
-            Toast.makeText(this,"MAPS",Toast.LENGTH_SHORT).show();
+            fragmentTransaction.replace(R.id.fragment_layout, mapsFragment);
+            //Toast.makeText(this,"MAPS",Toast.LENGTH_SHORT).show();
             fragmentTransaction.commit();
             toggleFab("HIDE", null);
             return;

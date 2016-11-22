@@ -95,7 +95,7 @@ public class MapsFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 myGoogleMap = googleMap;
-                System.out.println(unidades.size());
+
                 //myGoogleMap.addMarker(new MarkerOptions().position(LOC).title("My loction!"));
                 CameraUpdate update = CameraUpdateFactory.newLatLngZoom(LOC, 9);
                 //myGoogleMap.animateCamera(update);
@@ -125,7 +125,7 @@ public class MapsFragment extends Fragment {
 
                             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16);
                             myGoogleMap.animateCamera(update);
-
+                            navActivity.CURRENT_LOCATION = location;
                             getUnidadesNear(location);
                         }
                     }
@@ -222,6 +222,7 @@ public class MapsFragment extends Fragment {
         try{
             unidadesNearTask.execute(loc.getLatitude(), loc.getLongitude());
             unidades = unidadesNearTask.get(5000, TimeUnit.MILLISECONDS);
+            navActivity.UNIDADES_NEAR = unidades;
             System.out.println(unidades);
             addMarkers();
         }catch(Exception e){

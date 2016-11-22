@@ -62,6 +62,8 @@ public class UnidadesFragment extends Fragment {
 
         ///
 
+        System.out.println(navActivity.CURRENT_LOCATION);
+
         View unidadesView = inflater.inflate(R.layout.fragment_unidades, container, false);
         final RecyclerView mRecyclerView = (RecyclerView) unidadesView.findViewById(R.id.unidades_recycler);
 
@@ -73,7 +75,7 @@ public class UnidadesFragment extends Fragment {
             un.setNome("Unidade" + (i + 1));
             dummy_unidades.add(un);
         }
-        unidades = loadUnidades();
+        unidades = navActivity.UNIDADES_NEAR; //loadUnidades();
 
         setRecyclerLayout(mRecyclerView, unidades);
         setHasOptionsMenu(true);
@@ -179,7 +181,7 @@ public class UnidadesFragment extends Fragment {
             requestHeaders.setContentType(MediaType.APPLICATION_JSON);
             requestHeaders.add("x-access-token", AUTH_TOKEN);
 
-            String url = navActivity.BASE_URL + "/api/locais/near/";
+            String url = navActivity.BASE_URL + "/api/locais/nearlocation/";
             url += navActivity.CURRENT_USER.getId();
 
             HttpEntity<String> httpEntity = new HttpEntity<String>(requestHeaders);
