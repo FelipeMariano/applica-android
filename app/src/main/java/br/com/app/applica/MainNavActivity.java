@@ -38,6 +38,7 @@ import br.com.app.applica.entitity.Unidade;
 import br.com.app.applica.entitity.User;
 import br.com.app.applica.fragment.HomeFragment;
 import br.com.app.applica.fragment.MapsFragment;
+import br.com.app.applica.fragment.MyProfileFragment;
 import br.com.app.applica.fragment.UnidadesFragment;
 
 public class MainNavActivity extends AppCompatActivity
@@ -56,6 +57,7 @@ public class MainNavActivity extends AppCompatActivity
 
     public static final String TAG_HOME = "home";
     public static final String TAG_UNIDADES = "unidades";
+    public static final String TAG_MY_PROFILE = "my_profile";
 
     public static final String TAG_CARDENETA = "card";
     public static final String TAG_APLICACAO = "aplic";
@@ -191,7 +193,10 @@ public class MainNavActivity extends AppCompatActivity
         } else if (id == R.id.nav_unidades) {
             navItemIndex = 1;
             CURRENT_TAG = TAG_UNIDADES;
-        } else if (id == R.id.nav_about_us) {
+        }else if (id == R.id.nav_my_profile) {
+            navItemIndex = 2;
+            CURRENT_TAG = TAG_MY_PROFILE;
+        }else if (id == R.id.nav_about_us) {
             selectable = false;
             Intent intent = new Intent(this, AboutUsActivity.class);
             startActivity(intent);
@@ -235,7 +240,18 @@ public class MainNavActivity extends AppCompatActivity
             fragmentTransaction.commit();
             toggleFab("HIDE", null);
             return;
+        }
 
+        if(CURRENT_TAG.equals(TAG_MY_PROFILE)){
+            Fragment myProfFragment = new MyProfileFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            fragmentTransaction.replace(R.id.fragment_layout, myProfFragment);
+
+            fragmentTransaction.commit();
+            toggleFab("HIDE", null);
+            return;
         }
 
         Fragment homeFragment = getFragment();

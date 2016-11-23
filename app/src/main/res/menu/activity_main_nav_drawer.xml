@@ -11,9 +11,9 @@
             android:icon="@drawable/ic_room"
             android:title="Unidades de vacinação" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_my_profile"
             android:icon="@drawable/ic_settings"
-            android:title="Configurações" />
+            android:title="Meu perfil" />
     </group>
 
     <item android:title="Outros">
