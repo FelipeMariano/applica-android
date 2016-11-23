@@ -1,6 +1,7 @@
 <resources>
-    <!-- <string name="base_url">http://192.168.0.16:3000</string> -->
-    <string name="base_url">http://applica-applica.44fs.preview.openshiftapps.com</string>
+    <string name="base_url">http://192.168.0.16:3000</string>
+    <!-- <string name="base_url">http://applica-applica.44fs.preview.openshiftapps.com</string> -->
+    <!-- <string name="base_url">http://192.168.43.93:3000</string> -->
     <string name="app_name">Applica</string>
     <string name="toolbar_section_name">[Section Name]</string>
     <string name="action_settings">Settings</string>

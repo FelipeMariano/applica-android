@@ -103,33 +103,9 @@ public class MapsFragment extends Fragment {
                 myGoogleMap.setMyLocationEnabled(true);
 
                 if (ActivityCompat.checkSelfPermission(navActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(navActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
+
                 }
-
-                myGoogleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener(){
-
-                    @Override
-                    public void onMyLocationChange(Location location) {
-                        if(LOCATION_MOVE) {
-                            LOCATION_MOVE = false;
-
-                            //getUnidadesNear(location);
-
-                         //   myGoogleMap.addMarker(
-                          //          new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude()))
-                          //                  .title("Minha localização")
-                          //                  .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_my_location))
-                           // );
-
-                            //addMarkers();
-
-                            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16);
-                            myGoogleMap.animateCamera(update);
-                            navActivity.CURRENT_LOCATION = location;
-                            getUnidadesNear(location);
-                        }
-                    }
-                });
+                riseMap();
             }
 
         });
@@ -141,6 +117,37 @@ public class MapsFragment extends Fragment {
     public void onResume(){
         super.onResume();
         mMapView.onResume();
+        if(myGoogleMap != null)
+            riseMap();
+
+    }
+
+    private void riseMap(){
+        System.out.println("SETTING MAP!");
+        myGoogleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener(){
+
+            @Override
+            public void onMyLocationChange(Location location) {
+                if(LOCATION_MOVE) {
+                    LOCATION_MOVE = false;
+
+                    //getUnidadesNear(location);
+
+                    //   myGoogleMap.addMarker(
+                    //          new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude()))
+                    //                  .title("Minha localização")
+                    //                  .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_my_location))
+                    // );
+
+                    //addMarkers();
+
+                    CameraUpdate update = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16);
+                    myGoogleMap.animateCamera(update);
+                    navActivity.CURRENT_LOCATION = location;
+                    getUnidadesNear(location);
+                }
+            }
+        });
     }
 
     @Override

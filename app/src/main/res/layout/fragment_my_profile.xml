@@ -16,6 +16,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <Button
+            android:background="@drawable/round_button_edit_primary"
+            android:textColor="@color/colorWhite"
+            android:layout_alignParentRight="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
         <EditText
             android:id="@+id/profile_nome"
             android:layout_below="@+id/profile_email"
@@ -45,10 +52,7 @@
 
         <EditText
             android:id="@+id/profile_dt_nasc"
-            android:layout_alignLeft="@+id/profile_sobrenome"
-            android:layout_below="@+id/profile_sobrenome"
-            android:layout_marginStart="15dp"
-            android:inputType="date"
+            android:layout_below="@+id/profile_sexo"
             android:editable="false"
             android:text="oi"
             android:layout_width="100dp"
