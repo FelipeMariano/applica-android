@@ -157,4 +157,15 @@ public class User {
         return getNome() + " " + getSobrenome();
     }
 
+    public String getFormattedData(){
+        if(this.dt_nasc != null) {
+            String strDate = this.dt_nasc.toString();
+            String separetedDate[] = strDate.substring(0, 10).split("-");
+
+            return separetedDate[2] + "/" + separetedDate[1] + "/" + separetedDate[0];
+        }
+
+        return "";
+    }
+
 }

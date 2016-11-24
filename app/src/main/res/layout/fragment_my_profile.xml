@@ -3,60 +3,126 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="br.com.app.applica.fragment.MyProfileFragment">
-
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/general_infos"
         android:layout_margin="20dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/profile_email"
-            android:editable="false"
-            android:text="oi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textSize="16sp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:textColor="@drawable/edit_text_selector"/>
 
         <Button
-            android:background="@drawable/round_button_edit_primary"
+            android:id="@+id/edit_password"
+            android:background="@drawable/mybutton"
+            android:text="Trocar senha"
+            android:textSize="8sp"
             android:textColor="@color/colorWhite"
             android:layout_alignParentRight="true"
-            android:layout_width="30dp"
+            android:layout_width="80dp"
             android:layout_height="30dp" />
 
         <EditText
             android:id="@+id/profile_nome"
             android:layout_below="@+id/profile_email"
             android:layout_alignStart="@+id/profile_email"
-            android:editable="false"
-            android:text="oi"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content" />
+            android:textSize="16sp"
+            android:layout_width="100dp"
+            android:layout_marginTop="15dp"
+            android:layout_height="wrap_content"
+            android:textColor="@drawable/edit_text_selector"/>
 
         <EditText
         android:id="@+id/profile_sobrenome"
         android:layout_toEndOf="@+id/profile_nome"
         android:layout_alignBaseline="@+id/profile_nome"
         android:layout_marginLeft="5dp"
-        android:editable="false"
-        android:text="oi"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+            android:textColor="@drawable/edit_text_selector"/>
 
       <Spinner
           android:id="@+id/profile_sexo"
           android:layout_below="@id/profile_nome"
-          android:layout_marginTop="10dp"
+          android:layout_marginTop="20dp"
           android:layout_width="150dp"
-          android:layout_height="wrap_content" />
+          android:layout_height="wrap_content"
+          android:textColor="@drawable/edit_text_selector"/>
 
 
         <EditText
             android:id="@+id/profile_dt_nasc"
             android:layout_below="@+id/profile_sexo"
-            android:editable="false"
-            android:text="oi"
             android:layout_width="100dp"
-            android:layout_height="wrap_content" />
+            android:layout_marginTop="15dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@drawable/edit_text_selector"/>
 
+
+
+
+    </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/profile_password"
+            android:layout_below="@+id/general_infos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/new_password"
+                android:hint="Nova Senha"
+                android:textSize="16sp"
+                android:inputType="textPassword"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/new_password_repeat"
+                android:layout_below="@+id/new_password"
+                android:hint="Repita a nova senha"
+                android:textSize="16sp"
+                android:inputType="textPassword"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/old_password"
+                android:layout_below="@+id/new_password_repeat"
+                android:hint="Digite a senha antiga"
+                android:textSize="16sp"
+                android:inputType="textPassword"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    <Button
+        android:id="@+id/profile_save"
+        android:text="Salvar"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     </RelativeLayout>
 </FrameLayout>
