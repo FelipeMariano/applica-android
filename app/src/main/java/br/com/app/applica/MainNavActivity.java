@@ -107,10 +107,13 @@ public class MainNavActivity extends AppCompatActivity
         CURRENT_USER.setAuthToken(userToken);
 
         LoadUser loadUserTask = new LoadUser();
-
+        User loadedUser = new User();
         try{
             loadUserTask.execute();
-            CURRENT_USER = loadUserTask.get(5000, TimeUnit.MILLISECONDS);
+            loadedUser = loadUserTask.get(5000, TimeUnit.MILLISECONDS);
+            loadedUser.setPassword(CURRENT_USER.getPassword());
+
+            CURRENT_USER = loadedUser;
         }catch(Exception e){
 
         }
