@@ -53,18 +53,16 @@
         android:id="@+id/profile_sobrenome"
         android:layout_toEndOf="@+id/profile_nome"
         android:layout_alignBaseline="@+id/profile_nome"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="50dp"
         android:layout_marginTop="15dp"
         android:textSize="16sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-            android:textColor="@drawable/edit_text_selector"/>
+        android:layout_width="200dp"
+        android:layout_height="wrap_content" android:textColor="@drawable/edit_text_selector"/>
 
         <TextView
             android:id="@+id/error_profile_sobrenome"
             android:layout_alignStart="@+id/profile_sobrenome"
-            android:layout_marginLeft="5dp"
-            android:layout_below="@+id/profile_sobrenome"
+            android:layout_alignBaseline="@+id/error_profile_nome"
             android:textSize="10sp"
             android:textColor="@color/colorRed"
             android:layout_width="wrap_content"
@@ -73,7 +71,7 @@
       <Spinner
           android:id="@+id/profile_sexo"
           android:layout_below="@id/profile_nome"
-          android:layout_marginTop="20dp"
+          android:layout_marginTop="40dp"
           android:layout_width="150dp"
           android:layout_height="wrap_content"
           android:textColor="@drawable/edit_text_selector"/>
@@ -83,7 +81,7 @@
             android:id="@+id/profile_dt_nasc"
             android:layout_below="@+id/profile_sexo"
             android:layout_width="100dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="20dp"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@drawable/edit_text_selector"/>

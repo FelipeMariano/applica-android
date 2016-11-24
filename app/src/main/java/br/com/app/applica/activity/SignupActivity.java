@@ -26,6 +26,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -89,6 +91,10 @@ public class SignupActivity extends AppCompatActivity {
         if(!isValidSobrenome(USER.getSobrenome()))
             isValid = false;
 
+        String separetedData[] = dtNasc.getText().toString().split("/");
+
+        if(!isValidData(separetedData[0], separetedData[1], separetedData[2]))
+            isValid = false;
 
         if(!isValid)
             return false;
@@ -103,6 +109,28 @@ public class SignupActivity extends AppCompatActivity {
 
         return true;
 
+    }
+
+    private boolean isValidData(String dia, String mes, String ano){
+        Boolean isValid = true;
+        TextView errorDtNasc = (TextView) findViewById(R.id.error_signup_dt_nasc);
+        String strDate = dia + "/" + mes + "/" + ano;
+        SimpleDateFormat format = new SimpleDateFormat("d/MM/yyyy");
+        Date selectedDate;
+
+        try {
+            selectedDate = format.parse(strDate);
+        }catch(Exception e){
+            System.out.println("ERRO AO FORMATAR DATA");
+            return false;
+        }
+
+        if(ano == "" || mes == "" || dia == "" || (new Date().before(selectedDate))){
+            isValid = false;
+            errorDtNasc.setText("*Data inválida");
+        }
+
+        return isValid;
     }
 
     private boolean isValidNome(String nome){
@@ -137,8 +165,8 @@ public class SignupActivity extends AppCompatActivity {
     private boolean isValidEmail(String email){
         Boolean isValid = true;
         TextView errorEmail = (TextView) findViewById(R.id.error_signup_email);
-
-        if((email == null) || (email.length() < 5)){
+        String re = "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        if((email == null) || (email.length() < 5) || !email.matches(re)){
             isValid = false;
             errorEmail.setText("*Email inválido");
         }else{
@@ -153,16 +181,16 @@ public class SignupActivity extends AppCompatActivity {
         TextView errorPass = (TextView) findViewById(R.id.error_signup_password);
         TextView errorPassRep = (TextView) findViewById(R.id.error_signup_password_repeat);
 
-        if((password == null) || (password.length() <  8)){
+        if((password == null) || (password.length() <  8) || !password.matches(".*[a-zA-Z]+.*")){
             isValid = false;
-            errorPass.setText("*A senha deve conter no mínimo 8 caracteres, com ao menos 1 letra");
+            errorPass.setText("*A senha deve conter no mínimo 8 caracteres, com ao menos 1 letra.");
         }else{
             errorPass.setText("");
         }
 
         if(!password.equals(repeatedPassword)){
             isValid = false;
-            errorPassRep.setText("As senhas não batem.");
+            errorPassRep.setText("As senhas não condizem.");
         }else{
             errorPassRep.setText("");
         }

@@ -98,13 +98,16 @@ public class MainNavActivity extends AppCompatActivity
 
         String userId = "";
         String userToken = "";
+        String userPassword = "";
         Bundle extras = getIntent().getExtras();
         userId = extras.getString("id");
         userToken = extras.getString("x-access-token");
+        userPassword = extras.getString("password");
 
         CURRENT_USER = new User();
         CURRENT_USER.setId(userId);
         CURRENT_USER.setAuthToken(userToken);
+        CURRENT_USER.setPassword(userPassword);
 
         LoadUser loadUserTask = new LoadUser();
         User loadedUser = new User();

@@ -117,7 +117,7 @@ public class Splash extends AppCompatActivity {
 
                     user = getUserLocally();
 
-                    System.out.println(user.getEmail());
+                    System.out.println(user.getPassword());
                     if (user.getEmail() != null)
                         System.out.println("Is Logged!");
                     else{
@@ -129,6 +129,7 @@ public class Splash extends AppCompatActivity {
 
                     Intent intent = new Intent(Splash.this, MainNavActivity.class);
                     intent.putExtra("id", user.getId());
+                    intent.putExtra("password", user.getPassword());
                     intent.putExtra("x-access-token", user.getAuthToken());
                     startActivity(intent);
 

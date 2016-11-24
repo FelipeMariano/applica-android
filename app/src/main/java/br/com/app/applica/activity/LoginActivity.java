@@ -101,7 +101,6 @@ public class LoginActivity extends AppCompatActivity {
         try {
             loginUser.execute();
             user = loginUser.get(5000, TimeUnit.MILLISECONDS);
-            System.out.println("---> " + user.getAuthToken());
 
             FileOutputStream fos = new FileOutputStream(new File(getFilesDir(), "userData.xml"));
             FileOutputStream fileos = openFileOutput("userData", Context.MODE_PRIVATE);
@@ -113,6 +112,8 @@ public class LoginActivity extends AppCompatActivity {
         } finally {
              Intent intent = new Intent(LoginActivity.this, MainNavActivity.class);
             intent.putExtra("id", user.getId());
+
+            intent.putExtra("password", user.getPassword());
             intent.putExtra("x-access-token", user.getAuthToken());
             startActivity(intent);
             finish();

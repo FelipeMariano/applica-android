@@ -161,8 +161,10 @@ public class User {
         if(this.dt_nasc != null) {
             String strDate = this.dt_nasc.toString();
             String separetedDate[] = strDate.substring(0, 10).split("-");
-
-            return separetedDate[2] + "/" + separetedDate[1] + "/" + separetedDate[0];
+            if(separetedDate.length > 1)
+                return separetedDate[2] + "/" + separetedDate[1] + "/" + separetedDate[0];
+            else
+                System.out.println("DATA DO USER: " + this.dt_nasc);
         }
 
         return "";
