@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ import br.com.app.applica.MainNavActivity;
 import br.com.app.applica.R;
 import br.com.app.applica.entitity.Auth;
 import br.com.app.applica.entitity.User;
+import br.com.app.applica.util.AutoAddTextWatcher;
 
 public class SignupActivity extends AppCompatActivity {
     private User USER;
@@ -48,6 +50,10 @@ public class SignupActivity extends AppCompatActivity {
         setSexoSpinner();
 
         baseUrl = getResources().getString(R.string.base_url);
+
+        final EditText date = (EditText) findViewById(R.id.signup_dt_nasc);
+
+        date.addTextChangedListener(new AutoAddTextWatcher(date, "/", 2, 4));
 
         Button btnSendInfos = (Button) findViewById(R.id.signup_btn_send);
         btnSendInfos.setOnClickListener(new View.OnClickListener() {

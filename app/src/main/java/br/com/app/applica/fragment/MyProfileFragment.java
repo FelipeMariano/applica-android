@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 import br.com.app.applica.MainNavActivity;
 import br.com.app.applica.R;
 import br.com.app.applica.entitity.User;
+import br.com.app.applica.util.AutoAddTextWatcher;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,6 +86,10 @@ public class MyProfileFragment extends Fragment {
         });
 
         btnEditPass.setVisibility(View.GONE);
+
+        final EditText date = (EditText) profileView.findViewById(R.id.profile_dt_nasc);
+
+       date.addTextChangedListener(new AutoAddTextWatcher(date, "/", 2, 4));
 
         setHasOptionsMenu(true);
         loadUser(profileView);
@@ -135,6 +141,7 @@ public class MyProfileFragment extends Fragment {
             case R.id.action_close:
                 IS_TO_EDIT = false;
                 toggleOptionsMenu();
+                toggleEditPassword();
                 setToView();
         }
         return false;
@@ -173,7 +180,6 @@ public class MyProfileFragment extends Fragment {
         if(IS_TO_EDIT_PASSWORD && !setAndValidatePassword())
             isValid = false;
 
-
         if(!isValidData(separatedData[0], separatedData[1], separatedData[2]))
             isValid = false;
 
@@ -183,6 +189,7 @@ public class MyProfileFragment extends Fragment {
         if(!isValidSobrenome(USER.getSobrenome()))
             isValid = false;
 
+        System.out.println(isValid);
         return isValid;
 
     }
@@ -202,7 +209,7 @@ public class MyProfileFragment extends Fragment {
     }
 
     private boolean isValidNome(String nome){
-        Boolean isValid = false;
+        Boolean isValid = true;
         TextView errorNome = (TextView) navActivity.findViewById(R.id.error_profile_nome);
 
         if(nome.length() < 1){

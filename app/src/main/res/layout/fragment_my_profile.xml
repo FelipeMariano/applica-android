@@ -12,13 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/profile_email"
-            android:textSize="16sp"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:textColor="@drawable/edit_text_selector"/>
-
         <Button
             android:id="@+id/edit_password"
             android:background="@drawable/mybutton"
@@ -29,11 +22,23 @@
             android:layout_width="80dp"
             android:layout_height="30dp" />
 
+
+        <EditText
+            android:id="@+id/profile_email"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:maxLines="1"
+            android:layout_below="@+id/edit_password"
+            android:layout_height="wrap_content"
+            android:textColor="@drawable/edit_text_selector"/>
+
         <EditText
             android:id="@+id/profile_nome"
             android:layout_below="@+id/profile_email"
             android:layout_alignStart="@+id/profile_email"
             android:textSize="16sp"
+            android:singleLine="true"
+            android:nextFocusDown="@+id/profile_sobrenome"
             android:layout_width="100dp"
             android:layout_marginTop="15dp"
             android:layout_height="wrap_content"
@@ -55,6 +60,8 @@
         android:layout_alignBaseline="@+id/profile_nome"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="15dp"
+        android:singleLine="true"
+        android:nextFocusDown="@+id/profile_dt_nasc"
         android:textSize="16sp"
         android:layout_width="200dp"
         android:layout_height="wrap_content" android:textColor="@drawable/edit_text_selector"/>
@@ -71,7 +78,7 @@
       <Spinner
           android:id="@+id/profile_sexo"
           android:layout_below="@id/profile_nome"
-          android:layout_marginTop="40dp"
+          android:layout_marginTop="20dp"
           android:layout_width="150dp"
           android:layout_height="wrap_content"
           android:textColor="@drawable/edit_text_selector"/>
@@ -81,10 +88,13 @@
             android:id="@+id/profile_dt_nasc"
             android:layout_below="@+id/profile_sexo"
             android:layout_width="100dp"
+            android:inputType="date"
             android:layout_marginTop="20dp"
+            android:singleLine="true"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@drawable/edit_text_selector"/>
+
         <TextView
             android:id="@+id/error_profile_dt_nasc"
             android:layout_alignStart="@+id/profile_dt_nasc"
@@ -115,11 +125,14 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/error_new_password"
                 android:layout_alignStart="@+id/new_password"
                 android:layout_marginLeft="5dp"
                 android:layout_below="@+id/new_password"
+                android:singleLine="true"
+                android:nextFocusDown="@+id/new_password_repeat"
                 android:textSize="10sp"
                 android:textColor="@color/colorRed"
                 android:layout_width="wrap_content"
@@ -131,6 +144,8 @@
                 android:hint="Repita a nova senha"
                 android:textSize="16sp"
                 android:inputType="textPassword"
+                android:singleLine="true"
+                android:nextFocusDown="@+id/old_password"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
