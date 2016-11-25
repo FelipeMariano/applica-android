@@ -123,7 +123,7 @@ public class AplicacaoFormFragment extends Fragment {
     private void delete(){
 
         new AlertDialog.Builder(navActivity).setTitle("Deletar cardeneta")
-                .setMessage("Você realmente deseja deletar a cardeneta permanentemente? Todos os dados aqui serão perdidos!")
+                .setMessage("Você realmente deseja deletar a aplicaçãopermanentemente? Todos os dados aqui serão perdidos!")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialog, int whichButton){

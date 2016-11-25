@@ -173,8 +173,8 @@ public class HomeFragment extends Fragment{
     private void setPendingsAlert() {
         mMenu.clear();
         setCurrentUser();
-        System.out.println("PENDINGS: " + CURRENT_USER.getPendings().size());
-        if (CURRENT_USER.getPendings().size() > 0) {
+
+        if (CURRENT_USER.getPendings() != null && CURRENT_USER.getPendings().size() > 0) {
             navActivity.getMenuInflater().inflate(R.menu.pending_menu, mMenu);
         }
     }
