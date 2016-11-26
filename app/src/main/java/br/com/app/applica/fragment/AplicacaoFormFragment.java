@@ -524,14 +524,6 @@ public class AplicacaoFormFragment extends Fragment {
         }
     }
 
-    private void cancelNotification(Context context, int notificationId){
-        Intent notificationIntent = new Intent(context, NotificationPublisher.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, 0);
-
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(pendingIntent);
-    }
-
     public void scheduleNotification(Context context, long delay, int notificationId, Map<String, String> dados) {//delay is after how much time(in millis) from current time you want to schedule the notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setContentTitle(context.getString(R.string.notification_title))

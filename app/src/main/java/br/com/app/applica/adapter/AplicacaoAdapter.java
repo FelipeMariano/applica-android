@@ -33,6 +33,8 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
 
     public static class AplicacaoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private String id;
+        public int sort;
+        public Boolean alarm;
         public final TextView data;
         public final TextView vacina;
         public final TextView dose;
@@ -116,10 +118,14 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
 
         vHolder.dose.setText(dose);
         vHolder.vacina.setText(aplicacao.getVacina());
-        if(aplicacao.getAlarm())
+        vHolder.alarm = aplicacao.getAlarm();
+        vHolder.sort = aplicacao.getSort();
+        if(vHolder.alarm) {
             vHolder.btnAlarme.setBackgroundDrawable(vHolder.alarmOn);
-        else
+        }
+        else{
             vHolder.btnAlarme.setBackgroundDrawable(vHolder.alarmOff);
+        }
     }
 
 

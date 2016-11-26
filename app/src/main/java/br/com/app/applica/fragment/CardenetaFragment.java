@@ -115,6 +115,7 @@ public class CardenetaFragment extends Fragment {
                 String vacina = vHolder.vacina.getText().toString();
                 String data = vHolder.data.getText().toString();
                 String dose = vHolder.dose.getText().toString();
+                int sort = vHolder.sort;
                 String detalhes = "Tomarei a vacina no hospital de são jesus";
 
                 Map<String, String> dados = new ArrayMap<String, String>();
@@ -123,22 +124,48 @@ public class CardenetaFragment extends Fragment {
                 dados.put("dose", dose);
                 dados.put("detalhes", detalhes);
 
-                if(vHolder.btnAlarme.isChecked())
+                AplicacaoUpdateAlarmTask updateAlarmTask = new AplicacaoUpdateAlarmTask();
+                Aplicacao aplicacao = new Aplicacao();
+
+                if(vHolder.btnAlarme.isChecked() && !vHolder.alarm) {
                     vHolder.btnAlarme.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_notification_on));
-                else {
+                    vHolder.alarm = true;
+                }else{
+                    vHolder.alarm = false;
+                    cancelNotification(navActivity, sort);
+
+                    aplicacao.set_id(vHolder.getId());
+                    aplicacao.setAlarm(vHolder.alarm);
+
+                    try{
+                        updateAlarmTask.execute(aplicacao);
+                        updateAlarmTask.get(5000, TimeUnit.MILLISECONDS);
+                    }catch(Exception e){
+                        System.out.println("FAILED TO REMOVE ALARM: " + e);
+                    }
                     vHolder.btnAlarme.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_notification_off));
                     return;
                 }
+
+
+                aplicacao.set_id(vHolder.getId());
+                aplicacao.setAlarm(vHolder.alarm);
                 try {
-                    scheduleNotification(navActivity, 10000, 1, dados);
+                    setAlarm(dados, sort, 5000);
+                    updateAlarmTask.execute(aplicacao);
+                    updateAlarmTask.get(5000, TimeUnit.MILLISECONDS);
                     Toast.makeText(navActivity, "Alarme adicionado com sucesso.", Toast.LENGTH_SHORT).show();
                 }catch(Exception e){
-
+                    System.out.println("FAILED TO SET ALARM: " + e);
                 }
 
             }
         });
 
+    }
+
+    private void setAlarm(Map dados, int sortId, int delay){
+        scheduleNotification(navActivity, delay, 1, dados);
     }
 
     private void loadDadadosCardeneta(){
@@ -528,6 +555,68 @@ public class CardenetaFragment extends Fragment {
         }
     }
 
+    private class AplicacaoUpdateAlarmTask extends AsyncTask<Aplicacao, Void, Aplicacao> {
+
+        @Override
+        protected Aplicacao doInBackground(Aplicacao... params) {
+            Aplicacao CURRENT_APLICACAO = params[0];
+            String url = navActivity.BASE_URL + "/api/aplicacoes/" + CURRENT_APLICACAO.get_id();
+
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders requestHeaders = new HttpHeaders();
+
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+            requestHeaders.add("x-access-token", AUTH_TOKEN);
+
+
+
+            StringWriter _writer = new StringWriter();
+            ObjectMapper mapper = new ObjectMapper();
+
+
+            try {
+
+                LinkedHashMap<String, Object> _map = new LinkedHashMap<String, Object>();
+                _map.put("alarm", CURRENT_APLICACAO.getAlarm());
+
+                if(CURRENT_APLICACAO.getEfetivada() == null)
+                    _map.put("lote", null);
+                else
+                    _map.put("lote", CURRENT_APLICACAO.getLote());
+
+                _map.put("local", "local");
+
+                mapper.writeValue(_writer, _map);
+            }catch(Exception e){
+                System.out.println("ERRO AO MAPEAR PERSIST APLICAÇÃO" + e);
+            }
+
+
+            HttpEntity<String> httpEntity = new HttpEntity<String>(_writer.toString(), requestHeaders);
+            ResponseEntity<Aplicacao> result;
+
+             result = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, Aplicacao.class);
+
+
+            CURRENT_APLICACAO = result.getBody();
+
+            return CURRENT_APLICACAO;
+        }
+    }
+
+
+    private void cancelNotification(Context context, int notificationId){
+        Intent notificationIntent = new Intent(context, NotificationPublisher.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+
+        Toast.makeText(navActivity, "Lembrete desligado.", Toast.LENGTH_SHORT).show();
+    }
+
     public void scheduleNotification(Context context, long delay, int notificationId, Map<String, String> dados) {//delay is after how much time(in millis) from current time you want to schedule the notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setContentTitle(context.getString(R.string.notification_title))
@@ -556,6 +645,8 @@ public class CardenetaFragment extends Fragment {
         long futureInMillis = SystemClock.elapsedRealtime() + delay;
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+
+
 
     }
 }
