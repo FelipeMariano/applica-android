@@ -14,7 +14,6 @@ public class NotificationActivity extends AppCompatActivity {
     private String vacina;
     private String data;
     private String dose;
-    private String detalhes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +24,6 @@ public class NotificationActivity extends AppCompatActivity {
         vacina = intent.getStringExtra("vacina");
         data = intent.getStringExtra("data");
         dose = intent.getStringExtra("dose");
-        detalhes = intent.getStringExtra("detalhes");
 
         setValues();
 
@@ -44,11 +42,9 @@ public class NotificationActivity extends AppCompatActivity {
         TextView vacina = (TextView) findViewById(R.id.vacina);
         TextView data = (TextView) findViewById(R.id.data);
         TextView dose = (TextView) findViewById(R.id.dose);
-        TextView detalhes = (TextView) findViewById(R.id.detalhes);
 
         vacina.setText(this.vacina);
         data.setText(this.data);
         dose.setText(this.dose);
-        detalhes.setText(this.detalhes);
     }
 }

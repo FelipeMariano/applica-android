@@ -65,6 +65,7 @@ public class AplicacaoFormFragment extends Fragment {
     public static MainNavActivity navActivity;
     public static String CURRENT_CARD_ID = null;
     public static String CURRENT_APLICACAO_ID = null;
+    private boolean ALARM_SETTED;
     public static Aplicacao CURRENT_APLICACAO;
     public String AUTH_TOKEN;
     int year_x, month_x, day_x;
@@ -80,7 +81,7 @@ public class AplicacaoFormFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View formAplicacaoView = inflater.inflate(R.layout.fragment_aplicacao_form, container, false);
-
+        ALARM_SETTED = false;
         navActivity = (MainNavActivity) getActivity();
         final Calendar calendar = Calendar.getInstance();
 
@@ -191,11 +192,10 @@ public class AplicacaoFormFragment extends Fragment {
 
     private void setLoadedAplicacao(Aplicacao aplicacao, View view){
 
-        System.out.println(aplicacao.getAlarm());
-
         if(aplicacao.getAlarm() != null){
             Switch alarm = (Switch) view.findViewById(R.id.set_alarm);
             alarm.setChecked(aplicacao.getAlarm());
+            ALARM_SETTED = aplicacao.getAlarm();
         }
 
         if(aplicacao.getData() != null){
@@ -420,6 +420,9 @@ public class AplicacaoFormFragment extends Fragment {
     }
 
     private void setAlarm(Aplicacao aplicacao, int delay){
+
+        if(ALARM_SETTED) return;
+
         Switch set_alarm = (Switch) navActivity.findViewById(R.id.set_alarm);
         Map<String, String> dados = new ArrayMap<String, String>();
         dados.put("vacina", aplicacao.getVacina());
@@ -529,8 +532,8 @@ public class AplicacaoFormFragment extends Fragment {
                 .setContentTitle(context.getString(R.string.notification_title))
                 .setContentText(context.getString(R.string.notification_content))
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_check)
-                .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.cast_ic_notification_rewind)).getBitmap())
+                .setSmallIcon(R.drawable.ic_notification_on)
+                .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.mipmap.ic_vaccine)).getBitmap())
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
         Intent intent = new Intent(context, NotificationActivity.class);

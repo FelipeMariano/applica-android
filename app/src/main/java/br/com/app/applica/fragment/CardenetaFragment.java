@@ -127,7 +127,7 @@ public class CardenetaFragment extends Fragment {
                 AplicacaoUpdateAlarmTask updateAlarmTask = new AplicacaoUpdateAlarmTask();
                 Aplicacao aplicacao = new Aplicacao();
 
-                if(vHolder.btnAlarme.isChecked() && !vHolder.alarm) {
+                if(!vHolder.alarm) {
                     vHolder.btnAlarme.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_notification_on));
                     vHolder.alarm = true;
                 }else{
@@ -155,7 +155,7 @@ public class CardenetaFragment extends Fragment {
                     setAlarm(dados, sort, 5000);
                     updateAlarmTask.execute(aplicacao);
                     updateAlarmTask.get(5000, TimeUnit.MILLISECONDS);
-                    Toast.makeText(navActivity, "Alarme adicionado com sucesso.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(navActivity, "Lembrete adicionado com sucesso.", Toast.LENGTH_SHORT).show();
                 }catch(Exception e){
                     System.out.println("FAILED TO SET ALARM: " + e);
                 }
@@ -623,8 +623,8 @@ public class CardenetaFragment extends Fragment {
                 .setContentTitle(context.getString(R.string.notification_title))
                 .setContentText(context.getString(R.string.notification_content))
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_check)
-                .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.cast_ic_notification_rewind)).getBitmap())
+                .setSmallIcon(R.drawable.ic_notification_on)
+                .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.mipmap.ic_vaccine)).getBitmap())
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
         Intent intent = new Intent(context, NotificationActivity.class);

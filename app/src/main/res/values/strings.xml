@@ -7,7 +7,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="notification_title">Applica</string>
-    <string name="notification_content">Hello world</string>
+    <string name="notification_content">Não se esqueça de tomar a sua vacina</string>
 
     <string name="id_label">The Id is</string>
     <string name="id_value">[id]</string>
