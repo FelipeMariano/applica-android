@@ -132,17 +132,18 @@ public class CardenetaFragment extends Fragment {
                     vHolder.alarm = true;
                 }else{
                     vHolder.alarm = false;
-                    cancelNotification(navActivity, sort);
 
                     aplicacao.set_id(vHolder.getId());
                     aplicacao.setAlarm(vHolder.alarm);
 
+                    cancelNotification(navActivity, sort);
                     try{
                         updateAlarmTask.execute(aplicacao);
                         updateAlarmTask.get(5000, TimeUnit.MILLISECONDS);
                     }catch(Exception e){
                         System.out.println("FAILED TO REMOVE ALARM: " + e);
                     }
+
                     vHolder.btnAlarme.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_notification_off));
                     return;
                 }
