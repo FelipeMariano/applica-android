@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 /**
  * Created by felipe on 25/11/16.
@@ -23,7 +22,5 @@ public class NotificationPublisher extends BroadcastReceiver {
         int notificationId = intent.getIntExtra(NOTIFICATION_ID, 0);
 
         notificationManager.notify(notificationId, notification);
-
-        Toast.makeText(context, "HELLO!", Toast.LENGTH_SHORT).show();
     }
 }

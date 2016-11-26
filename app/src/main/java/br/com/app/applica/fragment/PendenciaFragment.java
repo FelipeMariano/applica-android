@@ -101,24 +101,13 @@ public class PendenciaFragment extends Fragment {
 
         navActivity = (MainNavActivity) getActivity();
         navActivity.toggleFab("HIDE", null);
+        navActivity.getSupportActionBar().setTitle("Minhas pendências");
 
         AUTH_TOKEN = navActivity.CURRENT_USER.getAuthToken();
         CURRENT_USER_ID = navActivity.CURRENT_USER.getId();
 
         final RecyclerView mRecyclerView = (RecyclerView) pendingsView.findViewById(R.id.pendencias_recycler);
 
-        List<Pendencia> dummies_pendings = new ArrayList<>();
-
-        for(int i = 0; i < 5; i++){
-            Pendencia pend = new Pendencia();
-            pend.set_id("123");
-            pend.setCardeneta(new Cardeneta());
-            pend.setUser_dest(new User());
-            User or = new User();
-            or.setEmail("Origem@gmail.com");
-            pend.setUser_origin(or);
-            dummies_pendings.add(pend);
-        }
 
         setRecyclerLayout(mRecyclerView, loadPendencias());
         //loadPendencias();

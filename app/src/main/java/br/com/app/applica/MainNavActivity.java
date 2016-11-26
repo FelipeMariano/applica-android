@@ -196,16 +196,20 @@ public class MainNavActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
             navItemIndex = 0;
             CURRENT_TAG = TAG_HOME;
+            getSupportActionBar().setTitle("Minhas cardenetas");
         } else if (id == R.id.nav_unidades) {
             navItemIndex = 1;
             CURRENT_TAG = TAG_UNIDADES;
+            getSupportActionBar().setTitle("Unidades");
         }else if (id == R.id.nav_my_profile) {
             navItemIndex = 2;
             CURRENT_TAG = TAG_MY_PROFILE;
+            getSupportActionBar().setTitle("Meu perfil");
         }else if (id == R.id.nav_about_us) {
             selectable = false;
             Intent intent = new Intent(this, AboutUsActivity.class);
             startActivity(intent);
+            getSupportActionBar().setTitle("Applica");
         } else if (id == R.id.nav_logout) {
             try{
                 File file = new File(getFilesDir(), "userData");
