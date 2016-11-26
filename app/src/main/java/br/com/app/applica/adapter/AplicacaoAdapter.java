@@ -1,5 +1,6 @@
 package br.com.app.applica.adapter;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +37,8 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
         public final TextView vacina;
         public final TextView dose;
         public final ToggleButton btnAlarme;
+        public final Drawable alarmOn;
+        public final Drawable alarmOff;
 
         public String getId() {
             return id;
@@ -48,6 +51,10 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
         public AplicacaoViewHolder(final View itemView){
             super(itemView);
             itemView.setTag(this);
+
+            alarmOn = itemView.getResources().getDrawable(R.drawable.ic_notification_on);
+            alarmOff = itemView.getResources().getDrawable(R.drawable.ic_notification_off);
+
             data = (TextView) itemView.findViewById(R.id.aplicacao_item_data);
             vacina = (TextView) itemView.findViewById(R.id.aplicacao_item_vacina);
             dose = (TextView) itemView.findViewById(R.id.aplicacao_item_dose);
@@ -106,8 +113,13 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
             dose = "Dose única";
         else
             dose = aplicacao.getDose() + "ª dose";
+
         vHolder.dose.setText(dose);
         vHolder.vacina.setText(aplicacao.getVacina());
+        if(aplicacao.getAlarm())
+            vHolder.btnAlarme.setBackgroundDrawable(vHolder.alarmOn);
+        else
+            vHolder.btnAlarme.setBackgroundDrawable(vHolder.alarmOff);
     }
 
 

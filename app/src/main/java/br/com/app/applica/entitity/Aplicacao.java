@@ -11,7 +11,9 @@ public class Aplicacao {
     private String vacina;
     private String data;
     private Integer dose;
+    private Integer sort;
     private Boolean efetivada;
+    private Boolean alarm;
     private String lote;
 
     public Aplicacao(){
@@ -68,6 +70,22 @@ public class Aplicacao {
 
     public String get_id() {
         return _id;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    public Boolean getAlarm() {
+        return alarm;
+    }
+
+    public void setAlarm(Boolean alarm) {
+        this.alarm = alarm;
     }
 
     public void set_id(String _id) {

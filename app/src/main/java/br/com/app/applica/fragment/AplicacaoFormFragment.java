@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +49,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.MainNavActivity;
@@ -189,6 +191,13 @@ public class AplicacaoFormFragment extends Fragment {
 
     private void setLoadedAplicacao(Aplicacao aplicacao, View view){
 
+        System.out.println(aplicacao.getAlarm());
+
+        if(aplicacao.getAlarm() != null){
+            Switch alarm = (Switch) view.findViewById(R.id.set_alarm);
+            alarm.setChecked(aplicacao.getAlarm());
+        }
+
         if(aplicacao.getData() != null){
            String data = aplicacao.getFormattedData();
            Button dataButton = (Button) view.findViewById(R.id.aplicacao_data);
@@ -317,11 +326,13 @@ public class AplicacaoFormFragment extends Fragment {
         CheckBox isEfetivada = (CheckBox) view.findViewById(R.id.aplicacao_efetivada);
         String data = year_x + "-" + month_x + "-" + day_x;
         TextView lote = (TextView) view.findViewById(R.id.aplicacao_lote);
+        Switch alarm = (Switch) view.findViewById(R.id.set_alarm);
 
         CURRENT_APLICACAO.setDose(dose.getSelectedItemPosition());
         CURRENT_APLICACAO.setVacina(vacina.getSelectedItem().toString());
         CURRENT_APLICACAO.setEfetivada(isEfetivada.isChecked());
         CURRENT_APLICACAO.setData(data);
+        CURRENT_APLICACAO.setAlarm(alarm.isChecked());
 
         if(CURRENT_APLICACAO.getEfetivada())
             CURRENT_APLICACAO.setLote(lote.getText().toString());
@@ -330,15 +341,11 @@ public class AplicacaoFormFragment extends Fragment {
     private void saveAplicacao(){
         AplicacaoSaveTask saveAplicacao = new AplicacaoSaveTask();
 
-        Switch set_alarm = (Switch) navActivity.findViewById(R.id.set_alarm);
-
-        if(set_alarm.isChecked()){
-           scheduleNotification(navActivity, 5000, 1);
-        }
 
             try{
                 saveAplicacao.execute();
-                saveAplicacao.get(5000, TimeUnit.MILLISECONDS);
+                CURRENT_APLICACAO = saveAplicacao.get(5000, TimeUnit.MILLISECONDS);
+
                 CURRENT_APLICACAO_ID = CURRENT_APLICACAO.get_id();
                 System.out.println("APLICACAO SAVED SUCCESSFULLY: "+ CURRENT_APLICACAO_ID);
             }catch(Exception e){
@@ -412,6 +419,20 @@ public class AplicacaoFormFragment extends Fragment {
         }
     }
 
+    private void setAlarm(Aplicacao aplicacao, int delay){
+        Switch set_alarm = (Switch) navActivity.findViewById(R.id.set_alarm);
+        Map<String, String> dados = new ArrayMap<String, String>();
+        dados.put("vacina", aplicacao.getVacina());
+        dados.put("dose", aplicacao.getDose() + "ª dose");
+        dados.put("data", aplicacao.getFormattedData());
+        dados.put("detalhes", "Detalhessssss");
+        System.out.println(aplicacao.getSort());
+
+        if(set_alarm.isChecked()){
+            scheduleNotification(navActivity, delay, aplicacao.getSort(), dados);
+        }
+    }
+
     private class AplicacaoSaveTask extends AsyncTask<Void, Void, Aplicacao> {
 
         @Override
@@ -441,6 +462,8 @@ public class AplicacaoFormFragment extends Fragment {
                 _map.put("vacina", CURRENT_APLICACAO.getVacina());
                 _map.put("dose", CURRENT_APLICACAO.getDose());
                 _map.put("efetivada", CURRENT_APLICACAO.getEfetivada());
+                _map.put("alarm", CURRENT_APLICACAO.getAlarm());
+
                 if(CURRENT_APLICACAO.getEfetivada() == null)
                     _map.put("lote", null);
                 else
@@ -467,6 +490,12 @@ public class AplicacaoFormFragment extends Fragment {
             CURRENT_APLICACAO = result.getBody();
 
             return CURRENT_APLICACAO;
+        }
+
+        @Override
+        protected void onPostExecute(Aplicacao aplicacao){
+            System.out.println(aplicacao.getSort());
+            setAlarm(aplicacao, 5000);
         }
     }
 
@@ -495,7 +524,15 @@ public class AplicacaoFormFragment extends Fragment {
         }
     }
 
-    public void scheduleNotification(Context context, long delay, int notificationId) {//delay is after how much time(in millis) from current time you want to schedule the notification
+    private void cancelNotification(Context context, int notificationId){
+        Intent notificationIntent = new Intent(context, NotificationPublisher.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+    }
+
+    public void scheduleNotification(Context context, long delay, int notificationId, Map<String, String> dados) {//delay is after how much time(in millis) from current time you want to schedule the notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setContentTitle(context.getString(R.string.notification_title))
                 .setContentText(context.getString(R.string.notification_content))
@@ -505,8 +542,10 @@ public class AplicacaoFormFragment extends Fragment {
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
         Intent intent = new Intent(context, NotificationActivity.class);
-        intent.putExtra("data", "26/11/2016");
-        intent.putExtra("vacina", "Hepatite B");
+        intent.putExtra("data", dados.get("data"));
+        intent.putExtra("vacina", dados.get("vacina"));
+        intent.putExtra("dose", dados.get("dose"));
+        intent.putExtra("detalhes", dados.get("detalhes"));
         PendingIntent activity = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(activity);
 
