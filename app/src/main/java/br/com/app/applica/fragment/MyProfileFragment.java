@@ -1,16 +1,9 @@
 package br.com.app.applica.fragment;
 
 
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,10 +36,8 @@ import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.MainNavActivity;
 import br.com.app.applica.R;
-import br.com.app.applica.activity.LoginActivity;
 import br.com.app.applica.entitity.User;
 import br.com.app.applica.util.AutoAddTextWatcher;
-import br.com.app.applica.util.NotificationPublisher;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -90,8 +81,7 @@ public class MyProfileFragment extends Fragment {
         btnEditPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //scheduleNotification(navActivity, 5000, 123);
-                toggleEditPassword();
+               toggleEditPassword();
             }
         });
 
@@ -433,26 +423,5 @@ public class MyProfileFragment extends Fragment {
         }
     }
 
-    public void scheduleNotification(Context context, long delay, int notificationId) {//delay is after how much time(in millis) from current time you want to schedule the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setContentTitle("NOT")
-                .setContentText("Olá")
-                .setAutoCancel(true).setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
-        Intent intent = new Intent(context, LoginActivity.class);
-        PendingIntent activity = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        builder.setContentIntent(activity);
-
-        Notification notification = builder.build();
-
-        Intent notificationIntent = new Intent(context, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, notificationId);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        long futureInMillis = delay;// SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        System.out.println(futureInMillis);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-    }
 }

@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -94,7 +93,6 @@ public class UnidadesFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case(R.id.action_map_unidades):
-                Toast.makeText(navActivity, "MAP SHOWS!", Toast.LENGTH_SHORT).show();
                 Fragment mapsFragment = new MapsFragment();
                 MapsFragment.unidades = unidades;
                 FragmentManager fragmentManager = navActivity.getSupportFragmentManager();
@@ -103,7 +101,6 @@ public class UnidadesFragment extends Fragment {
                 fragmentTransaction.commit();
                 return true;
             case(R.id.action_list_unidades):
-                Toast.makeText(navActivity, "LIST SHOWS!", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return false;

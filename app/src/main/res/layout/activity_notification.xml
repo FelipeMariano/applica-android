@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="br.com.app.applica.activity.NotificationActivity">
+    <RelativeLayout
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="Não esqueça de tomar a sua vacina..."
+            android:id="@+id/title"
+            android:textSize="20sp"
+            android:layout_marginLeft="30dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/label_data"
+            android:textSize="13sp"
+            android:text="Data:"
+            android:textStyle="bold"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/data"
+            android:textSize="15sp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/label_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/label_dose"
+            android:textSize="13sp"
+            android:text="Dose:"
+            android:textStyle="bold"
+            android:layout_below="@+id/data"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/dose"
+            android:textSize="15sp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/label_dose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/label_vacina"
+            android:textSize="13sp"
+            android:text="Vacina:"
+            android:textStyle="bold"
+            android:layout_below="@+id/dose"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/vacina"
+            android:textSize="15sp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/label_vacina"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/label_detalhes"
+            android:textSize="13sp"
+            android:text="Detalhes:"
+            android:textStyle="bold"
+            android:layout_below="@+id/vacina"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/detalhes"
+            android:textSize="15sp"
+            android:layout_below="@+id/label_detalhes"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_close"
+        android:text="Fechar"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+</RelativeLayout>

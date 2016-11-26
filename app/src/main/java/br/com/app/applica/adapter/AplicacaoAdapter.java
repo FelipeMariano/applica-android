@@ -5,9 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -25,7 +27,7 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
     private AplicacaoFilter aplicacaoFilter;
     private static String LOG_TAG = "AplicacaoAdapter";
     private static MyClickListener myClickListener;
-
+    private static BtnAlarmeListener btnAlarmeListener;
 
 
     public static class AplicacaoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -33,6 +35,7 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
         public final TextView data;
         public final TextView vacina;
         public final TextView dose;
+        public final ToggleButton btnAlarme;
 
         public String getId() {
             return id;
@@ -48,8 +51,17 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
             data = (TextView) itemView.findViewById(R.id.aplicacao_item_data);
             vacina = (TextView) itemView.findViewById(R.id.aplicacao_item_vacina);
             dose = (TextView) itemView.findViewById(R.id.aplicacao_item_dose);
+            btnAlarme = (ToggleButton) itemView.findViewById(R.id.turnon_alarme);
+
             Log.i(LOG_TAG, "Adding Listener");
             itemView.setOnClickListener(this);
+
+            btnAlarme.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    btnAlarmeListener.onToggle(getPosition(), itemView);
+                }
+            });
         }
 
         @Override
@@ -161,6 +173,14 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
             adapter.filteredAplicacoes.addAll((ArrayList<Aplicacao>) results.values);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    public interface BtnAlarmeListener{
+        public void onToggle(int position, View view);
+    }
+
+    public void setBtnAlarmeListener(BtnAlarmeListener btnAlarmeListener){
+        this.btnAlarmeListener = btnAlarmeListener;
     }
 
 }

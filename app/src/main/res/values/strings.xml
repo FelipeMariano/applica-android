@@ -6,6 +6,9 @@
     <string name="toolbar_section_name">[Section Name]</string>
     <string name="action_settings">Settings</string>
 
+    <string name="notification_title">Applica</string>
+    <string name="notification_content">Hello world</string>
+
     <string name="id_label">The Id is</string>
     <string name="id_value">[id]</string>
     <string name="content_label">Name</string>

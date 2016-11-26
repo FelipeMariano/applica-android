@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 /**
  * Created by felipe on 25/11/16.
@@ -12,20 +13,17 @@ import android.content.Intent;
 public class NotificationPublisher extends BroadcastReceiver {
 
     public static String NOTIFICATION_ID = "notification_id";
-    public static String NOTIFICATION = "notification";
-    private Intent INTENT;
-
-    public void setIntent(Intent intent){
-        this.INTENT = intent;
-    }
+    public static String NOTIFICATION;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+       NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Notification notification = intent.getParcelableExtra(NOTIFICATION);
         int notificationId = intent.getIntExtra(NOTIFICATION_ID, 0);
+
         notificationManager.notify(notificationId, notification);
+
+        Toast.makeText(context, "HELLO!", Toast.LENGTH_SHORT).show();
     }
 }

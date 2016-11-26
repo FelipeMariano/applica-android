@@ -1,13 +1,22 @@
 package br.com.app.applica.fragment;
 
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +31,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +52,9 @@ import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.MainNavActivity;
 import br.com.app.applica.R;
+import br.com.app.applica.activity.NotificationActivity;
 import br.com.app.applica.entitity.Aplicacao;
+import br.com.app.applica.util.NotificationPublisher;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,6 +106,17 @@ public class AplicacaoFormFragment extends Fragment {
         setSaveButtonAction(formAplicacaoView);
         setEfetivadaCheck(formAplicacaoView);
 
+        Switch set_alarm = (Switch) formAplicacaoView.findViewById(R.id.set_alarm);
+
+        set_alarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    System.out.println("CHECKED!");
+                }
+            }
+        });
+
         if(CURRENT_APLICACAO_ID != null)
             CURRENT_APLICACAO = loadAplicacao(formAplicacaoView);
         else
@@ -123,7 +146,7 @@ public class AplicacaoFormFragment extends Fragment {
     private void delete(){
 
         new AlertDialog.Builder(navActivity).setTitle("Deletar cardeneta")
-                .setMessage("Você realmente deseja deletar a aplicaçãopermanentemente? Todos os dados aqui serão perdidos!")
+                .setMessage("Você realmente deseja deletar a aplicação permanentemente? Todos os dados aqui serão perdidos!")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialog, int whichButton){
@@ -132,7 +155,7 @@ public class AplicacaoFormFragment extends Fragment {
                             AplicacaoDeleteTask deleteTask = new AplicacaoDeleteTask();
 
                             deleteTask.execute();
-                            deleteTask.get(5000, TimeUnit.MILLISECONDS);
+                            deleteTask.get(10000, TimeUnit.MILLISECONDS);
 
                             navActivity.getSupportFragmentManager().popBackStack();
                         }catch(Exception e){
@@ -277,6 +300,7 @@ public class AplicacaoFormFragment extends Fragment {
     private void setSaveButtonAction(final View view){
         Button saveButton = (Button) view.findViewById(R.id.btn_save_aplicacao);
 
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -305,7 +329,13 @@ public class AplicacaoFormFragment extends Fragment {
 
     private void saveAplicacao(){
         AplicacaoSaveTask saveAplicacao = new AplicacaoSaveTask();
-        //if (CURRENT_APLICACAO_ID == null)
+
+        Switch set_alarm = (Switch) navActivity.findViewById(R.id.set_alarm);
+
+        if(set_alarm.isChecked()){
+           scheduleNotification(navActivity, 5000, 1);
+        }
+
             try{
                 saveAplicacao.execute();
                 saveAplicacao.get(5000, TimeUnit.MILLISECONDS);
@@ -465,4 +495,32 @@ public class AplicacaoFormFragment extends Fragment {
         }
     }
 
+    public void scheduleNotification(Context context, long delay, int notificationId) {//delay is after how much time(in millis) from current time you want to schedule the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+                .setContentTitle(context.getString(R.string.notification_title))
+                .setContentText(context.getString(R.string.notification_content))
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.ic_check)
+                .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.cast_ic_notification_rewind)).getBitmap())
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+
+        Intent intent = new Intent(context, NotificationActivity.class);
+        intent.putExtra("data", "26/11/2016");
+        intent.putExtra("vacina", "Hepatite B");
+        PendingIntent activity = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.setContentIntent(activity);
+
+        Notification notification = builder.build();
+
+        Intent notificationIntent = new Intent(context, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, notificationId);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+
+    }
 }

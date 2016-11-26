@@ -29,6 +29,7 @@
             android:layout_marginRight="20dp"
             android:layout_height="30dp"/>
 
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -76,13 +77,31 @@
             android:layout_below="@+id/label_aplicacao_dose"
             />
 
+        <TextView
+            android:text="Alarme "
+            android:id="@+id/label_alarme"
+            android:layout_below="@+id/aplicacao_dose"
+            android:layout_alignStart="@+id/aplicacao_item_vacina"
+            android:layout_marginTop="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Switch
+            android:id="@+id/set_alarm"
+            android:layout_toEndOf="@+id/label_alarme"
+            android:layout_alignBaseline="@+id/label_alarme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <CheckBox
             android:id="@+id/aplicacao_efetivada"
             android:text="Aplicação efetivada"
-            android:layout_below="@+id/aplicacao_dose"
-            android:layout_marginTop="50dp"
+            android:layout_below="@+id/label_alarme"
+            android:layout_marginTop="40dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+
 
         <RelativeLayout
             android:id="@+id/aplicacao_efetivada_options"

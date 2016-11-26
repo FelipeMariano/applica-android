@@ -1,8 +1,10 @@
 package br.com.app.applica.fragment;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -129,6 +131,8 @@ public class HomeFragment extends Fragment{
        public void onLongPress(MotionEvent e){
             mMenu.clear();
             navActivity.getMenuInflater().inflate(R.menu.main_nav, mMenu);
+           Vibrator vibe = (Vibrator) navActivity.getSystemService(Context.VIBRATOR_SERVICE);
+           vibe.vibrate(100);
        }
 
         public boolean onSingleTapUp(MotionEvent e ){

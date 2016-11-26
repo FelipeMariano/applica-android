@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -160,10 +159,8 @@ public class MapsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case(R.id.action_map_unidades):
-                Toast.makeText(navActivity, "MAP SHOWS!", Toast.LENGTH_SHORT).show();
                 return true;
             case(R.id.action_list_unidades):
-                Toast.makeText(navActivity, "LIST SHOWS!", Toast.LENGTH_SHORT).show();
                 Fragment listUnidadesFragment = new UnidadesFragment();
                 FragmentManager fragmentManager = navActivity.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
