@@ -374,6 +374,7 @@ public class MyProfileFragment extends Fragment {
                     Toast.makeText(navActivity, "Atualizado com sucesso", Toast.LENGTH_SHORT).show();
                     navActivity.CURRENT_USER = USER;
                     USER_TEMP = navActivity.CURRENT_USER;
+                    MainNavActivity.setHeaderData(navActivity.CURRENT_USER, navActivity);
                 }
             }
         });

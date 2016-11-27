@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.springframework.http.HttpEntity;
@@ -109,6 +110,47 @@ public class MainNavActivity extends AppCompatActivity
         CURRENT_USER.setAuthToken(userToken);
         CURRENT_USER.setPassword(userPassword);
 
+        loadUser(savedInstanceState);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+       setHeaderData(CURRENT_USER, this);
+
+       return true;
+    }
+
+    public static void setHeaderData(User CURRENT_USER, MainNavActivity view){
+        if (CURRENT_USER.getId() != null){
+            // Inflate the menu; this adds items to the action bar if it is present.
+            TextView nome = (TextView) view.findViewById(R.id.nav_header_name);
+            TextView email = (TextView) view.findViewById(R.id.nav_header_email);
+            ImageView profileImage =  (ImageView) view.findViewById(R.id.imageView);
+
+            if(CURRENT_USER.getSexo().equals("Masculino")){
+                profileImage.setBackground(view.getResources().getDrawable(R.mipmap.avatar_man));
+            }else{
+                profileImage.setBackground(view.getResources().getDrawable(R.mipmap.avatar_woman));
+            }
+
+            nome.setText(CURRENT_USER.getFullName());
+            email.setText(CURRENT_USER.getEmail());
+            //getMenuInflater().inflate(R.menu.main_nav, menu);
+        }
+    }
+
+    private void loadUser(Bundle savedInstanceState){
         LoadUser loadUserTask = new LoadUser();
         User loadedUser = new User();
         try{
@@ -135,32 +177,6 @@ public class MainNavActivity extends AppCompatActivity
             loadFragment();
         }
 
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (CURRENT_USER.getId() != null){
-        // Inflate the menu; this adds items to the action bar if it is present.
-        TextView nome = (TextView) findViewById(R.id.nav_header_name);
-        TextView email = (TextView) findViewById(R.id.nav_header_email);
-
-        nome.setText(CURRENT_USER.getFullName());
-        email.setText(CURRENT_USER.getEmail());
-        //getMenuInflater().inflate(R.menu.main_nav, menu);
-        }
-
-       return true;
     }
 
     private void setToolbarTitle(){
