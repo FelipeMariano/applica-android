@@ -121,11 +121,16 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
         vHolder.vacina.setText(aplicacao.getVacina());
         vHolder.alarm = aplicacao.getAlarm();
         vHolder.sort = aplicacao.getSort();
-        if(vHolder.alarm) {
-            vHolder.btnAlarme.setBackgroundDrawable(vHolder.alarmOn);
-        }
-        else{
-            vHolder.btnAlarme.setBackgroundDrawable(vHolder.alarmOff);
+
+        if(!aplicacao.getEfetivada()) {
+            vHolder.btnAlarme.setVisibility(View.VISIBLE);
+            if (vHolder.alarm) {
+                vHolder.btnAlarme.setBackgroundDrawable(vHolder.alarmOn);
+            } else {
+                vHolder.btnAlarme.setBackgroundDrawable(vHolder.alarmOff);
+            }
+        }else{
+            vHolder.btnAlarme.setVisibility(View.GONE);
         }
     }
 
