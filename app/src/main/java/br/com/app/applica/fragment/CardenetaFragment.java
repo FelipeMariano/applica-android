@@ -2,20 +2,15 @@ package br.com.app.applica.fragment;
 
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,11 +47,11 @@ import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.MainNavActivity;
 import br.com.app.applica.R;
-import br.com.app.applica.activity.NotificationActivity;
 import br.com.app.applica.adapter.AplicacaoAdapter;
 import br.com.app.applica.entitity.Aplicacao;
 import br.com.app.applica.entitity.Cardeneta;
 import br.com.app.applica.entitity.User;
+import br.com.app.applica.util.DatePickerConstructor;
 import br.com.app.applica.util.NotificationPublisher;
 
 /**
@@ -68,6 +63,9 @@ public class CardenetaFragment extends Fragment {
     private static String AUTH_TOKEN;
     private List<Aplicacao> aplicacoes;
     private RecyclerView.Adapter mAdapter;
+
+    int hour_x;
+    int minute_x;
 
     public static MainNavActivity navActivity;
 
@@ -166,7 +164,9 @@ public class CardenetaFragment extends Fragment {
     }
 
     private void setAlarm(Map dados, int sortId, int delay){
-        scheduleNotification(navActivity, delay, 1, dados);
+        //scheduleNotification(navActivity, delay, 1, dados);
+        DatePickerConstructor.showDateTimePicker(navActivity, dados, sortId);
+        //showDateTimePicker(dados, sortId);
     }
 
     private void loadDadadosCardeneta(){
@@ -618,36 +618,5 @@ public class CardenetaFragment extends Fragment {
         Toast.makeText(navActivity, "Lembrete desligado.", Toast.LENGTH_SHORT).show();
     }
 
-    public void scheduleNotification(Context context, long delay, int notificationId, Map<String, String> dados) {//delay is after how much time(in millis) from current time you want to schedule the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setContentTitle(context.getString(R.string.notification_title))
-                .setContentText(context.getString(R.string.notification_content))
-                .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_notification_on)
-                .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.mipmap.ic_vaccine)).getBitmap())
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
-        Intent intent = new Intent(context, NotificationActivity.class);
-        intent.putExtra("data", dados.get("data"));
-        intent.putExtra("vacina", dados.get("vacina"));
-        intent.putExtra("dose", dados.get("dose"));
-        intent.putExtra("detalhes", dados.get("detalhes"));
-        PendingIntent activity = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        builder.setContentIntent(activity);
-
-        Notification notification = builder.build();
-
-        Intent notificationIntent = new Intent(context, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, notificationId);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-
-
-
-    }
 }

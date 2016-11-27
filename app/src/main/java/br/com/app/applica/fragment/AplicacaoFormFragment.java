@@ -56,6 +56,7 @@ import br.com.app.applica.MainNavActivity;
 import br.com.app.applica.R;
 import br.com.app.applica.activity.NotificationActivity;
 import br.com.app.applica.entitity.Aplicacao;
+import br.com.app.applica.util.DatePickerConstructor;
 import br.com.app.applica.util.NotificationPublisher;
 
 /**
@@ -432,8 +433,10 @@ public class AplicacaoFormFragment extends Fragment {
         System.out.println(aplicacao.getSort());
 
         if(set_alarm.isChecked()){
-            scheduleNotification(navActivity, delay, aplicacao.getSort(), dados);
+            DatePickerConstructor.showDateTimePicker(navActivity, dados, aplicacao.getSort());
+            //scheduleNotification(navActivity, delay, aplicacao.getSort(), dados);
         }
+
     }
 
     private class AplicacaoSaveTask extends AsyncTask<Void, Void, Aplicacao> {

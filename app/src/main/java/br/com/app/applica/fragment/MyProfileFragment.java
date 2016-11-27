@@ -45,6 +45,7 @@ import br.com.app.applica.util.AutoAddTextWatcher;
 public class MyProfileFragment extends Fragment {
     private MainNavActivity navActivity;
     private User USER;
+    private User USER_TEMP;
     private Menu mMenu;
     private MenuInflater mMenuInflater;
     private Boolean IS_TO_EDIT = false;
@@ -77,7 +78,7 @@ public class MyProfileFragment extends Fragment {
         View profilePass = profileView.findViewById(R.id.profile_password);
 
         profilePass.setVisibility(View.GONE);
-
+        USER_TEMP = navActivity.CURRENT_USER;
         btnEditPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,16 +136,54 @@ public class MyProfileFragment extends Fragment {
         switch (item.getItemId()){
             case R.id.action_edit:
                 IS_TO_EDIT = true;
+                System.out.println("SET!");
                 toggleOptionsMenu();
                 setToEdit();
                 return true;
             case R.id.action_close:
+                setPattern();
                 IS_TO_EDIT = false;
                 toggleOptionsMenu();
+                IS_TO_EDIT_PASSWORD = true;
                 toggleEditPassword();
                 setToView();
         }
         return false;
+    }
+
+    private void setPattern(){
+        nome.setText(USER_TEMP.getNome());
+        sobrenome.setText(USER_TEMP.getSobrenome());
+        dtNasc.setText(USER_TEMP.getFormattedData());
+
+        TextView errorNome = (TextView) navActivity.findViewById(R.id.error_profile_nome);
+        TextView errorSobrenome = (TextView) navActivity.findViewById(R.id.error_profile_sobrenome);
+        TextView errorDtNasc = (TextView) navActivity.findViewById(R.id.error_profile_dt_nasc);
+        TextView errorNewPass = (TextView) navActivity.findViewById(R.id.error_new_password);
+        TextView errorNewPassRepeat = (TextView) navActivity.findViewById(R.id.error_new_password_repeat);
+        TextView errorOldPass = (TextView) navActivity.findViewById(R.id.error_old_password);
+
+        errorNome.setText("");
+        errorSobrenome.setText("");
+        errorDtNasc.setText("");
+        errorNewPass.setText("");
+        errorNewPassRepeat.setText("");
+        errorOldPass.setText("");
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(navActivity, R.array.sexo_arrays,
+                    android.R.layout.simple_spinner_item);
+
+
+            int itemPosition = adapter.getPosition(USER_TEMP.getSexo());
+            sexo.setSelection(itemPosition);
+
+
+        newPassword.setText("");
+        EditText newPasswordRepeat = (EditText) navActivity.findViewById(R.id.new_password_repeat);
+        EditText oldPassword = (EditText) navActivity.findViewById(R.id.old_password);
+        newPasswordRepeat.setText("");
+        oldPassword.setText("");
+        USER = USER_TEMP;
     }
 
     private void setToEdit(){
@@ -173,9 +212,6 @@ public class MyProfileFragment extends Fragment {
 
         String separatedData[] = dtNasc.getText().toString().split("/");
 
-        USER.setNome(nome.getText().toString());
-        USER.setSobrenome(sobrenome.getText().toString());
-        USER.setDt_nasc(separatedData[2] + "-" + separatedData[1] + "-" + separatedData[0]);
 
         if(IS_TO_EDIT_PASSWORD && !setAndValidatePassword())
             isValid = false;
@@ -183,13 +219,18 @@ public class MyProfileFragment extends Fragment {
         if(!isValidData(separatedData[0], separatedData[1], separatedData[2]))
             isValid = false;
 
-        if(!isValidNome(USER.getNome()))
+        if(!isValidNome(nome.getText().toString()))
             isValid = false;
 
-        if(!isValidSobrenome(USER.getSobrenome()))
+        if(!isValidSobrenome(sobrenome.getText().toString()))
             isValid = false;
 
-        System.out.println(isValid);
+        if(isValid){
+            USER.setNome(nome.getText().toString());
+            USER.setSobrenome(sobrenome.getText().toString());
+            USER.setDt_nasc(separatedData[2] + "-" + separatedData[1] + "-" + separatedData[0]);
+        }
+
         return isValid;
 
     }
@@ -326,11 +367,14 @@ public class MyProfileFragment extends Fragment {
             public void onClick(View v) {
                 if(!setAndValidateUserData()){
                     Toast.makeText(navActivity, "Erro ao atualizar", Toast.LENGTH_SHORT).show();
+                    USER = navActivity.CURRENT_USER;
                     return;
+                }else {
+                    edit();
+                    Toast.makeText(navActivity, "Atualizado com sucesso", Toast.LENGTH_SHORT).show();
+                    navActivity.CURRENT_USER = USER;
+                    USER_TEMP = navActivity.CURRENT_USER;
                 }
-
-                Toast.makeText(navActivity, "Atualizado com sucesso", Toast.LENGTH_SHORT).show();
-                navActivity.CURRENT_USER = USER;
             }
         });
 
