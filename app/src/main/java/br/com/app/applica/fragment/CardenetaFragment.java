@@ -114,6 +114,7 @@ public class CardenetaFragment extends Fragment {
                 String data = vHolder.data.getText().toString();
                 String dose = vHolder.dose.getText().toString();
                 int sort = vHolder.sort;
+
                 String detalhes = "Tomarei a vacina no hospital de são jesus";
 
                 Map<String, String> dados = new ArrayMap<String, String>();

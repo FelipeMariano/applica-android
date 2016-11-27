@@ -23,7 +23,7 @@ import br.com.app.applica.entitity.Aplicacao;
  * Created by felipe on 30/10/16.
  */
 public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .AplicacaoViewHolder> implements Filterable{
-    private List<Aplicacao> aplicacoes;
+    private static List<Aplicacao> aplicacoes;
     private List<Aplicacao> filteredAplicacoes;
     private AplicacaoFilter aplicacaoFilter;
     private static String LOG_TAG = "AplicacaoAdapter";
@@ -69,6 +69,7 @@ public class AplicacaoAdapter extends RecyclerView.Adapter<AplicacaoAdapter .Apl
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     btnAlarmeListener.onToggle(getPosition(), itemView);
+                    aplicacoes.get(getPosition()).setAlarm(true);
                 }
             });
         }

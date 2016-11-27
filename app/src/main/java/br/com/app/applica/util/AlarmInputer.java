@@ -66,6 +66,5 @@ public class AlarmInputer {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent);
-
     }
 }
