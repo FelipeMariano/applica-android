@@ -1,6 +1,7 @@
 package br.com.app.applica.fragment;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,6 +29,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,6 +39,8 @@ import java.util.concurrent.TimeUnit;
 
 import br.com.app.applica.MainNavActivity;
 import br.com.app.applica.R;
+import br.com.app.applica.activity.LoginActivity;
+import br.com.app.applica.entitity.Auth;
 import br.com.app.applica.entitity.User;
 import br.com.app.applica.util.AutoAddTextWatcher;
 
@@ -375,6 +380,19 @@ public class MyProfileFragment extends Fragment {
                     navActivity.CURRENT_USER = USER;
                     USER_TEMP = navActivity.CURRENT_USER;
                     MainNavActivity.setHeaderData(navActivity.CURRENT_USER, navActivity);
+                    try {
+
+                        File file = new File(navActivity.getFilesDir(), "userData.xml");
+                        if(file.exists())
+                            file.delete();
+
+                        FileOutputStream fos = new FileOutputStream(file);
+                        FileOutputStream fileos = navActivity.openFileOutput("userData", Context.MODE_PRIVATE);
+
+                        LoginActivity.storageUserData(fos, fileos, navActivity.CURRENT_USER);
+                    }catch(Exception e){
+                        System.out.println("ERRO AO SALVAR NOVOS DADOS DO USUÁRIO: " + e);
+                    }
                 }
             }
         });
@@ -424,7 +442,9 @@ public class MyProfileFragment extends Fragment {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders requestHeaders = new HttpHeaders();
 
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+           restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+
             requestHeaders.setContentType(MediaType.APPLICATION_JSON);
             requestHeaders.add("x-access-token", USER.getAuthToken());
 
@@ -438,9 +458,7 @@ public class MyProfileFragment extends Fragment {
 
 
             StringWriter _writer = new StringWriter();
-            StringWriter _authWriter = new StringWriter();
             ObjectMapper mapper = new ObjectMapper();
-            ObjectMapper authMapper = new ObjectMapper();
 
             try {
                 mapper.writeValue(_writer, _map);
@@ -449,16 +467,14 @@ public class MyProfileFragment extends Fragment {
             }
 
             try {
-
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 requestHeaders.setContentType(MediaType.APPLICATION_JSON);
 
                 HttpEntity<String> httpEntity = new HttpEntity<String>(_writer.toString(), requestHeaders);
 
 
-                ResponseEntity<?> result = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, User.class);
 
-                System.out.println(result.getBody());
+                ResponseEntity<User> result = restTemplate.exchange(url, HttpMethod.PUT, httpEntity,  User.class);
 
             }catch(Exception e){
                 System.out.println("FAILS TO VALIDATE USER: " + e);
@@ -466,7 +482,78 @@ public class MyProfileFragment extends Fragment {
 
             return true;
         }
+
+        @Override
+        protected void onPostExecute(Boolean isUserSaved) {
+            if(!isUserSaved) return;
+
+            AuthenticationTask authTask = new AuthenticationTask();
+            try{
+                authTask.execute();
+                authTask.get(5000, TimeUnit.MILLISECONDS);
+            }catch(Exception e){
+                System.out.println("ERRO AO AUTENTICAR USUÁRIO APÓS UPDATE: " + e);
+            }
+
+        }
     }
 
+    private class AuthenticationTask extends AsyncTask<Void, Void, User> {
+        //FAVOR MOVER ISTO PARA ACTIVITY DE LOGIN!!!!
+        @Override
+        protected User doInBackground(Void... params){
+            try{
+                //User loggedUser = new User();
+                String url = navActivity.BASE_URL + "/authenticate";
 
+                RestTemplate restTemplate = new RestTemplate();
+                HttpHeaders requestHeaders = new HttpHeaders();
+
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+                //requestHeaders.add("x-access-token", getAuthToken());
+
+                LinkedHashMap<String, Object> _map = new LinkedHashMap<String, Object>();
+                _map.put("email", USER.getEmail());
+                _map.put("password", USER.getPassword());
+
+                StringWriter _writer = new StringWriter();
+                ObjectMapper mapper = new ObjectMapper();
+
+                try {
+                    mapper.writeValue(_writer, _map);
+                }catch(Exception e){
+
+                }
+                ResponseEntity<Auth> result;
+                try {
+
+                    HttpEntity<String> httpEntity = new HttpEntity<String>(_writer.toString(), requestHeaders);
+
+                    result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Auth.class);
+                    System.out.println("--> " + result.getStatusCode());
+                    Auth body = result.getBody();
+
+                    USER.setAuthToken(body.getToken());
+
+                }catch(Exception e){
+                    System.out.println("FAILS TO VALIDATE USER: " + e);
+                    return new User();
+                }finally{
+                    return USER;
+                }
+
+            }catch(Exception e){
+                System.out.println("Error: " + e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(User user){
+            System.out.println("USER EMAIL " + USER.getEmail());
+            System.out.println("USER PASS " + USER.getPassword());
+            System.out.println("USER LOADED");
+        }
+    }
 }
