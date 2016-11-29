@@ -1,6 +1,7 @@
 package br.com.app.applica.fragment;
 
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -132,18 +133,36 @@ public class UnidadesFragment extends Fragment {
 
         public boolean onSingleTapUp(MotionEvent e ){
 
-            UnidadeFragment unidadeFragment = new UnidadeFragment();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            final ProgressDialog progress = ProgressDialog.show(navActivity, "", "Carregando...", true);
 
-            Bundle bundle = new Bundle();
-            bundle.putString("unidade_id", CURRENT_UNIDADE_ID);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
-            unidadeFragment.setArguments(bundle);
 
-            transaction.replace(R.id.fragment_layout, unidadeFragment);
-            transaction.addToBackStack(null);
+                    UnidadeFragment unidadeFragment = new UnidadeFragment();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-            transaction.commit();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("unidade_id", CURRENT_UNIDADE_ID);
+
+                    unidadeFragment.setArguments(bundle);
+
+                    transaction.replace(R.id.fragment_layout, unidadeFragment);
+                    transaction.addToBackStack(null);
+
+                    transaction.commit();
+
+
+                    navActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progress.dismiss();
+                        }
+                    });
+                }
+            }).start();
+
 
             return true;
         }

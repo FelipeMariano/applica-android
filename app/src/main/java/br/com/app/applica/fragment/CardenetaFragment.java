@@ -378,30 +378,53 @@ public class CardenetaFragment extends Fragment {
         CURRENT_CARD_ID = toDelete;
         AUTH_TOKEN = token;
 
+
         new AlertDialog.Builder(navActivity).setTitle("Deletar cardeneta")
                 .setMessage("Você realmente deseja deletar a cardeneta permanentemente? Todos os dados aqui serão perdidos!")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialog, int whichButton){
 
-                        try{
-                            CardenetaDeleteTask deleteTask = new CardenetaDeleteTask();
-                            try{
-                                deleteTask.execute();
-                                if (deleteTask.get(5000, TimeUnit.MILLISECONDS) == null) {
-                                    Toast.makeText(navActivity, "Cardeneta deletada!", Toast.LENGTH_SHORT).show();
+                        final ProgressDialog progress = ProgressDialog.show(navActivity, "", "Carregando...", true);
 
-                                    if(navActivity != null)
-                                        navActivity.getSupportFragmentManager().popBackStack();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+
+
+                                try{
+                                    CardenetaDeleteTask deleteTask = new CardenetaDeleteTask();
+                                    try{
+                                        deleteTask.execute();
+                                        if (deleteTask.get(5000, TimeUnit.MILLISECONDS) == null) {
+                                            navActivity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    navActivity.getSupportFragmentManager().popBackStack();
+                                                    Toast.makeText(navActivity, "Cardeneta deletada!", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
+
+                                        }
+                                    }catch(Exception e){
+                                        System.out.println("TIME EXCEPTION WHILE DELETING! " + e);
+                                    }
+                                }catch(Exception e){
+                                    System.out.println("INVALID ID");
 
                                 }
-                            }catch(Exception e){
-                                System.out.println("TIME EXCEPTION WHILE DELETING! " + e);
-                            }
-                        }catch(Exception e){
-                            System.out.println("INVALID ID");
 
-                        }
+
+                                navActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progress.dismiss();
+                                    }
+                                });
+                            }
+                        }).start();
+
                             Toast.makeText(navActivity, "Cardeneta deletada!", Toast.LENGTH_SHORT).show();
                             for(Cardeneta card : HomeFragment.cardenetas){
                                 if(card.get_id().equals(toDelete)){

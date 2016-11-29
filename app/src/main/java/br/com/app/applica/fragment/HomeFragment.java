@@ -189,6 +189,8 @@ public class HomeFragment extends Fragment{
     public void onResume(){
         super.onResume();
 
+        navActivity.getSupportActionBar().setTitle("Minhas cardenetas");
+
         if(mMenu != null)
             setPendingsAlert();
     }
