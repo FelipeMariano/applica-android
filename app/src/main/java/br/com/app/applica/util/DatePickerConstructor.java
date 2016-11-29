@@ -1,5 +1,7 @@
 package br.com.app.applica.util;
 
+import android.widget.Toast;
+
 import org.joda.time.LocalDateTime;
 
 import java.util.Date;
@@ -35,6 +37,8 @@ public class DatePickerConstructor {
                                 alarmDate.put("year", year_x);
                                 alarmDate.put("hour", hour_x);
                                 alarmDate.put("minutes", minute_x);
+
+                                Toast.makeText(navActivity, "Lembrete adicionado com sucesso.", Toast.LENGTH_SHORT).show();
                                 AlarmInputer.scheduleAlarm(navActivity, alarmDate, sortId, dados);
                             }
                         });

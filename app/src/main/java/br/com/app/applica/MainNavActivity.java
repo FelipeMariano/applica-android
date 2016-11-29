@@ -150,7 +150,7 @@ public class MainNavActivity extends AppCompatActivity
         }
     }
 
-    private void loadUser(Bundle savedInstanceState){
+    public void loadUser(Bundle savedInstanceState){
         LoadUser loadUserTask = new LoadUser();
         User loadedUser = new User();
         try{
@@ -231,6 +231,8 @@ public class MainNavActivity extends AppCompatActivity
                 File file = new File(getFilesDir(), "userData");
                 if(file.exists())
                    file.delete();
+
+                LoginActivity.LOGIN_ERROR = "";
 
                 Intent intent = new Intent(this, Splash.class);
                 startActivity(intent);

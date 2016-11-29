@@ -178,6 +178,8 @@ public class HomeFragment extends Fragment{
         mMenu.clear();
         setCurrentUser();
 
+        System.out.println("QTD PENDINGS: " + CURRENT_USER.getPendings().size());
+
         if (CURRENT_USER.getPendings() != null && CURRENT_USER.getPendings().size() > 0) {
             navActivity.getMenuInflater().inflate(R.menu.pending_menu, mMenu);
         }
@@ -188,6 +190,7 @@ public class HomeFragment extends Fragment{
         switch (item.getItemId()){
             case R.id.action_sync:
                 try{
+                    navActivity.loadUser(new Bundle());
                     setRecyclerLayout(mRecyclerView);
                     Toast.makeText(navActivity, "Dados atualizados", Toast.LENGTH_SHORT).show();
                     setPendingsAlert();
@@ -251,7 +254,7 @@ public class HomeFragment extends Fragment{
 
         @Override
         protected void onPostExecute(User user){
-            System.out.println(CURRENT_USER.getListaCardenetas().size());
+
         }
     }
 
