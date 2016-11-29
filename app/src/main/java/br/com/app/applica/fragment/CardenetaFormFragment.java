@@ -4,6 +4,7 @@ package br.com.app.applica.fragment;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -249,26 +250,45 @@ public class CardenetaFormFragment extends Fragment {
     private void setSaveButtonAction(final View view){
         Button saveButton = (Button) view.findViewById(R.id.btn_save_cardeneta);
 
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setDadosCardeneta(view);
 
-                Boolean isValid = true;
 
-                if(!isValidNasc()) isValid = false;
+                final ProgressDialog progress = ProgressDialog.show(navActivity, "", "Carregando...", true);
 
-                if(!isValidSobrenome(CURRENT_CARD.getSobrenome())) isValid = false;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                if(!isValidNome(CURRENT_CARD.getNome())) isValid = false;
+                        setDadosCardeneta(view);
 
-                if(!isValid){
-                    Toast.makeText(navActivity, "Dados inválidos", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                        Boolean isValid = true;
 
-                saveCardeneta();
-                navActivity.getSupportFragmentManager().popBackStack();
+                        if(!isValidNasc()) isValid = false;
+
+                        if(!isValidSobrenome(CURRENT_CARD.getSobrenome())) isValid = false;
+
+                        if(!isValidNome(CURRENT_CARD.getNome())) isValid = false;
+
+                        if(!isValid){
+                            Toast.makeText(navActivity, "Dados inválidos", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        saveCardeneta();
+                        navActivity.getSupportFragmentManager().popBackStack();
+
+                        navActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progress.dismiss();
+                            }
+                        });
+                    }
+                }).start();
+
             }
         });
     }

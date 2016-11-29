@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -149,27 +150,43 @@ public class AplicacaoFormFragment extends Fragment {
 
     private void delete(){
 
-        new AlertDialog.Builder(navActivity).setTitle("Deletar cardeneta")
-                .setMessage("Você realmente deseja deletar a aplicação permanentemente? Todos os dados aqui serão perdidos!")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int whichButton){
-                        try{
 
-                            AplicacaoDeleteTask deleteTask = new AplicacaoDeleteTask();
+        final ProgressDialog progress = ProgressDialog.show(navActivity, "", "Carregando...", true);
 
-                            deleteTask.execute();
-                            deleteTask.get(10000, TimeUnit.MILLISECONDS);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-                            navActivity.getSupportFragmentManager().popBackStack();
-                        }catch(Exception e){
 
-                        }
-                        Toast.makeText(navActivity, "Aplicação deletada!", Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(navActivity).setTitle("Deletar cardeneta")
+                        .setMessage("Você realmente deseja deletar a aplicação permanentemente? Todos os dados aqui serão perdidos!")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int whichButton){
+                                try{
+
+                                    AplicacaoDeleteTask deleteTask = new AplicacaoDeleteTask();
+
+                                    deleteTask.execute();
+                                    deleteTask.get(10000, TimeUnit.MILLISECONDS);
+
+                                    navActivity.getSupportFragmentManager().popBackStack();
+                                }catch(Exception e){
+
+                                }
+                                Toast.makeText(navActivity, "Aplicação deletada!", Toast.LENGTH_SHORT).show();
+                            }
+                        }).setNegativeButton(android.R.string.no, null).show();
+
+
+                navActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progress.dismiss();
                     }
-                }).setNegativeButton(android.R.string.no, null).show();
-
-
+                });
+            }
+        }).start();
 
     }
 
@@ -314,9 +331,26 @@ public class AplicacaoFormFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setDadosAplicacao(view);
-                saveAplicacao();
-                navActivity.getSupportFragmentManager().popBackStack();
+
+                final ProgressDialog progress = ProgressDialog.show(navActivity, "", "Carregando...", true);
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        setDadosAplicacao(view);
+                        saveAplicacao();
+                        navActivity.getSupportFragmentManager().popBackStack();
+
+                        navActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progress.dismiss();
+                            }
+                        });
+                    }
+                }).start();
+
             }
         });
     }
@@ -343,7 +377,7 @@ public class AplicacaoFormFragment extends Fragment {
         AplicacaoSaveTask saveAplicacao = new AplicacaoSaveTask();
 
 
-            try{
+        try{
                 saveAplicacao.execute();
                 CURRENT_APLICACAO = saveAplicacao.get(5000, TimeUnit.MILLISECONDS);
 

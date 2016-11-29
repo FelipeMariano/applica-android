@@ -1,5 +1,6 @@
 package br.com.app.applica.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -98,26 +99,43 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         final UserLoginTask loginUser = new UserLoginTask();
 
-        try {
-            loginUser.execute();
-            user = loginUser.get(5000, TimeUnit.MILLISECONDS);
+        final ProgressDialog progress = ProgressDialog.show(this, "", "Carregando...", true);
 
-            FileOutputStream fos = new FileOutputStream(new File(getFilesDir(), "userData.xml"));
-            FileOutputStream fileos = openFileOutput("userData", Context.MODE_PRIVATE);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-            storageUserData(fos, fileos, user);
 
-        } catch (Exception e) {
-            System.out.println("ERRO: " + e);
-        } finally {
-             Intent intent = new Intent(LoginActivity.this, MainNavActivity.class);
-            intent.putExtra("id", user.getId());
+                try {
+                    loginUser.execute();
+                    user = loginUser.get(5000, TimeUnit.MILLISECONDS);
 
-            intent.putExtra("password", user.getPassword());
-            intent.putExtra("x-access-token", user.getAuthToken());
-            startActivity(intent);
-            finish();
-        }
+                    FileOutputStream fos = new FileOutputStream(new File(getFilesDir(), "userData.xml"));
+                    FileOutputStream fileos = openFileOutput("userData", Context.MODE_PRIVATE);
+
+                    storageUserData(fos, fileos, user);
+
+                } catch (Exception e) {
+                    System.out.println("ERRO: " + e);
+                } finally {
+                    Intent intent = new Intent(LoginActivity.this, MainNavActivity.class);
+                    intent.putExtra("id", user.getId());
+
+                    intent.putExtra("password", user.getPassword());
+                    intent.putExtra("x-access-token", user.getAuthToken());
+                    startActivity(intent);
+                    finish();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progress.dismiss();
+                    }
+                });
+            }
+        }).start();
+
 
     }
 

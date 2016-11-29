@@ -3,6 +3,7 @@ package br.com.app.applica.fragment;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -86,22 +87,39 @@ public class CardenetaFragment extends Fragment {
 
         ((AplicacaoAdapter) mAdapter).setOnItemClickListener(new AplicacaoAdapter.MyClickListener() {
             @Override
-            public void onItemClick(int position, View v) {
-                AplicacaoAdapter.AplicacaoViewHolder vHolder = (AplicacaoAdapter.AplicacaoViewHolder) v.getTag();
+            public void onItemClick(int position, final View v) {
 
-                Fragment aplicacaoForm = new AplicacaoFormFragment();
 
-                Bundle bundle = new Bundle();
-                bundle.putString("aplicacao_id", vHolder.getId());
-                bundle.putString("card_id", CURRENT_CARD_ID);
+                final ProgressDialog progress = ProgressDialog.show(navActivity, "", "Carregando...", true);
 
-                aplicacaoForm.setArguments(bundle);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AplicacaoAdapter.AplicacaoViewHolder vHolder = (AplicacaoAdapter.AplicacaoViewHolder) v.getTag();
 
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_layout, aplicacaoForm);
-                transaction.addToBackStack(null);
+                        final Fragment aplicacaoForm = new AplicacaoFormFragment();
 
-                transaction.commit();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("aplicacao_id", vHolder.getId());
+                        bundle.putString("card_id", CURRENT_CARD_ID);
+
+                        aplicacaoForm.setArguments(bundle);
+
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_layout, aplicacaoForm);
+                        transaction.addToBackStack(null);
+
+                        transaction.commit();
+
+                        navActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progress.dismiss();
+                            }
+                        });
+                    }
+                }).start();
+
             }
         });
 

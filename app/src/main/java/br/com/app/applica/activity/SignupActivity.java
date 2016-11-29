@@ -1,5 +1,6 @@
 package br.com.app.applica.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -206,26 +207,51 @@ public class SignupActivity extends AppCompatActivity {
 
     private void signUp(){
         if(setAndValidateFormInfos()) {
-            SignupTask signupTask = new SignupTask();
+            final SignupTask signupTask = new SignupTask();
 
-            try {
-                signupTask.execute();
-                signupTask.get(5000, TimeUnit.MILLISECONDS);
-                Toast.makeText(this, "Usuário criado", Toast.LENGTH_SHORT).show();
+            final ProgressDialog progress = ProgressDialog.show(this, "", "Carregando...", true);
 
-                FileOutputStream fos = new FileOutputStream(new File(getFilesDir(), "userData.xml"));
-                FileOutputStream fileos = openFileOutput("userData", Context.MODE_PRIVATE);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
-                LoginActivity.storageUserData(fos, fileos, USER);
 
-                Intent intent = new Intent(SignupActivity.this, MainNavActivity.class);
-                intent.putExtra("id", USER.getId());
-                intent.putExtra("x-access-token", USER.getAuthToken());
-                startActivity(intent);
-                finish();
-            }catch (Exception e){
-                System.out.println("Erro ao cadastrar usuário: " + e);
-            }
+                    try {
+                        signupTask.execute();
+                        signupTask.get(5000, TimeUnit.MILLISECONDS);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(SignupActivity.this, "Usuário criado", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                        FileOutputStream fos = new FileOutputStream(new File(getFilesDir(), "userData.xml"));
+                        FileOutputStream fileos = openFileOutput("userData", Context.MODE_PRIVATE);
+
+                        LoginActivity.storageUserData(fos, fileos, USER);
+
+                        Intent intent = new Intent(SignupActivity.this, MainNavActivity.class);
+                        intent.putExtra("id", USER.getId());
+                        intent.putExtra("x-access-token", USER.getAuthToken());
+                        startActivity(intent);
+                        finish();
+                    }catch (Exception e){
+                        System.out.println("Erro ao cadastrar usuário: " + e);
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progress.dismiss();
+                        }
+                    });
+
+                }
+            }).start();
+
         }else
             Toast.makeText(this, "Informações inválidas", Toast.LENGTH_SHORT).show();
     }

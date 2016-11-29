@@ -1,6 +1,7 @@
 package br.com.app.applica.fragment;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -375,24 +376,42 @@ public class MyProfileFragment extends Fragment {
                     USER = navActivity.CURRENT_USER;
                     return;
                 }else {
-                    edit();
-                    Toast.makeText(navActivity, "Atualizado com sucesso", Toast.LENGTH_SHORT).show();
-                    navActivity.CURRENT_USER = USER;
-                    USER_TEMP = navActivity.CURRENT_USER;
-                    MainNavActivity.setHeaderData(navActivity.CURRENT_USER, navActivity);
-                    try {
 
-                        File file = new File(navActivity.getFilesDir(), "userData.xml");
-                        if(file.exists())
-                            file.delete();
+                    final ProgressDialog progress = ProgressDialog.show(navActivity, "", "Carregando...", true);
 
-                        FileOutputStream fos = new FileOutputStream(file);
-                        FileOutputStream fileos = navActivity.openFileOutput("userData", Context.MODE_PRIVATE);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            edit();
 
-                        LoginActivity.storageUserData(fos, fileos, navActivity.CURRENT_USER);
-                    }catch(Exception e){
-                        System.out.println("ERRO AO SALVAR NOVOS DADOS DO USUÁRIO: " + e);
-                    }
+
+                            navActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(navActivity, "Atualizado com sucesso", Toast.LENGTH_SHORT).show();
+                                    navActivity.CURRENT_USER = USER;
+                                    USER_TEMP = navActivity.CURRENT_USER;
+                                    MainNavActivity.setHeaderData(navActivity.CURRENT_USER, navActivity);
+                                    try {
+
+                                        File file = new File(navActivity.getFilesDir(), "userData.xml");
+                                        if(file.exists())
+                                            file.delete();
+
+                                        FileOutputStream fos = new FileOutputStream(file);
+                                        FileOutputStream fileos = navActivity.openFileOutput("userData", Context.MODE_PRIVATE);
+
+                                        LoginActivity.storageUserData(fos, fileos, navActivity.CURRENT_USER);
+                                    }catch(Exception e){
+                                        System.out.println("ERRO AO SALVAR NOVOS DADOS DO USUÁRIO: " + e);
+                                    }
+                                    progress.dismiss();
+                                }
+                            });
+                        }
+                    }).start();
+
+
                 }
             }
         });

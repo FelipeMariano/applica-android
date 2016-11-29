@@ -1,6 +1,7 @@
 package br.com.app.applica.fragment;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -109,6 +110,7 @@ public class HomeFragment extends Fragment{
         navActivity.toggleFab(MainNavActivity.TAG_CARDENETA, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 CardenetaFormFragment fragment = new CardenetaFormFragment();
 
                 fragment.CURRENT_CARD_ID = null;
@@ -136,18 +138,35 @@ public class HomeFragment extends Fragment{
        }
 
         public boolean onSingleTapUp(MotionEvent e ){
-            Fragment cardeneta = new CardenetaFragment();
 
-            Bundle bundle = new Bundle();
-            bundle.putString("card_id", CURRENT_CARD_ID);
-            cardeneta.setArguments(bundle);
 
-            FragmentTransaction transaction= getFragmentManager().beginTransaction();
+            final ProgressDialog progress = ProgressDialog.show(navActivity, "", "Carregando...", true);
 
-            transaction.replace(R.id.fragment_layout, cardeneta);
-            transaction.addToBackStack(null);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
-            transaction.commit();
+                    Fragment cardeneta = new CardenetaFragment();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("card_id", CURRENT_CARD_ID);
+                    cardeneta.setArguments(bundle);
+
+                    FragmentTransaction transaction= getFragmentManager().beginTransaction();
+
+                    transaction.replace(R.id.fragment_layout, cardeneta);
+                    transaction.addToBackStack(null);
+
+                    transaction.commit();
+
+                    navActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progress.dismiss();
+                        }
+                    });
+                }
+            }).start();
 
             return true;
         }
